@@ -1,0 +1,8 @@
+# CMake generation dependency list for this directory.
+C:/Program Files/CMake/share/cmake-3.23/Modules/FindPackageHandleStandardArgs.cmake
+C:/Program Files/CMake/share/cmake-3.23/Modules/FindPackageMessage.cmake
+C:/Program Files/CMake/share/cmake-3.23/Modules/FindZLIB.cmake
+C:/Program Files/CMake/share/cmake-3.23/Modules/SelectLibraryConfigurations.cmake
+C:/Users/PC/Desktop/Program/OptixRenderer/SDK/CMake/FindOpenEXR.cmake
+C:/Users/PC/Desktop/Program/OptixRenderer/SDK/CMake/FindZlibStatic.cmake
+C:/Users/PC/Desktop/Program/OptixRenderer/SDK/lib/ImageReader/CMakeLists.txt

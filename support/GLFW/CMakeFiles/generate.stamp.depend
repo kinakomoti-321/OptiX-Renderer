@@ -1,0 +1,16 @@
+# CMake generation dependency list for this directory.
+C:/Program Files/CMake/share/cmake-3.23/Modules/BasicConfigVersion-SameMajorVersion.cmake.in
+C:/Program Files/CMake/share/cmake-3.23/Modules/CMakePackageConfigHelpers.cmake
+C:/Program Files/CMake/share/cmake-3.23/Modules/CheckCSourceCompiles.cmake
+C:/Program Files/CMake/share/cmake-3.23/Modules/CheckIncludeFile.cmake
+C:/Program Files/CMake/share/cmake-3.23/Modules/CheckLibraryExists.cmake
+C:/Program Files/CMake/share/cmake-3.23/Modules/FindPackageHandleStandardArgs.cmake
+C:/Program Files/CMake/share/cmake-3.23/Modules/FindPackageMessage.cmake
+C:/Program Files/CMake/share/cmake-3.23/Modules/FindThreads.cmake
+C:/Program Files/CMake/share/cmake-3.23/Modules/Internal/CheckSourceCompiles.cmake
+C:/Program Files/CMake/share/cmake-3.23/Modules/WriteBasicConfigVersionFile.cmake
+C:/Users/PC/Desktop/Program/OptixRenderer/SDK/support/GLFW/CMake/modules/FindVulkan.cmake
+C:/Users/PC/Desktop/Program/OptixRenderer/SDK/support/GLFW/CMakeLists.txt
+C:/Users/PC/Desktop/Program/OptixRenderer/SDK/support/GLFW/src/glfw3.pc.in
+C:/Users/PC/Desktop/Program/OptixRenderer/SDK/support/GLFW/src/glfw3Config.cmake.in
+C:/Users/PC/Desktop/Program/OptixRenderer/SDK/support/GLFW/src/glfw_config.h.in

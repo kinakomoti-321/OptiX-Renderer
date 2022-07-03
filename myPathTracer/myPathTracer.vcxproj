@@ -1,0 +1,447 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
+  </PropertyGroup>
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="MinSizeRel|x64">
+      <Configuration>MinSizeRel</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="RelWithDebInfo|x64">
+      <Configuration>RelWithDebInfo</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{ED23F94A-20FD-3030-92BF-FE78D5A818A9}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>10.0.19041.0</WindowsTargetPlatformVersion>
+    <Platform>x64</Platform>
+    <ProjectName>myPathTracer</ProjectName>
+    <VCProjectUpgraderObjectName>NoUpgrade</VCProjectUpgraderObjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\PC\Desktop\Program\OptixRenderer\build\bin\Debug\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">myPathTracer.dir\Debug\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">myPathTracer</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.exe</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</GenerateManifest>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\PC\Desktop\Program\OptixRenderer\build\bin\Release\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">myPathTracer.dir\Release\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">myPathTracer</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.exe</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</GenerateManifest>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Users\PC\Desktop\Program\OptixRenderer\build\bin\MinSizeRel\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">myPathTracer.dir\MinSizeRel\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">myPathTracer</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">.exe</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">true</GenerateManifest>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Users\PC\Desktop\Program\OptixRenderer\build\bin\RelWithDebInfo\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">myPathTracer.dir\RelWithDebInfo\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">myPathTracer</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">.exe</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">true</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">true</GenerateManifest>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\ProgramData\NVIDIA Corporation\OptiX SDK 7.4.0\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\cuda;C:\Users\PC\Desktop\Program\OptixRenderer\SDK;C:\Users\PC\Desktop\Program\OptixRenderer\build\include;C:\Users\PC\Desktop\Program\OptixRenderer\build;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\support\imgui\..;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\support\GLFW\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\support\.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /w34101 /w34189 /w34018 /w34389</AdditionalOptions>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4355;4996;4800</DisableSpecificWarnings>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <Optimization>Disabled</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;OPTIX_SAMPLE_NAME_DEFINE=myPathTracer;OPTIX_SAMPLE_DIR_DEFINE=myPathTracer;_USE_MATH_DEFINES;NOMINMAX;GLFW_DLL;GLAD_GLAPI_EXPORT;CMAKE_INTDIR="Debug"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_DEBUG;_WINDOWS;OPTIX_SAMPLE_NAME_DEFINE=myPathTracer;OPTIX_SAMPLE_DIR_DEFINE=myPathTracer;_USE_MATH_DEFINES;NOMINMAX;GLFW_DLL;GLAD_GLAPI_EXPORT;CMAKE_INTDIR=\"Debug\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\ProgramData\NVIDIA Corporation\OptiX SDK 7.4.0\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\cuda;C:\Users\PC\Desktop\Program\OptixRenderer\SDK;C:\Users\PC\Desktop\Program\OptixRenderer\build\include;C:\Users\PC\Desktop\Program\OptixRenderer\build;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\support\imgui\..;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\support\GLFW\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\support\.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\ProgramData\NVIDIA Corporation\OptiX SDK 7.4.0\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\cuda;C:\Users\PC\Desktop\Program\OptixRenderer\SDK;C:\Users\PC\Desktop\Program\OptixRenderer\build\include;C:\Users\PC\Desktop\Program\OptixRenderer\build;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\support\imgui\..;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\support\GLFW\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\support\.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalDependencies>..\lib\Debug\imgui.lib;..\lib\Debug\sutil_7_sdk.lib;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\lib\x64\cudart_static.lib;..\lib\Debug\glfw3dll.lib;..\lib\Debug\glad.lib;opengl32.lib;glu32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>C:/Users/PC/Desktop/Program/OptixRenderer/build/lib/Debug/myPathTracer.lib</ImportLibrary>
+      <ProgramDataBaseFile>C:/Users/PC/Desktop/Program/OptixRenderer/build/bin/Debug/myPathTracer.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\ProgramData\NVIDIA Corporation\OptiX SDK 7.4.0\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\cuda;C:\Users\PC\Desktop\Program\OptixRenderer\SDK;C:\Users\PC\Desktop\Program\OptixRenderer\build\include;C:\Users\PC\Desktop\Program\OptixRenderer\build;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\support\imgui\..;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\support\GLFW\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\support\.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /w34101 /w34189 /w34018 /w34389</AdditionalOptions>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <DisableSpecificWarnings>4355;4996;4800</DisableSpecificWarnings>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <Optimization>Full</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;OPTIX_SAMPLE_NAME_DEFINE=myPathTracer;OPTIX_SAMPLE_DIR_DEFINE=myPathTracer;_USE_MATH_DEFINES;NOMINMAX;GLFW_DLL;GLAD_GLAPI_EXPORT;CMAKE_INTDIR="Release"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;OPTIX_SAMPLE_NAME_DEFINE=myPathTracer;OPTIX_SAMPLE_DIR_DEFINE=myPathTracer;_USE_MATH_DEFINES;NOMINMAX;GLFW_DLL;GLAD_GLAPI_EXPORT;CMAKE_INTDIR=\"Release\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\ProgramData\NVIDIA Corporation\OptiX SDK 7.4.0\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\cuda;C:\Users\PC\Desktop\Program\OptixRenderer\SDK;C:\Users\PC\Desktop\Program\OptixRenderer\build\include;C:\Users\PC\Desktop\Program\OptixRenderer\build;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\support\imgui\..;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\support\GLFW\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\support\.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\ProgramData\NVIDIA Corporation\OptiX SDK 7.4.0\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\cuda;C:\Users\PC\Desktop\Program\OptixRenderer\SDK;C:\Users\PC\Desktop\Program\OptixRenderer\build\include;C:\Users\PC\Desktop\Program\OptixRenderer\build;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\support\imgui\..;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\support\GLFW\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\support\.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalDependencies>..\lib\Release\imgui.lib;..\lib\Release\sutil_7_sdk.lib;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\lib\x64\cudart_static.lib;..\lib\Release\glfw3dll.lib;..\lib\Release\glad.lib;opengl32.lib;glu32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>C:/Users/PC/Desktop/Program/OptixRenderer/build/lib/Release/myPathTracer.lib</ImportLibrary>
+      <ProgramDataBaseFile>C:/Users/PC/Desktop/Program/OptixRenderer/build/bin/Release/myPathTracer.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\ProgramData\NVIDIA Corporation\OptiX SDK 7.4.0\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\cuda;C:\Users\PC\Desktop\Program\OptixRenderer\SDK;C:\Users\PC\Desktop\Program\OptixRenderer\build\include;C:\Users\PC\Desktop\Program\OptixRenderer\build;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\support\imgui\..;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\support\GLFW\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\support\.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /w34101 /w34189 /w34018 /w34389</AdditionalOptions>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <DisableSpecificWarnings>4355;4996;4800</DisableSpecificWarnings>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <Optimization>MinSpace</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;OPTIX_SAMPLE_NAME_DEFINE=myPathTracer;OPTIX_SAMPLE_DIR_DEFINE=myPathTracer;_USE_MATH_DEFINES;NOMINMAX;GLFW_DLL;GLAD_GLAPI_EXPORT;CMAKE_INTDIR="MinSizeRel"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;OPTIX_SAMPLE_NAME_DEFINE=myPathTracer;OPTIX_SAMPLE_DIR_DEFINE=myPathTracer;_USE_MATH_DEFINES;NOMINMAX;GLFW_DLL;GLAD_GLAPI_EXPORT;CMAKE_INTDIR=\"MinSizeRel\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\ProgramData\NVIDIA Corporation\OptiX SDK 7.4.0\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\cuda;C:\Users\PC\Desktop\Program\OptixRenderer\SDK;C:\Users\PC\Desktop\Program\OptixRenderer\build\include;C:\Users\PC\Desktop\Program\OptixRenderer\build;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\support\imgui\..;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\support\GLFW\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\support\.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\ProgramData\NVIDIA Corporation\OptiX SDK 7.4.0\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\cuda;C:\Users\PC\Desktop\Program\OptixRenderer\SDK;C:\Users\PC\Desktop\Program\OptixRenderer\build\include;C:\Users\PC\Desktop\Program\OptixRenderer\build;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\support\imgui\..;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\support\GLFW\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\support\.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalDependencies>..\lib\MinSizeRel\imgui.lib;..\lib\MinSizeRel\sutil_7_sdk.lib;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\lib\x64\cudart_static.lib;..\lib\MinSizeRel\glfw3dll.lib;..\lib\MinSizeRel\glad.lib;opengl32.lib;glu32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>C:/Users/PC/Desktop/Program/OptixRenderer/build/lib/MinSizeRel/myPathTracer.lib</ImportLibrary>
+      <ProgramDataBaseFile>C:/Users/PC/Desktop/Program/OptixRenderer/build/bin/MinSizeRel/myPathTracer.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\ProgramData\NVIDIA Corporation\OptiX SDK 7.4.0\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\cuda;C:\Users\PC\Desktop\Program\OptixRenderer\SDK;C:\Users\PC\Desktop\Program\OptixRenderer\build\include;C:\Users\PC\Desktop\Program\OptixRenderer\build;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\support\imgui\..;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\support\GLFW\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\support\.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /w34101 /w34189 /w34018 /w34389</AdditionalOptions>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4355;4996;4800</DisableSpecificWarnings>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;OPTIX_SAMPLE_NAME_DEFINE=myPathTracer;OPTIX_SAMPLE_DIR_DEFINE=myPathTracer;_USE_MATH_DEFINES;NOMINMAX;GLFW_DLL;GLAD_GLAPI_EXPORT;CMAKE_INTDIR="RelWithDebInfo"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;OPTIX_SAMPLE_NAME_DEFINE=myPathTracer;OPTIX_SAMPLE_DIR_DEFINE=myPathTracer;_USE_MATH_DEFINES;NOMINMAX;GLFW_DLL;GLAD_GLAPI_EXPORT;CMAKE_INTDIR=\"RelWithDebInfo\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\ProgramData\NVIDIA Corporation\OptiX SDK 7.4.0\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\cuda;C:\Users\PC\Desktop\Program\OptixRenderer\SDK;C:\Users\PC\Desktop\Program\OptixRenderer\build\include;C:\Users\PC\Desktop\Program\OptixRenderer\build;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\support\imgui\..;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\support\GLFW\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\support\.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\ProgramData\NVIDIA Corporation\OptiX SDK 7.4.0\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\cuda;C:\Users\PC\Desktop\Program\OptixRenderer\SDK;C:\Users\PC\Desktop\Program\OptixRenderer\build\include;C:\Users\PC\Desktop\Program\OptixRenderer\build;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\support\imgui\..;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\support\GLFW\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\support\.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalDependencies>..\lib\RelWithDebInfo\imgui.lib;..\lib\RelWithDebInfo\sutil_7_sdk.lib;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\lib\x64\cudart_static.lib;..\lib\RelWithDebInfo\glfw3dll.lib;..\lib\RelWithDebInfo\glad.lib;opengl32.lib;glu32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>C:/Users/PC/Desktop/Program/OptixRenderer/build/lib/RelWithDebInfo/myPathTracer.lib</ImportLibrary>
+      <ProgramDataBaseFile>C:/Users/PC/Desktop/Program/OptixRenderer/build/bin/RelWithDebInfo/myPathTracer.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\myPathTracer\myPathTracer.cu">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building NVCC ptx file lib/ptx/myPathTracer_generated_myPathTracer.cu.ptx</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
+cd C:\Users\PC\Desktop\Program\OptixRenderer\build\myPathTracer\CMakeFiles\myPathTracer.dir
+if %errorlevel% neq 0 goto :cmEnd
+C:
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E make_directory C:/Users/PC/Desktop/Program/OptixRenderer/build/lib/ptx
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -D verbose:BOOL=OFF -D check_dependencies:BOOL=ON -D "CCBIN:PATH=$(VCInstallDir)Tools/MSVC/$(VCToolsVersion)/bin/Host$(Platform)/$(PlatformTarget)" -D build_configuration:STRING=$(ConfigurationName) -D generated_file:STRING=C:/Users/PC/Desktop/Program/OptixRenderer/build/lib/ptx/myPathTracer_generated_myPathTracer.cu.ptx -D generated_cubin_file:STRING=C:/Users/PC/Desktop/Program/OptixRenderer/build/lib/ptx/myPathTracer_generated_myPathTracer.cu.ptx.cubin.txt -D generated_fatbin_file:STRING=C:/Users/PC/Desktop/Program/OptixRenderer/build/lib/ptx/myPathTracer_generated_myPathTracer.cu.ptx.fatbin.txt -P C:/Users/PC/Desktop/Program/OptixRenderer/build/myPathTracer/CMakeFiles/myPathTracer.dir//myPathTracer_generated_myPathTracer.cu.ptx.cmake
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\assert.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt_malloc.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt_math.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt_math_defines.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt_memcpy_s.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt_memory.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt_search.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt_stdio_config.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt_terminate.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt_wstdio.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt_wstdlib.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt_wstring.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt_wtime.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\crtdbg.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\errno.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\malloc.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\math.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\stddef.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\stdio.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\stdlib.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\string.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\time.h;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\cmath;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\concurrencysal.h;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\crtdefs.h;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\cstdarg;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\cstddef;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\cstdint;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\cstdio;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\cstdlib;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\eh.h;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\exception;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\initializer_list;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\limits.h;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\new;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\sal.h;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\stdarg.h;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\stdint.h;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\type_traits;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\use_ansi.h;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\vadefs.h;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\vcruntime.h;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\vcruntime_exception.h;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\vcruntime_new.h;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\vcruntime_new_debug.h;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\vcruntime_string.h;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\xkeycheck.h;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\xstddef;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\xtr1common;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\yvals.h;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\yvals_core.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\builtin_types.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\channel_descriptor.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\crt\common_functions.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\crt\cudacc_ext.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\crt\device_double_functions.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\crt\device_double_functions.hpp;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\crt\device_functions.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\crt\device_functions.hpp;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\crt\host_config.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\crt\host_defines.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\crt\math_functions.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\crt\math_functions.hpp;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\crt\sm_70_rt.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\crt\sm_70_rt.hpp;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\crt\sm_80_rt.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\crt\sm_80_rt.hpp;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\cuda_device_runtime_api.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\cuda_runtime.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\cuda_runtime_api.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\cuda_surface_types.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\cuda_texture_types.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\device_atomic_functions.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\device_atomic_functions.hpp;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\device_launch_parameters.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\device_types.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\driver_functions.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\driver_types.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\library_types.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\sm_20_atomic_functions.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\sm_20_atomic_functions.hpp;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\sm_20_intrinsics.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\sm_20_intrinsics.hpp;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\sm_30_intrinsics.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\sm_30_intrinsics.hpp;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\sm_32_atomic_functions.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\sm_32_atomic_functions.hpp;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\sm_32_intrinsics.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\sm_32_intrinsics.hpp;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\sm_35_atomic_functions.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\sm_35_intrinsics.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\sm_60_atomic_functions.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\sm_60_atomic_functions.hpp;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\sm_61_intrinsics.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\sm_61_intrinsics.hpp;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\surface_functions.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\surface_indirect_functions.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\surface_types.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\texture_fetch_functions.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\texture_indirect_functions.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\texture_types.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\vector_functions.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\vector_functions.hpp;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\vector_types.h;C:\ProgramData\NVIDIA Corporation\OptiX SDK 7.4.0\include\internal\optix_7_device_impl.h;C:\ProgramData\NVIDIA Corporation\OptiX SDK 7.4.0\include\internal\optix_7_device_impl_exception.h;C:\ProgramData\NVIDIA Corporation\OptiX SDK 7.4.0\include\internal\optix_7_device_impl_transformations.h;C:\ProgramData\NVIDIA Corporation\OptiX SDK 7.4.0\include\optix.h;C:\ProgramData\NVIDIA Corporation\OptiX SDK 7.4.0\include\optix_7_device.h;C:\ProgramData\NVIDIA Corporation\OptiX SDK 7.4.0\include\optix_7_types.h;C:\ProgramData\NVIDIA Corporation\OptiX SDK 7.4.0\include\optix_device.h;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\cuda\helpers.h;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\cuda\random.h;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\myPathTracer\myPathTracer.h;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\sutil\Preprocessor.h;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\sutil\vec_math.h;C:\Users\PC\Desktop\Program\OptixRenderer\build\myPathTracer\CMakeFiles\myPathTracer.dir\myPathTracer_generated_myPathTracer.cu.ptx.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\PC\Desktop\Program\OptixRenderer\build\lib\ptx\myPathTracer_generated_myPathTracer.cu.ptx</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building NVCC ptx file lib/ptx/myPathTracer_generated_myPathTracer.cu.ptx</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
+cd C:\Users\PC\Desktop\Program\OptixRenderer\build\myPathTracer\CMakeFiles\myPathTracer.dir
+if %errorlevel% neq 0 goto :cmEnd
+C:
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E make_directory C:/Users/PC/Desktop/Program/OptixRenderer/build/lib/ptx
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -D verbose:BOOL=OFF -D check_dependencies:BOOL=ON -D "CCBIN:PATH=$(VCInstallDir)Tools/MSVC/$(VCToolsVersion)/bin/Host$(Platform)/$(PlatformTarget)" -D build_configuration:STRING=$(ConfigurationName) -D generated_file:STRING=C:/Users/PC/Desktop/Program/OptixRenderer/build/lib/ptx/myPathTracer_generated_myPathTracer.cu.ptx -D generated_cubin_file:STRING=C:/Users/PC/Desktop/Program/OptixRenderer/build/lib/ptx/myPathTracer_generated_myPathTracer.cu.ptx.cubin.txt -D generated_fatbin_file:STRING=C:/Users/PC/Desktop/Program/OptixRenderer/build/lib/ptx/myPathTracer_generated_myPathTracer.cu.ptx.fatbin.txt -P C:/Users/PC/Desktop/Program/OptixRenderer/build/myPathTracer/CMakeFiles/myPathTracer.dir//myPathTracer_generated_myPathTracer.cu.ptx.cmake
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\assert.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt_malloc.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt_math.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt_math_defines.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt_memcpy_s.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt_memory.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt_search.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt_stdio_config.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt_terminate.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt_wstdio.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt_wstdlib.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt_wstring.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt_wtime.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\crtdbg.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\errno.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\malloc.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\math.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\stddef.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\stdio.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\stdlib.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\string.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\time.h;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\cmath;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\concurrencysal.h;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\crtdefs.h;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\cstdarg;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\cstddef;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\cstdint;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\cstdio;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\cstdlib;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\eh.h;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\exception;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\initializer_list;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\limits.h;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\new;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\sal.h;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\stdarg.h;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\stdint.h;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\type_traits;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\use_ansi.h;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\vadefs.h;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\vcruntime.h;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\vcruntime_exception.h;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\vcruntime_new.h;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\vcruntime_new_debug.h;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\vcruntime_string.h;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\xkeycheck.h;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\xstddef;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\xtr1common;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\yvals.h;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\yvals_core.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\builtin_types.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\channel_descriptor.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\crt\common_functions.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\crt\cudacc_ext.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\crt\device_double_functions.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\crt\device_double_functions.hpp;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\crt\device_functions.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\crt\device_functions.hpp;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\crt\host_config.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\crt\host_defines.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\crt\math_functions.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\crt\math_functions.hpp;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\crt\sm_70_rt.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\crt\sm_70_rt.hpp;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\crt\sm_80_rt.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\crt\sm_80_rt.hpp;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\cuda_device_runtime_api.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\cuda_runtime.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\cuda_runtime_api.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\cuda_surface_types.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\cuda_texture_types.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\device_atomic_functions.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\device_atomic_functions.hpp;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\device_launch_parameters.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\device_types.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\driver_functions.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\driver_types.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\library_types.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\sm_20_atomic_functions.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\sm_20_atomic_functions.hpp;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\sm_20_intrinsics.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\sm_20_intrinsics.hpp;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\sm_30_intrinsics.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\sm_30_intrinsics.hpp;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\sm_32_atomic_functions.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\sm_32_atomic_functions.hpp;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\sm_32_intrinsics.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\sm_32_intrinsics.hpp;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\sm_35_atomic_functions.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\sm_35_intrinsics.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\sm_60_atomic_functions.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\sm_60_atomic_functions.hpp;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\sm_61_intrinsics.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\sm_61_intrinsics.hpp;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\surface_functions.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\surface_indirect_functions.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\surface_types.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\texture_fetch_functions.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\texture_indirect_functions.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\texture_types.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\vector_functions.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\vector_functions.hpp;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\vector_types.h;C:\ProgramData\NVIDIA Corporation\OptiX SDK 7.4.0\include\internal\optix_7_device_impl.h;C:\ProgramData\NVIDIA Corporation\OptiX SDK 7.4.0\include\internal\optix_7_device_impl_exception.h;C:\ProgramData\NVIDIA Corporation\OptiX SDK 7.4.0\include\internal\optix_7_device_impl_transformations.h;C:\ProgramData\NVIDIA Corporation\OptiX SDK 7.4.0\include\optix.h;C:\ProgramData\NVIDIA Corporation\OptiX SDK 7.4.0\include\optix_7_device.h;C:\ProgramData\NVIDIA Corporation\OptiX SDK 7.4.0\include\optix_7_types.h;C:\ProgramData\NVIDIA Corporation\OptiX SDK 7.4.0\include\optix_device.h;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\cuda\helpers.h;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\cuda\random.h;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\myPathTracer\myPathTracer.h;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\sutil\Preprocessor.h;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\sutil\vec_math.h;C:\Users\PC\Desktop\Program\OptixRenderer\build\myPathTracer\CMakeFiles\myPathTracer.dir\myPathTracer_generated_myPathTracer.cu.ptx.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\PC\Desktop\Program\OptixRenderer\build\lib\ptx\myPathTracer_generated_myPathTracer.cu.ptx</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Building NVCC ptx file lib/ptx/myPathTracer_generated_myPathTracer.cu.ptx</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
+cd C:\Users\PC\Desktop\Program\OptixRenderer\build\myPathTracer\CMakeFiles\myPathTracer.dir
+if %errorlevel% neq 0 goto :cmEnd
+C:
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E make_directory C:/Users/PC/Desktop/Program/OptixRenderer/build/lib/ptx
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -D verbose:BOOL=OFF -D check_dependencies:BOOL=ON -D "CCBIN:PATH=$(VCInstallDir)Tools/MSVC/$(VCToolsVersion)/bin/Host$(Platform)/$(PlatformTarget)" -D build_configuration:STRING=$(ConfigurationName) -D generated_file:STRING=C:/Users/PC/Desktop/Program/OptixRenderer/build/lib/ptx/myPathTracer_generated_myPathTracer.cu.ptx -D generated_cubin_file:STRING=C:/Users/PC/Desktop/Program/OptixRenderer/build/lib/ptx/myPathTracer_generated_myPathTracer.cu.ptx.cubin.txt -D generated_fatbin_file:STRING=C:/Users/PC/Desktop/Program/OptixRenderer/build/lib/ptx/myPathTracer_generated_myPathTracer.cu.ptx.fatbin.txt -P C:/Users/PC/Desktop/Program/OptixRenderer/build/myPathTracer/CMakeFiles/myPathTracer.dir//myPathTracer_generated_myPathTracer.cu.ptx.cmake
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\assert.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt_malloc.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt_math.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt_math_defines.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt_memcpy_s.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt_memory.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt_search.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt_stdio_config.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt_terminate.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt_wstdio.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt_wstdlib.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt_wstring.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt_wtime.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\crtdbg.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\errno.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\malloc.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\math.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\stddef.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\stdio.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\stdlib.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\string.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\time.h;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\cmath;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\concurrencysal.h;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\crtdefs.h;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\cstdarg;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\cstddef;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\cstdint;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\cstdio;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\cstdlib;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\eh.h;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\exception;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\initializer_list;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\limits.h;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\new;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\sal.h;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\stdarg.h;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\stdint.h;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\type_traits;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\use_ansi.h;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\vadefs.h;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\vcruntime.h;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\vcruntime_exception.h;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\vcruntime_new.h;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\vcruntime_new_debug.h;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\vcruntime_string.h;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\xkeycheck.h;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\xstddef;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\xtr1common;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\yvals.h;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\yvals_core.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\builtin_types.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\channel_descriptor.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\crt\common_functions.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\crt\cudacc_ext.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\crt\device_double_functions.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\crt\device_double_functions.hpp;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\crt\device_functions.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\crt\device_functions.hpp;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\crt\host_config.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\crt\host_defines.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\crt\math_functions.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\crt\math_functions.hpp;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\crt\sm_70_rt.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\crt\sm_70_rt.hpp;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\crt\sm_80_rt.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\crt\sm_80_rt.hpp;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\cuda_device_runtime_api.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\cuda_runtime.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\cuda_runtime_api.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\cuda_surface_types.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\cuda_texture_types.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\device_atomic_functions.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\device_atomic_functions.hpp;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\device_launch_parameters.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\device_types.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\driver_functions.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\driver_types.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\library_types.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\sm_20_atomic_functions.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\sm_20_atomic_functions.hpp;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\sm_20_intrinsics.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\sm_20_intrinsics.hpp;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\sm_30_intrinsics.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\sm_30_intrinsics.hpp;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\sm_32_atomic_functions.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\sm_32_atomic_functions.hpp;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\sm_32_intrinsics.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\sm_32_intrinsics.hpp;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\sm_35_atomic_functions.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\sm_35_intrinsics.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\sm_60_atomic_functions.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\sm_60_atomic_functions.hpp;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\sm_61_intrinsics.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\sm_61_intrinsics.hpp;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\surface_functions.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\surface_indirect_functions.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\surface_types.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\texture_fetch_functions.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\texture_indirect_functions.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\texture_types.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\vector_functions.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\vector_functions.hpp;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\vector_types.h;C:\ProgramData\NVIDIA Corporation\OptiX SDK 7.4.0\include\internal\optix_7_device_impl.h;C:\ProgramData\NVIDIA Corporation\OptiX SDK 7.4.0\include\internal\optix_7_device_impl_exception.h;C:\ProgramData\NVIDIA Corporation\OptiX SDK 7.4.0\include\internal\optix_7_device_impl_transformations.h;C:\ProgramData\NVIDIA Corporation\OptiX SDK 7.4.0\include\optix.h;C:\ProgramData\NVIDIA Corporation\OptiX SDK 7.4.0\include\optix_7_device.h;C:\ProgramData\NVIDIA Corporation\OptiX SDK 7.4.0\include\optix_7_types.h;C:\ProgramData\NVIDIA Corporation\OptiX SDK 7.4.0\include\optix_device.h;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\cuda\helpers.h;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\cuda\random.h;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\myPathTracer\myPathTracer.h;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\sutil\Preprocessor.h;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\sutil\vec_math.h;C:\Users\PC\Desktop\Program\OptixRenderer\build\myPathTracer\CMakeFiles\myPathTracer.dir\myPathTracer_generated_myPathTracer.cu.ptx.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Users\PC\Desktop\Program\OptixRenderer\build\lib\ptx\myPathTracer_generated_myPathTracer.cu.ptx</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building NVCC ptx file lib/ptx/myPathTracer_generated_myPathTracer.cu.ptx</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
+cd C:\Users\PC\Desktop\Program\OptixRenderer\build\myPathTracer\CMakeFiles\myPathTracer.dir
+if %errorlevel% neq 0 goto :cmEnd
+C:
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E make_directory C:/Users/PC/Desktop/Program/OptixRenderer/build/lib/ptx
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -D verbose:BOOL=OFF -D check_dependencies:BOOL=ON -D "CCBIN:PATH=$(VCInstallDir)Tools/MSVC/$(VCToolsVersion)/bin/Host$(Platform)/$(PlatformTarget)" -D build_configuration:STRING=$(ConfigurationName) -D generated_file:STRING=C:/Users/PC/Desktop/Program/OptixRenderer/build/lib/ptx/myPathTracer_generated_myPathTracer.cu.ptx -D generated_cubin_file:STRING=C:/Users/PC/Desktop/Program/OptixRenderer/build/lib/ptx/myPathTracer_generated_myPathTracer.cu.ptx.cubin.txt -D generated_fatbin_file:STRING=C:/Users/PC/Desktop/Program/OptixRenderer/build/lib/ptx/myPathTracer_generated_myPathTracer.cu.ptx.fatbin.txt -P C:/Users/PC/Desktop/Program/OptixRenderer/build/myPathTracer/CMakeFiles/myPathTracer.dir//myPathTracer_generated_myPathTracer.cu.ptx.cmake
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\assert.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt_malloc.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt_math.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt_math_defines.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt_memcpy_s.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt_memory.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt_search.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt_stdio_config.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt_terminate.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt_wstdio.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt_wstdlib.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt_wstring.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt_wtime.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\crtdbg.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\errno.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\malloc.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\math.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\stddef.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\stdio.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\stdlib.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\string.h;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\time.h;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\cmath;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\concurrencysal.h;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\crtdefs.h;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\cstdarg;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\cstddef;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\cstdint;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\cstdio;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\cstdlib;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\eh.h;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\exception;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\initializer_list;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\limits.h;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\new;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\sal.h;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\stdarg.h;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\stdint.h;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\type_traits;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\use_ansi.h;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\vadefs.h;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\vcruntime.h;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\vcruntime_exception.h;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\vcruntime_new.h;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\vcruntime_new_debug.h;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\vcruntime_string.h;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\xkeycheck.h;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\xstddef;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\xtr1common;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\yvals.h;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\yvals_core.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\builtin_types.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\channel_descriptor.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\crt\common_functions.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\crt\cudacc_ext.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\crt\device_double_functions.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\crt\device_double_functions.hpp;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\crt\device_functions.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\crt\device_functions.hpp;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\crt\host_config.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\crt\host_defines.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\crt\math_functions.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\crt\math_functions.hpp;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\crt\sm_70_rt.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\crt\sm_70_rt.hpp;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\crt\sm_80_rt.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\crt\sm_80_rt.hpp;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\cuda_device_runtime_api.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\cuda_runtime.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\cuda_runtime_api.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\cuda_surface_types.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\cuda_texture_types.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\device_atomic_functions.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\device_atomic_functions.hpp;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\device_launch_parameters.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\device_types.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\driver_functions.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\driver_types.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\library_types.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\sm_20_atomic_functions.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\sm_20_atomic_functions.hpp;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\sm_20_intrinsics.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\sm_20_intrinsics.hpp;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\sm_30_intrinsics.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\sm_30_intrinsics.hpp;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\sm_32_atomic_functions.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\sm_32_atomic_functions.hpp;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\sm_32_intrinsics.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\sm_32_intrinsics.hpp;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\sm_35_atomic_functions.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\sm_35_intrinsics.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\sm_60_atomic_functions.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\sm_60_atomic_functions.hpp;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\sm_61_intrinsics.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\sm_61_intrinsics.hpp;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\surface_functions.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\surface_indirect_functions.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\surface_types.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\texture_fetch_functions.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\texture_indirect_functions.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\texture_types.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\vector_functions.h;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\vector_functions.hpp;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include\vector_types.h;C:\ProgramData\NVIDIA Corporation\OptiX SDK 7.4.0\include\internal\optix_7_device_impl.h;C:\ProgramData\NVIDIA Corporation\OptiX SDK 7.4.0\include\internal\optix_7_device_impl_exception.h;C:\ProgramData\NVIDIA Corporation\OptiX SDK 7.4.0\include\internal\optix_7_device_impl_transformations.h;C:\ProgramData\NVIDIA Corporation\OptiX SDK 7.4.0\include\optix.h;C:\ProgramData\NVIDIA Corporation\OptiX SDK 7.4.0\include\optix_7_device.h;C:\ProgramData\NVIDIA Corporation\OptiX SDK 7.4.0\include\optix_7_types.h;C:\ProgramData\NVIDIA Corporation\OptiX SDK 7.4.0\include\optix_device.h;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\cuda\helpers.h;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\cuda\random.h;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\myPathTracer\myPathTracer.h;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\sutil\Preprocessor.h;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\sutil\vec_math.h;C:\Users\PC\Desktop\Program\OptixRenderer\build\myPathTracer\CMakeFiles\myPathTracer.dir\myPathTracer_generated_myPathTracer.cu.ptx.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Users\PC\Desktop\Program\OptixRenderer\build\lib\ptx\myPathTracer_generated_myPathTracer.cu.ptx</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\myPathTracer\CMakeLists.txt">
+      <UseUtf8Encoding>Always</UseUtf8Encoding>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule C:/Users/PC/Desktop/Program/OptixRenderer/SDK/myPathTracer/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/PC/Desktop/Program/OptixRenderer/SDK -BC:/Users/PC/Desktop/Program/OptixRenderer/build --check-stamp-file C:/Users/PC/Desktop/Program/OptixRenderer/build/myPathTracer/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\PC\Desktop\Program\OptixRenderer\SDK\CMake\FindCUDA\run_nvcc.cmake;C:\Users\PC\Desktop\Program\OptixRenderer\build\myPathTracer\CMakeFiles\myPathTracer.dir\myPathTracer_generated_myPathTracer.cu.ptx.depend;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\PC\Desktop\Program\OptixRenderer\build\myPathTracer\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule C:/Users/PC/Desktop/Program/OptixRenderer/SDK/myPathTracer/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/PC/Desktop/Program/OptixRenderer/SDK -BC:/Users/PC/Desktop/Program/OptixRenderer/build --check-stamp-file C:/Users/PC/Desktop/Program/OptixRenderer/build/myPathTracer/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\PC\Desktop\Program\OptixRenderer\SDK\CMake\FindCUDA\run_nvcc.cmake;C:\Users\PC\Desktop\Program\OptixRenderer\build\myPathTracer\CMakeFiles\myPathTracer.dir\myPathTracer_generated_myPathTracer.cu.ptx.depend;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\PC\Desktop\Program\OptixRenderer\build\myPathTracer\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Building Custom Rule C:/Users/PC/Desktop/Program/OptixRenderer/SDK/myPathTracer/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/PC/Desktop/Program/OptixRenderer/SDK -BC:/Users/PC/Desktop/Program/OptixRenderer/build --check-stamp-file C:/Users/PC/Desktop/Program/OptixRenderer/build/myPathTracer/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Users\PC\Desktop\Program\OptixRenderer\SDK\CMake\FindCUDA\run_nvcc.cmake;C:\Users\PC\Desktop\Program\OptixRenderer\build\myPathTracer\CMakeFiles\myPathTracer.dir\myPathTracer_generated_myPathTracer.cu.ptx.depend;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Users\PC\Desktop\Program\OptixRenderer\build\myPathTracer\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building Custom Rule C:/Users/PC/Desktop/Program/OptixRenderer/SDK/myPathTracer/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/PC/Desktop/Program/OptixRenderer/SDK -BC:/Users/PC/Desktop/Program/OptixRenderer/build --check-stamp-file C:/Users/PC/Desktop/Program/OptixRenderer/build/myPathTracer/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Users\PC\Desktop\Program\OptixRenderer\SDK\CMake\FindCUDA\run_nvcc.cmake;C:\Users\PC\Desktop\Program\OptixRenderer\build\myPathTracer\CMakeFiles\myPathTracer.dir\myPathTracer_generated_myPathTracer.cu.ptx.depend;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Users\PC\Desktop\Program\OptixRenderer\build\myPathTracer\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\myPathTracer\myPathTracer.cpp" />
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\myPathTracer\myPathTracer.h" />
+    <ClInclude Include="debugLog.h" />
+    <ClInclude Include="image.h" />
+    <ClInclude Include="material.h" />
+    <ClInclude Include="modelLoader.h" />
+    <ClInclude Include="renderer.h" />
+    <None Include="C:\Users\PC\Desktop\Program\OptixRenderer\build\lib\ptx\myPathTracer_generated_myPathTracer.cu.ptx">
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="C:\Users\PC\Desktop\Program\OptixRenderer\build\ZERO_CHECK.vcxproj">
+      <Project>{00849498-1253-3F9D-83ED-7780FC910FD6}</Project>
+      <Name>ZERO_CHECK</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </ProjectReference>
+    <ProjectReference Include="C:\Users\PC\Desktop\Program\OptixRenderer\build\support\glad.vcxproj">
+      <Project>{45E14D93-910E-3A4A-B25C-AFB1B8A93F9C}</Project>
+      <Name>glad</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\Users\PC\Desktop\Program\OptixRenderer\build\support\GLFW\src\glfw.vcxproj">
+      <Project>{E5F2A348-C411-337C-BB3E-7AC674ACCD0F}</Project>
+      <Name>glfw</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\Users\PC\Desktop\Program\OptixRenderer\build\support\imgui\imgui.vcxproj">
+      <Project>{DE269701-2575-3974-A9BB-9DB6D6B98271}</Project>
+      <Name>imgui</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\Users\PC\Desktop\Program\OptixRenderer\build\sutil\sutil_7_sdk.vcxproj">
+      <Project>{9D388F41-E773-3196-833B-18465DC91F49}</Project>
+      <Name>sutil_7_sdk</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

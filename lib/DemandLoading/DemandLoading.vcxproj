@@ -1,0 +1,450 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
+  </PropertyGroup>
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="MinSizeRel|x64">
+      <Configuration>MinSizeRel</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="RelWithDebInfo|x64">
+      <Configuration>RelWithDebInfo</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{A6ED8402-E451-3697-A06A-B7B12B9A3BDC}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>10.0.19041.0</WindowsTargetPlatformVersion>
+    <Platform>x64</Platform>
+    <ProjectName>DemandLoading</ProjectName>
+    <VCProjectUpgraderObjectName>NoUpgrade</VCProjectUpgraderObjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\PC\Desktop\Program\OptixRenderer\build\lib\Debug\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">DemandLoading.dir\Debug\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">DemandLoading</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.lib</TargetExt>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\PC\Desktop\Program\OptixRenderer\build\lib\Release\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">DemandLoading.dir\Release\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">DemandLoading</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.lib</TargetExt>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Users\PC\Desktop\Program\OptixRenderer\build\lib\MinSizeRel\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">DemandLoading.dir\MinSizeRel\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">DemandLoading</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">.lib</TargetExt>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Users\PC\Desktop\Program\OptixRenderer\build\lib\RelWithDebInfo\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">DemandLoading.dir\RelWithDebInfo\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">DemandLoading</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">.lib</TargetExt>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\ProgramData\NVIDIA Corporation\OptiX SDK 7.4.0\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\cuda;C:\Users\PC\Desktop\Program\OptixRenderer\SDK;C:\Users\PC\Desktop\Program\OptixRenderer\build\include;C:\Users\PC\Desktop\Program\OptixRenderer\build;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\..\ImageReader\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\..\..\support;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\ImageReader\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /w34101 /w34189 /w34018 /w34389</AdditionalOptions>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4355;4996;4800</DisableSpecificWarnings>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <Optimization>Disabled</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;_USE_MATH_DEFINES;NOMINMAX;CMAKE_INTDIR="Debug"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_DEBUG;_WINDOWS;_USE_MATH_DEFINES;NOMINMAX;CMAKE_INTDIR=\"Debug\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\ProgramData\NVIDIA Corporation\OptiX SDK 7.4.0\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\cuda;C:\Users\PC\Desktop\Program\OptixRenderer\SDK;C:\Users\PC\Desktop\Program\OptixRenderer\build\include;C:\Users\PC\Desktop\Program\OptixRenderer\build;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\..\ImageReader\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\..\..\support;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\ImageReader\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\ProgramData\NVIDIA Corporation\OptiX SDK 7.4.0\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\cuda;C:\Users\PC\Desktop\Program\OptixRenderer\SDK;C:\Users\PC\Desktop\Program\OptixRenderer\build\include;C:\Users\PC\Desktop\Program\OptixRenderer\build;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\..\ImageReader\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\..\..\support;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\ImageReader\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Lib>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\ProgramData\NVIDIA Corporation\OptiX SDK 7.4.0\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\cuda;C:\Users\PC\Desktop\Program\OptixRenderer\SDK;C:\Users\PC\Desktop\Program\OptixRenderer\build\include;C:\Users\PC\Desktop\Program\OptixRenderer\build;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\..\ImageReader\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\..\..\support;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\ImageReader\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /w34101 /w34189 /w34018 /w34389</AdditionalOptions>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <DisableSpecificWarnings>4355;4996;4800</DisableSpecificWarnings>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <Optimization>Full</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;_USE_MATH_DEFINES;NOMINMAX;CMAKE_INTDIR="Release"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;_USE_MATH_DEFINES;NOMINMAX;CMAKE_INTDIR=\"Release\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\ProgramData\NVIDIA Corporation\OptiX SDK 7.4.0\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\cuda;C:\Users\PC\Desktop\Program\OptixRenderer\SDK;C:\Users\PC\Desktop\Program\OptixRenderer\build\include;C:\Users\PC\Desktop\Program\OptixRenderer\build;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\..\ImageReader\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\..\..\support;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\ImageReader\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\ProgramData\NVIDIA Corporation\OptiX SDK 7.4.0\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\cuda;C:\Users\PC\Desktop\Program\OptixRenderer\SDK;C:\Users\PC\Desktop\Program\OptixRenderer\build\include;C:\Users\PC\Desktop\Program\OptixRenderer\build;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\..\ImageReader\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\..\..\support;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\ImageReader\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Lib>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\ProgramData\NVIDIA Corporation\OptiX SDK 7.4.0\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\cuda;C:\Users\PC\Desktop\Program\OptixRenderer\SDK;C:\Users\PC\Desktop\Program\OptixRenderer\build\include;C:\Users\PC\Desktop\Program\OptixRenderer\build;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\..\ImageReader\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\..\..\support;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\ImageReader\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /w34101 /w34189 /w34018 /w34389</AdditionalOptions>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <DisableSpecificWarnings>4355;4996;4800</DisableSpecificWarnings>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <Optimization>MinSpace</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;_USE_MATH_DEFINES;NOMINMAX;CMAKE_INTDIR="MinSizeRel"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;_USE_MATH_DEFINES;NOMINMAX;CMAKE_INTDIR=\"MinSizeRel\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\ProgramData\NVIDIA Corporation\OptiX SDK 7.4.0\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\cuda;C:\Users\PC\Desktop\Program\OptixRenderer\SDK;C:\Users\PC\Desktop\Program\OptixRenderer\build\include;C:\Users\PC\Desktop\Program\OptixRenderer\build;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\..\ImageReader\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\..\..\support;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\ImageReader\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\ProgramData\NVIDIA Corporation\OptiX SDK 7.4.0\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\cuda;C:\Users\PC\Desktop\Program\OptixRenderer\SDK;C:\Users\PC\Desktop\Program\OptixRenderer\build\include;C:\Users\PC\Desktop\Program\OptixRenderer\build;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\..\ImageReader\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\..\..\support;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\ImageReader\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Lib>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\ProgramData\NVIDIA Corporation\OptiX SDK 7.4.0\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\cuda;C:\Users\PC\Desktop\Program\OptixRenderer\SDK;C:\Users\PC\Desktop\Program\OptixRenderer\build\include;C:\Users\PC\Desktop\Program\OptixRenderer\build;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\..\ImageReader\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\..\..\support;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\ImageReader\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /w34101 /w34189 /w34018 /w34389</AdditionalOptions>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4355;4996;4800</DisableSpecificWarnings>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;_USE_MATH_DEFINES;NOMINMAX;CMAKE_INTDIR="RelWithDebInfo"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;_USE_MATH_DEFINES;NOMINMAX;CMAKE_INTDIR=\"RelWithDebInfo\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\ProgramData\NVIDIA Corporation\OptiX SDK 7.4.0\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\cuda;C:\Users\PC\Desktop\Program\OptixRenderer\SDK;C:\Users\PC\Desktop\Program\OptixRenderer\build\include;C:\Users\PC\Desktop\Program\OptixRenderer\build;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\..\ImageReader\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\..\..\support;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\ImageReader\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\ProgramData\NVIDIA Corporation\OptiX SDK 7.4.0\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\cuda;C:\Users\PC\Desktop\Program\OptixRenderer\SDK;C:\Users\PC\Desktop\Program\OptixRenderer\build\include;C:\Users\PC\Desktop\Program\OptixRenderer\build;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\..\ImageReader\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\..\..\support;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\ImageReader\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Lib>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\PagingSystemKernels.cu">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building NVCC (Device) object lib/ptx/$(Configuration)/PagingSystemKernels_generated_PagingSystemKernels.cu.obj</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
+cd C:\Users\PC\Desktop\Program\OptixRenderer\build\lib\DemandLoading\CMakeFiles\PagingSystemKernels.dir
+if %errorlevel% neq 0 goto :cmEnd
+C:
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E make_directory C:/Users/PC/Desktop/Program/OptixRenderer/build/lib/ptx/$(Configuration)
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -D verbose:BOOL=OFF -D check_dependencies:BOOL=ON -D "CCBIN:PATH=$(VCInstallDir)Tools/MSVC/$(VCToolsVersion)/bin/Host$(Platform)/$(PlatformTarget)" -D build_configuration:STRING=$(ConfigurationName) -D generated_file:STRING=C:/Users/PC/Desktop/Program/OptixRenderer/build/lib/ptx/$(Configuration)/PagingSystemKernels_generated_PagingSystemKernels.cu.obj -D generated_cubin_file:STRING=C:/Users/PC/Desktop/Program/OptixRenderer/build/lib/ptx/$(Configuration)/PagingSystemKernels_generated_PagingSystemKernels.cu.obj.cubin.txt -D generated_fatbin_file:STRING=C:/Users/PC/Desktop/Program/OptixRenderer/build/lib/ptx/$(Configuration)/PagingSystemKernels_generated_PagingSystemKernels.cu.obj.fatbin.txt -P C:/Users/PC/Desktop/Program/OptixRenderer/build/lib/DemandLoading/CMakeFiles/PagingSystemKernels.dir//PagingSystemKernels_generated_PagingSystemKernels.cu.obj.cmake
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\PC\Desktop\Program\OptixRenderer\build\lib\DemandLoading\CMakeFiles\PagingSystemKernels.dir\PagingSystemKernels_generated_PagingSystemKernels.cu.obj.depend;C:\Users\PC\Desktop\Program\OptixRenderer\build\lib\DemandLoading\CMakeFiles\PagingSystemKernels.dir\PagingSystemKernels_generated_PagingSystemKernels.cu.obj.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\PC\Desktop\Program\OptixRenderer\build\lib\ptx\$(Configuration)\PagingSystemKernels_generated_PagingSystemKernels.cu.obj</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building NVCC (Device) object lib/ptx/$(Configuration)/PagingSystemKernels_generated_PagingSystemKernels.cu.obj</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
+cd C:\Users\PC\Desktop\Program\OptixRenderer\build\lib\DemandLoading\CMakeFiles\PagingSystemKernels.dir
+if %errorlevel% neq 0 goto :cmEnd
+C:
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E make_directory C:/Users/PC/Desktop/Program/OptixRenderer/build/lib/ptx/$(Configuration)
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -D verbose:BOOL=OFF -D check_dependencies:BOOL=ON -D "CCBIN:PATH=$(VCInstallDir)Tools/MSVC/$(VCToolsVersion)/bin/Host$(Platform)/$(PlatformTarget)" -D build_configuration:STRING=$(ConfigurationName) -D generated_file:STRING=C:/Users/PC/Desktop/Program/OptixRenderer/build/lib/ptx/$(Configuration)/PagingSystemKernels_generated_PagingSystemKernels.cu.obj -D generated_cubin_file:STRING=C:/Users/PC/Desktop/Program/OptixRenderer/build/lib/ptx/$(Configuration)/PagingSystemKernels_generated_PagingSystemKernels.cu.obj.cubin.txt -D generated_fatbin_file:STRING=C:/Users/PC/Desktop/Program/OptixRenderer/build/lib/ptx/$(Configuration)/PagingSystemKernels_generated_PagingSystemKernels.cu.obj.fatbin.txt -P C:/Users/PC/Desktop/Program/OptixRenderer/build/lib/DemandLoading/CMakeFiles/PagingSystemKernels.dir//PagingSystemKernels_generated_PagingSystemKernels.cu.obj.cmake
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\PC\Desktop\Program\OptixRenderer\build\lib\DemandLoading\CMakeFiles\PagingSystemKernels.dir\PagingSystemKernels_generated_PagingSystemKernels.cu.obj.depend;C:\Users\PC\Desktop\Program\OptixRenderer\build\lib\DemandLoading\CMakeFiles\PagingSystemKernels.dir\PagingSystemKernels_generated_PagingSystemKernels.cu.obj.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\PC\Desktop\Program\OptixRenderer\build\lib\ptx\$(Configuration)\PagingSystemKernels_generated_PagingSystemKernels.cu.obj</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Building NVCC (Device) object lib/ptx/$(Configuration)/PagingSystemKernels_generated_PagingSystemKernels.cu.obj</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
+cd C:\Users\PC\Desktop\Program\OptixRenderer\build\lib\DemandLoading\CMakeFiles\PagingSystemKernels.dir
+if %errorlevel% neq 0 goto :cmEnd
+C:
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E make_directory C:/Users/PC/Desktop/Program/OptixRenderer/build/lib/ptx/$(Configuration)
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -D verbose:BOOL=OFF -D check_dependencies:BOOL=ON -D "CCBIN:PATH=$(VCInstallDir)Tools/MSVC/$(VCToolsVersion)/bin/Host$(Platform)/$(PlatformTarget)" -D build_configuration:STRING=$(ConfigurationName) -D generated_file:STRING=C:/Users/PC/Desktop/Program/OptixRenderer/build/lib/ptx/$(Configuration)/PagingSystemKernels_generated_PagingSystemKernels.cu.obj -D generated_cubin_file:STRING=C:/Users/PC/Desktop/Program/OptixRenderer/build/lib/ptx/$(Configuration)/PagingSystemKernels_generated_PagingSystemKernels.cu.obj.cubin.txt -D generated_fatbin_file:STRING=C:/Users/PC/Desktop/Program/OptixRenderer/build/lib/ptx/$(Configuration)/PagingSystemKernels_generated_PagingSystemKernels.cu.obj.fatbin.txt -P C:/Users/PC/Desktop/Program/OptixRenderer/build/lib/DemandLoading/CMakeFiles/PagingSystemKernels.dir//PagingSystemKernels_generated_PagingSystemKernels.cu.obj.cmake
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Users\PC\Desktop\Program\OptixRenderer\build\lib\DemandLoading\CMakeFiles\PagingSystemKernels.dir\PagingSystemKernels_generated_PagingSystemKernels.cu.obj.depend;C:\Users\PC\Desktop\Program\OptixRenderer\build\lib\DemandLoading\CMakeFiles\PagingSystemKernels.dir\PagingSystemKernels_generated_PagingSystemKernels.cu.obj.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Users\PC\Desktop\Program\OptixRenderer\build\lib\ptx\$(Configuration)\PagingSystemKernels_generated_PagingSystemKernels.cu.obj</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building NVCC (Device) object lib/ptx/$(Configuration)/PagingSystemKernels_generated_PagingSystemKernels.cu.obj</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
+cd C:\Users\PC\Desktop\Program\OptixRenderer\build\lib\DemandLoading\CMakeFiles\PagingSystemKernels.dir
+if %errorlevel% neq 0 goto :cmEnd
+C:
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E make_directory C:/Users/PC/Desktop/Program/OptixRenderer/build/lib/ptx/$(Configuration)
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -D verbose:BOOL=OFF -D check_dependencies:BOOL=ON -D "CCBIN:PATH=$(VCInstallDir)Tools/MSVC/$(VCToolsVersion)/bin/Host$(Platform)/$(PlatformTarget)" -D build_configuration:STRING=$(ConfigurationName) -D generated_file:STRING=C:/Users/PC/Desktop/Program/OptixRenderer/build/lib/ptx/$(Configuration)/PagingSystemKernels_generated_PagingSystemKernels.cu.obj -D generated_cubin_file:STRING=C:/Users/PC/Desktop/Program/OptixRenderer/build/lib/ptx/$(Configuration)/PagingSystemKernels_generated_PagingSystemKernels.cu.obj.cubin.txt -D generated_fatbin_file:STRING=C:/Users/PC/Desktop/Program/OptixRenderer/build/lib/ptx/$(Configuration)/PagingSystemKernels_generated_PagingSystemKernels.cu.obj.fatbin.txt -P C:/Users/PC/Desktop/Program/OptixRenderer/build/lib/DemandLoading/CMakeFiles/PagingSystemKernels.dir//PagingSystemKernels_generated_PagingSystemKernels.cu.obj.cmake
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Users\PC\Desktop\Program\OptixRenderer\build\lib\DemandLoading\CMakeFiles\PagingSystemKernels.dir\PagingSystemKernels_generated_PagingSystemKernels.cu.obj.depend;C:\Users\PC\Desktop\Program\OptixRenderer\build\lib\DemandLoading\CMakeFiles\PagingSystemKernels.dir\PagingSystemKernels_generated_PagingSystemKernels.cu.obj.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Users\PC\Desktop\Program\OptixRenderer\build\lib\ptx\$(Configuration)\PagingSystemKernels_generated_PagingSystemKernels.cu.obj</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\CMakeLists.txt">
+      <UseUtf8Encoding>Always</UseUtf8Encoding>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule C:/Users/PC/Desktop/Program/OptixRenderer/SDK/lib/DemandLoading/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/PC/Desktop/Program/OptixRenderer/SDK -BC:/Users/PC/Desktop/Program/OptixRenderer/build --check-stamp-file C:/Users/PC/Desktop/Program/OptixRenderer/build/lib/DemandLoading/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\PC\Desktop\Program\OptixRenderer\SDK\CMake\FindCUDA\run_nvcc.cmake;C:\Users\PC\Desktop\Program\OptixRenderer\build\lib\DemandLoading\CMakeFiles\PagingSystemKernels.dir\PagingSystemKernels_generated_PagingSystemKernels.cu.obj.depend;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\PC\Desktop\Program\OptixRenderer\build\lib\DemandLoading\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule C:/Users/PC/Desktop/Program/OptixRenderer/SDK/lib/DemandLoading/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/PC/Desktop/Program/OptixRenderer/SDK -BC:/Users/PC/Desktop/Program/OptixRenderer/build --check-stamp-file C:/Users/PC/Desktop/Program/OptixRenderer/build/lib/DemandLoading/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\PC\Desktop\Program\OptixRenderer\SDK\CMake\FindCUDA\run_nvcc.cmake;C:\Users\PC\Desktop\Program\OptixRenderer\build\lib\DemandLoading\CMakeFiles\PagingSystemKernels.dir\PagingSystemKernels_generated_PagingSystemKernels.cu.obj.depend;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\PC\Desktop\Program\OptixRenderer\build\lib\DemandLoading\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Building Custom Rule C:/Users/PC/Desktop/Program/OptixRenderer/SDK/lib/DemandLoading/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/PC/Desktop/Program/OptixRenderer/SDK -BC:/Users/PC/Desktop/Program/OptixRenderer/build --check-stamp-file C:/Users/PC/Desktop/Program/OptixRenderer/build/lib/DemandLoading/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Users\PC\Desktop\Program\OptixRenderer\SDK\CMake\FindCUDA\run_nvcc.cmake;C:\Users\PC\Desktop\Program\OptixRenderer\build\lib\DemandLoading\CMakeFiles\PagingSystemKernels.dir\PagingSystemKernels_generated_PagingSystemKernels.cu.obj.depend;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Users\PC\Desktop\Program\OptixRenderer\build\lib\DemandLoading\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building Custom Rule C:/Users/PC/Desktop/Program/OptixRenderer/SDK/lib/DemandLoading/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/PC/Desktop/Program/OptixRenderer/SDK -BC:/Users/PC/Desktop/Program/OptixRenderer/build --check-stamp-file C:/Users/PC/Desktop/Program/OptixRenderer/build/lib/DemandLoading/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Users\PC\Desktop\Program\OptixRenderer\SDK\CMake\FindCUDA\run_nvcc.cmake;C:\Users\PC\Desktop\Program\OptixRenderer\build\lib\DemandLoading\CMakeFiles\PagingSystemKernels.dir\PagingSystemKernels_generated_PagingSystemKernels.cu.obj.depend;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Users\PC\Desktop\Program\OptixRenderer\build\lib\DemandLoading\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\DemandLoaderImpl.cpp" />
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\DemandLoaderImpl.h" />
+    <ClCompile Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\DeviceContextImpl.cpp" />
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\DeviceContextImpl.h" />
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\PageMappingsContext.h" />
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\PageTableManager.h" />
+    <ClCompile Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\PagingSystem.cpp" />
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\PagingSystem.h" />
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\PagingSystemKernels.h" />
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\RequestContext.h" />
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\RequestHandler.h" />
+    <ClCompile Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\RequestProcessor.cpp" />
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\RequestProcessor.h" />
+    <ClCompile Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\RequestQueue.cpp" />
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\RequestQueue.h" />
+    <ClCompile Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\ResourceRequestHandler.cpp" />
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\ResourceRequestHandler.h" />
+    <ClCompile Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\Ticket.cpp" />
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\TicketImpl.h" />
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\include\DemandLoading\DemandLoader.h" />
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\include\DemandLoading\DemandTexture.h" />
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\include\DemandLoading\DeviceContext.h" />
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\include\DemandLoading\Options.h" />
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\include\DemandLoading\Resource.h" />
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\include\DemandLoading\Statistics.h" />
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\include\DemandLoading\Texture2D.h" />
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\include\DemandLoading\Texture2DExtended.h" />
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\include\DemandLoading\TextureDescriptor.h" />
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\include\DemandLoading\TextureSampler.h" />
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\include\DemandLoading\Ticket.h" />
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\include\DemandLoading\TileIndexing.h" />
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\Memory\Allocators.h" />
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\Memory\AsyncItemPool.h" />
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\Memory\Buffers.h" />
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\Memory\BulkMemory.h" />
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\Memory\BulkPinnedItemPool.h" />
+    <ClCompile Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\Memory\DeviceContextPool.cpp" />
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\Memory\DeviceContextPool.h" />
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\Memory\DeviceMemoryManager.h" />
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\Memory\EventPool.h" />
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\Memory\FixedPool.h" />
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\Memory\ItemPool.h" />
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\Memory\PinnedItemPool.h" />
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\Memory\PinnedMemoryManager.h" />
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\Memory\PinnedRequestContextPool.h" />
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\Memory\SamplerPool.h" />
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\Memory\TileArena.h" />
+    <ClCompile Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\Memory\TilePool.cpp" />
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\Memory\TilePool.h" />
+    <ClCompile Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\Textures\BaseColorRequestHandler.cpp" />
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\Textures\BaseColorRequestHandler.h" />
+    <ClCompile Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\Textures\DemandTextureImpl.cpp" />
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\Textures\DemandTextureImpl.h" />
+    <ClCompile Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\Textures\DenseTexture.cpp" />
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\Textures\DenseTexture.h" />
+    <ClCompile Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\Textures\SamplerRequestHandler.cpp" />
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\Textures\SamplerRequestHandler.h" />
+    <ClCompile Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\Textures\SparseTexture.cpp" />
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\Textures\SparseTexture.h" />
+    <ClCompile Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\Textures\TextureRequestHandler.cpp" />
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\Textures\TextureRequestHandler.h" />
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\Util\CudaCallback.h" />
+    <ClCompile Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\Util\DeviceSet.cpp" />
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\Util\DeviceSet.h" />
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\Util\Exception.h" />
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\Util\Math.h" />
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\Util\MutexArray.h" />
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\Util\NVTXProfiling.h" />
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\Util\Stopwatch.h" />
+    <ClCompile Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\Util\TraceFile.cpp" />
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\Util\TraceFile.h" />
+    <Object Include="C:\Users\PC\Desktop\Program\OptixRenderer\build\lib\ptx\$(Configuration)\PagingSystemKernels_generated_PagingSystemKernels.cu.obj" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="C:\Users\PC\Desktop\Program\OptixRenderer\build\ZERO_CHECK.vcxproj">
+      <Project>{00849498-1253-3F9D-83ED-7780FC910FD6}</Project>
+      <Name>ZERO_CHECK</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </ProjectReference>
+    <ProjectReference Include="C:\Users\PC\Desktop\Program\OptixRenderer\build\lib\ImageReader\ImageReader.vcxproj">
+      <Project>{484C658D-DCBA-3D53-A5A1-6152338491C4}</Project>
+      <Name>ImageReader</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

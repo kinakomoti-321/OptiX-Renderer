@@ -1,0 +1,5 @@
+# CMake generation dependency list for this directory.
+C:/Users/PC/Desktop/Program/OptixRenderer/SDK/CMake/FindCUDA/run_nvcc.cmake
+C:/Users/PC/Desktop/Program/OptixRenderer/SDK/sutil/CMakeLists.txt
+C:/Users/PC/Desktop/Program/OptixRenderer/build/sutil/CMakeFiles/cuda_compile_ptx.dir/__/cuda/cuda_compile_ptx_generated_sphere.cu.ptx.depend
+C:/Users/PC/Desktop/Program/OptixRenderer/build/sutil/CMakeFiles/cuda_compile_ptx.dir/__/cuda/cuda_compile_ptx_generated_whitted.cu.ptx.depend

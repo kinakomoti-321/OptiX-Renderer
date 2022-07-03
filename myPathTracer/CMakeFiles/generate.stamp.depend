@@ -1,0 +1,4 @@
+# CMake generation dependency list for this directory.
+C:/Users/PC/Desktop/Program/OptixRenderer/SDK/CMake/FindCUDA/run_nvcc.cmake
+C:/Users/PC/Desktop/Program/OptixRenderer/SDK/myPathTracer/CMakeLists.txt
+C:/Users/PC/Desktop/Program/OptixRenderer/build/myPathTracer/CMakeFiles/myPathTracer.dir/myPathTracer_generated_myPathTracer.cu.ptx.depend

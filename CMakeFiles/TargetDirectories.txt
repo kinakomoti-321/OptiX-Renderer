@@ -1,0 +1,10 @@
+C:/Users/PC/Desktop/Program/OptixRenderer/build/CMakeFiles/ALL_BUILD.dir
+C:/Users/PC/Desktop/Program/OptixRenderer/build/CMakeFiles/ZERO_CHECK.dir
+C:/Users/PC/Desktop/Program/OptixRenderer/build/myPathTracer/CMakeFiles/myPathTracer.dir
+C:/Users/PC/Desktop/Program/OptixRenderer/build/sutil/CMakeFiles/sutil_7_sdk.dir
+C:/Users/PC/Desktop/Program/OptixRenderer/build/lib/DemandLoading/CMakeFiles/DemandLoading.dir
+C:/Users/PC/Desktop/Program/OptixRenderer/build/lib/ImageReader/CMakeFiles/ImageReader.dir
+C:/Users/PC/Desktop/Program/OptixRenderer/build/support/CMakeFiles/glad.dir
+C:/Users/PC/Desktop/Program/OptixRenderer/build/support/GLFW/CMakeFiles/ALL_BUILD.dir
+C:/Users/PC/Desktop/Program/OptixRenderer/build/support/GLFW/src/CMakeFiles/glfw.dir
+C:/Users/PC/Desktop/Program/OptixRenderer/build/support/imgui/CMakeFiles/imgui.dir

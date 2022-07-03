@@ -1,0 +1,245 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\DemandLoaderImpl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\DeviceContextImpl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\PagingSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\RequestProcessor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\RequestQueue.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\ResourceRequestHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\Ticket.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\Memory\DeviceContextPool.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\Memory\TilePool.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\Textures\BaseColorRequestHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\Textures\DemandTextureImpl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\Textures\DenseTexture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\Textures\SamplerRequestHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\Textures\SparseTexture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\Textures\TextureRequestHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\Util\DeviceSet.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\Util\TraceFile.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\DemandLoaderImpl.h">
+      <Filter>Header Files\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\DeviceContextImpl.h">
+      <Filter>Header Files\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\PageMappingsContext.h">
+      <Filter>Header Files\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\PageTableManager.h">
+      <Filter>Header Files\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\PagingSystem.h">
+      <Filter>Header Files\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\PagingSystemKernels.h">
+      <Filter>Header Files\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\RequestContext.h">
+      <Filter>Header Files\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\RequestHandler.h">
+      <Filter>Header Files\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\RequestProcessor.h">
+      <Filter>Header Files\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\RequestQueue.h">
+      <Filter>Header Files\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\ResourceRequestHandler.h">
+      <Filter>Header Files\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\TicketImpl.h">
+      <Filter>Header Files\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\include\DemandLoading\DemandLoader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\include\DemandLoading\DemandTexture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\include\DemandLoading\DeviceContext.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\include\DemandLoading\Options.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\include\DemandLoading\Resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\include\DemandLoading\Statistics.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\include\DemandLoading\Texture2D.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\include\DemandLoading\Texture2DExtended.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\include\DemandLoading\TextureDescriptor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\include\DemandLoading\TextureSampler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\include\DemandLoading\Ticket.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\include\DemandLoading\TileIndexing.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\Memory\Allocators.h">
+      <Filter>Header Files\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\Memory\AsyncItemPool.h">
+      <Filter>Header Files\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\Memory\Buffers.h">
+      <Filter>Header Files\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\Memory\BulkMemory.h">
+      <Filter>Header Files\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\Memory\BulkPinnedItemPool.h">
+      <Filter>Header Files\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\Memory\DeviceContextPool.h">
+      <Filter>Header Files\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\Memory\DeviceMemoryManager.h">
+      <Filter>Header Files\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\Memory\EventPool.h">
+      <Filter>Header Files\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\Memory\FixedPool.h">
+      <Filter>Header Files\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\Memory\ItemPool.h">
+      <Filter>Header Files\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\Memory\PinnedItemPool.h">
+      <Filter>Header Files\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\Memory\PinnedMemoryManager.h">
+      <Filter>Header Files\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\Memory\PinnedRequestContextPool.h">
+      <Filter>Header Files\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\Memory\SamplerPool.h">
+      <Filter>Header Files\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\Memory\TileArena.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\Memory\TilePool.h">
+      <Filter>Header Files\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\Textures\BaseColorRequestHandler.h">
+      <Filter>Header Files\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\Textures\DemandTextureImpl.h">
+      <Filter>Header Files\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\Textures\DenseTexture.h">
+      <Filter>Header Files\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\Textures\SamplerRequestHandler.h">
+      <Filter>Header Files\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\Textures\SparseTexture.h">
+      <Filter>Header Files\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\Textures\TextureRequestHandler.h">
+      <Filter>Header Files\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\Util\CudaCallback.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\Util\DeviceSet.h">
+      <Filter>Header Files\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\Util\Exception.h">
+      <Filter>Header Files\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\Util\Math.h">
+      <Filter>Header Files\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\Util\MutexArray.h">
+      <Filter>Header Files\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\Util\NVTXProfiling.h">
+      <Filter>Header Files\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\Util\Stopwatch.h">
+      <Filter>Header Files\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\Util\TraceFile.h">
+      <Filter>Header Files\Implementation</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\PagingSystemKernels.cu">
+      <Filter>Source Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\lib\DemandLoading\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Object Include="C:\Users\PC\Desktop\Program\OptixRenderer\build\lib\ptx\$(Configuration)\PagingSystemKernels_generated_PagingSystemKernels.cu.obj">
+      <Filter>Object Files</Filter>
+    </Object>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{BAFFAA8E-F16D-36B9-B1C6-3292F317616D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Implementation">
+      <UniqueIdentifier>{9D596E02-7E82-3C01-A986-A68BAA29B1A8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object Files">
+      <UniqueIdentifier>{60E6213A-17EC-364B-8206-C9B544616341}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{A0D611AB-5C00-37AE-9A3F-B9C5DA882C0D}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

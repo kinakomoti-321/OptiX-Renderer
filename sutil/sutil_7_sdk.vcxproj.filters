@@ -1,0 +1,125 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\sutil\Camera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\sutil\GLDisplay.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\sutil\PPMLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\sutil\Scene.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\sutil\sutil.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\sutil\Trackball.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\build\sampleConfig.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\cuda\BufferView.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\cuda\GeometryData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\cuda\Light.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\cuda\LocalGeometry.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\cuda\MaterialData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\cuda\util.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\cuda\helpers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\sutil\Aabb.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\sutil\Camera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\sutil\CUDAOutputBuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\sutil\Exception.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\sutil\GLDisplay.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\sutil\Matrix.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\sutil\PPMLoader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\sutil\Preprocessor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\sutil\Quaternion.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\sutil\Record.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\sutil\Scene.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\sutil\sutilapi.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\sutil\sutil.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\sutil\Trackball.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\sutil\vec_math.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\cuda\sphere.cu">
+      <Filter>CUDA Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\cuda\whitted.cu">
+      <Filter>CUDA Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\sutil\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="C:\Users\PC\Desktop\Program\OptixRenderer\build\lib\ptx\cuda_compile_ptx_generated_sphere.cu.ptx">
+      <Filter>PTX Files</Filter>
+    </None>
+    <None Include="C:\Users\PC\Desktop\Program\OptixRenderer\build\lib\ptx\cuda_compile_ptx_generated_whitted.cu.ptx">
+      <Filter>PTX Files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CUDA Files">
+      <UniqueIdentifier>{E1EA3AB5-A20A-37A1-A590-D500D87444BC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{BAFFAA8E-F16D-36B9-B1C6-3292F317616D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PTX Files">
+      <UniqueIdentifier>{358E43FB-363F-3A75-A8D3-05A9A043F717}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{A0D611AB-5C00-37AE-9A3F-B9C5DA882C0D}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
