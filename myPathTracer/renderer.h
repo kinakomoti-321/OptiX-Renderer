@@ -5,7 +5,6 @@
 #include <optix_stack_size.h>
 #include <optix_stubs.h>
 
-
 #include <cuda_runtime.h>
 
 #include <sampleConfig.h>
@@ -26,8 +25,14 @@
 #include <myPathTracer/myPathTracer.h>
 #include <myPathTracer/debugLog.h>
 #include <myPathTracer/material.h>
+#include <myPathTracer/texture.h>
 
 
+struct CameraStatus {
+	float3 origin;
+	float3 direciton;
+	float f;
+};
 template <typename T>
 struct SbtRecord
 {
@@ -42,9 +47,9 @@ typedef SbtRecord<HitGroupData>   HitGroupSbtRecord;
 
 void configureCamera(sutil::Camera& cam, const uint32_t width, const uint32_t height)
 {
-	cam.setEye({ 0.0f, 0.0f, 5.0f });
+	cam.setEye({ 5.0f, 0.0f, 0.0f });
 	cam.setLookat({ 0.0f, 0.0f, 0.0f });
-	cam.setUp({ 0.0f, 1.0f, 3.0f });
+	cam.setUp({ 0.0f, 1.0f, 0.0f });
 	cam.setFovY(45.0f);
 	cam.setAspectRatio((float)width / (float)height);
 }
@@ -66,59 +71,6 @@ static void context_log_cb(unsigned int level, const char* tag, const char* mess
 		<< message << "\n";
 }
 
-static void addBox(std::vector<float3>& vert) {
-	//Bottom
-	vert.push_back({ 1.0f,-1.0f,1.0f });
-	vert.push_back({ 1.0f,-1.0f,-1.0f });
-	vert.push_back({ -1.0f,-1.0f,-1.0f });
-	vert.push_back({ 1.0f,-1.0f,1.0f });
-	vert.push_back({ -1.0f,-1.0f,-1.0f });
-	vert.push_back({ -1.0f,-1.0f,1.0f });
-
-	//Top
-	vert.push_back({ 1.0f,1.0f,1.0f });
-	vert.push_back({ 1.0f,1.0f,-1.0f });
-	vert.push_back({ -1.0f,1.0f,-1.0f });
-	vert.push_back({ 1.0f,1.0f,1.0f });
-	vert.push_back({ -1.0f,1.0f,-1.0f });
-	vert.push_back({ -1.0f,1.0f,1.0f });
-
-	//Left
-	vert.push_back({ -1.0f,1.0f,1.0f });
-	vert.push_back({ -1.0f,-1.0f,1.0f });
-	vert.push_back({ -1.0f,-1.0f,-1.0f });
-	vert.push_back({ -1.0f,1.0f,1.0f });
-	vert.push_back({ -1.0f,-1.0f,-1.0f });
-	vert.push_back({ -1.0f,1.0f,-1.0f });
-
-	//Right
-	vert.push_back({ 1.0f,1.0f,1.0f });
-	vert.push_back({ 1.0f,-1.0f,1.0f });
-	vert.push_back({ 1.0f,-1.0f,-1.0f });
-	vert.push_back({ 1.0f,1.0f,1.0f });
-	vert.push_back({ 1.0f,-1.0f,-1.0f });
-	vert.push_back({ 1.0f,1.0f,-1.0f });
-
-	//Back
-	vert.push_back({ -1.0f,1.0f,-1.0f });
-	vert.push_back({ -1.0f,-1.0f,-1.0f });
-	vert.push_back({ 1.0f,-1.0f,-1.0f });
-	vert.push_back({ -1.0f,1.0f,-1.0f });
-	vert.push_back({ 1.0f,-1.0f,-1.0f });
-	vert.push_back({ 1.0f,1.0f,-1.0f });
-
-
-	//Light
-	vert.push_back({ 0.5f,0.99f,0.5f });
-	vert.push_back({ 0.5f,.99f,-0.5f });
-	vert.push_back({ -0.5f,.99f,-0.5f });
-	vert.push_back({ 0.5f,.99f,0.5f });
-	vert.push_back({ -0.5f,.99f,-0.5f });
-	vert.push_back({ -0.5f,.99f,0.5f });
-}
-
-
-const unsigned int MAT_COUNT = 4;
 
 struct RendererState {
 	//Frame�Ȃǂ̊Ǘ�
@@ -127,13 +79,15 @@ struct RendererState {
 struct RenderData {
 	CUdeviceptr d_vertex = 0;
 	CUdeviceptr d_normal = 0;
-	CUdeviceptr d_uv = 0;
+	CUdeviceptr d_texcoord = 0;
+	CUdeviceptr d_textures = 0;
 
 	RenderData() {}
 	~RenderData() {
 		CUDA_CHECK(cudaFree(reinterpret_cast<void*>(d_vertex)));
 		CUDA_CHECK(cudaFree(reinterpret_cast<void*>(d_normal)));
-		CUDA_CHECK(cudaFree(reinterpret_cast<void*>(d_uv)));
+		CUDA_CHECK(cudaFree(reinterpret_cast<void*>(d_texcoord)));
+		CUDA_CHECK(cudaFree(reinterpret_cast<void*>(d_textures)));
 	}
 };
 
@@ -141,9 +95,14 @@ struct SceneData {
 	std::vector<float3> vertices;
 	std::vector<float3> normal;
 	std::vector<float2> uv;
-	std::vector<unsigned int> material_index;
+	std::vector<unsigned int> index;
+
 	std::vector<Material> material;
-	
+	std::vector<unsigned int> material_index;
+
+	std::vector<std::shared_ptr<Texture>> textures;
+	std::vector<int> texture_index;
+
 
 	float3 backGround;
 };
@@ -167,11 +126,13 @@ private:
 
 	OptixShaderBindingTable sbt = {};
 
+	std::vector<cudaArray_t> textureArrays;
+	std::vector<cudaTextureObject_t> textureObjects;
+
 	SceneData sceneData;
 	RenderData renderData;
 
 	unsigned int width, height;
-	std::string filename;
 
 	char log[2048]; // For error reporting from OptiX creation functions
 
@@ -219,21 +180,20 @@ private:
 			cudaMemcpyHostToDevice
 		));
 
+		//the number of flags is equal to the number of Material
+		std::vector<uint32_t> triangle_input_flags;
+		triangle_input_flags.resize(sceneData.material.size());
+		for (int i = 0; i < triangle_input_flags.size(); i++) {
+			triangle_input_flags[i] = OPTIX_GEOMETRY_FLAG_DISABLE_ANYHIT;
+		}
 
-		// Our build input is a simple list of non-indexed triangle vertices
-		const uint32_t triangle_input_flags[4] = {
-			OPTIX_GEOMETRY_FLAG_DISABLE_ANYHIT,
-			OPTIX_GEOMETRY_FLAG_DISABLE_ANYHIT,
-			OPTIX_GEOMETRY_FLAG_DISABLE_ANYHIT,
-			OPTIX_GEOMETRY_FLAG_DISABLE_ANYHIT
-		};
 		OptixBuildInput triangle_input = {};
 		triangle_input.type = OPTIX_BUILD_INPUT_TYPE_TRIANGLES;
 		triangle_input.triangleArray.vertexFormat = OPTIX_VERTEX_FORMAT_FLOAT3;
 		triangle_input.triangleArray.numVertices = static_cast<uint32_t>(sceneData.vertices.size());
 		triangle_input.triangleArray.vertexBuffers = &d_vertices;
-		triangle_input.triangleArray.flags = triangle_input_flags;
-		triangle_input.triangleArray.numSbtRecords = MAT_COUNT;
+		triangle_input.triangleArray.flags = triangle_input_flags.data();
+		triangle_input.triangleArray.numSbtRecords = sceneData.material.size();
 		triangle_input.triangleArray.sbtIndexOffsetBuffer = d_material;
 		triangle_input.triangleArray.sbtIndexOffsetSizeInBytes = sizeof(uint32_t);
 		triangle_input.triangleArray.sbtIndexOffsetStrideInBytes = sizeof(uint32_t);
@@ -277,7 +237,31 @@ private:
 		//CUDA_CHECK(cudaFree(reinterpret_cast<void*>(d_vertices)));
 		CUDA_CHECK(cudaFree(reinterpret_cast<void*>(d_material)));
 
+
+		const size_t normals_size = sizeof(float3) * sceneData.normal.size();
+		CUdeviceptr d_normals = 0;
+		CUDA_CHECK(cudaMalloc(reinterpret_cast<void**>(&d_normals), normals_size));
+		CUDA_CHECK(cudaMemcpy(
+			reinterpret_cast<void*>(d_normals),
+			sceneData.normal.data(),
+			normals_size,
+			cudaMemcpyHostToDevice
+		));
+
+		const size_t texcoords_size = sizeof(float2) * sceneData.uv.size();
+		CUdeviceptr d_texcoords = 0;
+		CUDA_CHECK(cudaMalloc(reinterpret_cast<void**>(&d_texcoords), texcoords_size));
+		CUDA_CHECK(cudaMemcpy(
+			reinterpret_cast<void*>(d_texcoords),
+			sceneData.uv.data(),
+			texcoords_size,
+			cudaMemcpyHostToDevice
+		));
+
+
 		renderData.d_vertex = d_vertices;
+		renderData.d_normal = d_normals;
+		renderData.d_texcoord = d_texcoords;
 	}
 
 	void moduleInit() {
@@ -443,20 +427,7 @@ private:
 			cudaMemcpyHostToDevice
 		));
 
-		/*
-		CUdeviceptr hitgroup_record;
-		size_t      hitgroup_record_size = sizeof(HitGroupSbtRecord);
-		CUDA_CHECK(cudaMalloc(reinterpret_cast<void**>(&hitgroup_record), hitgroup_record_size));
-		HitGroupSbtRecord hg_sbt;
-		OPTIX_CHECK(optixSbtRecordPackHeader(hitgroup_prog_group, &hg_sbt));
-		CUDA_CHECK(cudaMemcpy(
-			reinterpret_cast<void*>(hitgroup_record),
-			&hg_sbt,
-			hitgroup_record_size,
-			cudaMemcpyHostToDevice
-		));
-		*/
-
+		unsigned int MAT_COUNT = sceneData.material.size();
 		CUdeviceptr d_hitgroup_records;
 		const size_t hitgroup_record_size = sizeof(HitGroupSbtRecord);
 		CUDA_CHECK(cudaMalloc(
@@ -464,28 +435,103 @@ private:
 			hitgroup_record_size * MAT_COUNT * RAY_TYPE
 		));
 
-		HitGroupSbtRecord hitgroup_record[RAY_TYPE * MAT_COUNT];
+		std::vector<HitGroupSbtRecord> hitgroup_record;
+		hitgroup_record.resize(MAT_COUNT * RAY_TYPE);
 		for (int i = 0; i < sceneData.material.size(); ++i) {
 			{
-
 				const int sbt_idx = i * RAY_TYPE;
 				OPTIX_CHECK(optixSbtRecordPackHeader(hitgroup_prog_group, &hitgroup_record[sbt_idx]));
+
+				Log::DebugLog(sceneData.material[i].material_name + " creating...");
+					
+				//Diffuse	
+				hitgroup_record[sbt_idx].data.diffuse = sceneData.material[i].base_color;
+				hitgroup_record[sbt_idx].data.diffuse_texID = sceneData.material[i].base_color_tex;
+				
+				//Specular
+				hitgroup_record[sbt_idx].data.specular = sceneData.material[i].specular;
+				hitgroup_record[sbt_idx].data.specular_texID = sceneData.material[i].specular_tex;
+
+				//Roughness
+				hitgroup_record[sbt_idx].data.roughness = sceneData.material[i].roughness;
+				hitgroup_record[sbt_idx].data.roughness_texID = sceneData.material[i].roughness_tex;
+
+				//Metallic
+				hitgroup_record[sbt_idx].data.metallic = sceneData.material[i].metallic;
+				hitgroup_record[sbt_idx].data.metallic_texID = sceneData.material[i].metallic_tex;
+
+				//Sheen
+				hitgroup_record[sbt_idx].data.sheen = sceneData.material[i].sheen;
+				hitgroup_record[sbt_idx].data.sheen_texID = sceneData.material[i].sheen_tex;
+
+				//IOR
+				hitgroup_record[sbt_idx].data.ior = sceneData.material[i].ior;
+
+				//NormalMap
+				hitgroup_record[sbt_idx].data.normalmap_texID = sceneData.material[i].normal_tex;
+
+				//BumpMap
+				hitgroup_record[sbt_idx].data.bumpmap_texID = sceneData.material[i].bump_tex;
+
+				//Emmision
 				hitgroup_record[sbt_idx].data.emission_color = sceneData.material[i].emmision_color;
-				hitgroup_record[sbt_idx].data.base_color = sceneData.material[i].base_color;
-				hitgroup_record[sbt_idx].data.vertices = reinterpret_cast<float3*>(renderData.d_vertex);
+				hitgroup_record[sbt_idx].data.emission_texID = sceneData.material[i].emmision_color_tex;
+
+				//Ideal Specular
+				hitgroup_record[sbt_idx].data.is_idealSpecular = sceneData.material[i].ideal_specular;
+
+				//Materila ID
+				hitgroup_record[sbt_idx].data.MaterialID = i;
 			}
 
 			{
-
 				const int sbt_idx = i * RAY_TYPE + 1;
 				memset(&hitgroup_record[sbt_idx], 0, hitgroup_record_size);
 				OPTIX_CHECK(optixSbtRecordPackHeader(hitgroup_prog_occulusion, &hitgroup_record[sbt_idx]));
+				//Diffuse	
+				hitgroup_record[sbt_idx].data.diffuse = sceneData.material[i].base_color;
+				hitgroup_record[sbt_idx].data.diffuse_texID = sceneData.material[i].base_color_tex;
+				
+				//Specular
+				hitgroup_record[sbt_idx].data.specular = sceneData.material[i].specular;
+				hitgroup_record[sbt_idx].data.specular_texID = sceneData.material[i].specular_tex;
+
+				//Roughness
+				hitgroup_record[sbt_idx].data.roughness = sceneData.material[i].roughness;
+				hitgroup_record[sbt_idx].data.roughness_texID = sceneData.material[i].roughness_tex;
+
+				//Metallic
+				hitgroup_record[sbt_idx].data.metallic = sceneData.material[i].metallic;
+				hitgroup_record[sbt_idx].data.metallic_texID = sceneData.material[i].metallic_tex;
+
+				//Sheen
+				hitgroup_record[sbt_idx].data.sheen = sceneData.material[i].sheen;
+				hitgroup_record[sbt_idx].data.sheen_texID = sceneData.material[i].sheen_tex;
+
+				//IOR
+				hitgroup_record[sbt_idx].data.ior = sceneData.material[i].ior;
+
+				//NormalMap
+				hitgroup_record[sbt_idx].data.normalmap_texID = sceneData.material[i].normal_tex;
+
+				//BumpMap
+				hitgroup_record[sbt_idx].data.bumpmap_texID = sceneData.material[i].bump_tex;
+
+				//Emmision
+				hitgroup_record[sbt_idx].data.emission_color = sceneData.material[i].emmision_color;
+				hitgroup_record[sbt_idx].data.emission_texID = sceneData.material[i].emmision_color_tex;
+
+				//Ideal Specular
+				hitgroup_record[sbt_idx].data.is_idealSpecular = sceneData.material[i].ideal_specular;
+
+				//Materila ID
+				hitgroup_record[sbt_idx].data.MaterialID = i;
 			}
 		}
 
 		CUDA_CHECK(cudaMemcpy(
 			reinterpret_cast<void*>(d_hitgroup_records),
-			hitgroup_record,
+			hitgroup_record.data(),
 			hitgroup_record_size * MAT_COUNT * RAY_TYPE,
 			cudaMemcpyHostToDevice
 		));
@@ -498,9 +544,72 @@ private:
 		sbt.hitgroupRecordStrideInBytes = static_cast<uint32_t>(hitgroup_record_size);
 		sbt.hitgroupRecordCount = RAY_TYPE * MAT_COUNT;
 	}
+
+	void textureBind() {
+		int numTextures = (int)sceneData.textures.size();
+
+		textureArrays.resize(numTextures);
+		textureObjects.resize(numTextures);
+
+		for (int textureID = 0; textureID < numTextures; textureID++) {
+			auto texture = sceneData.textures[textureID];
+			Log::DebugLog("Texture : " + texture->tex_name + ", Texture ID : ", textureID);
+			cudaResourceDesc res_desc = {};
+
+			cudaChannelFormatDesc channel_desc;
+			int32_t width = texture->width;
+			int32_t height = texture->height;
+			int32_t numComponents = 4;
+			int32_t pitch = width * numComponents * sizeof(uint8_t);
+			channel_desc = cudaCreateChannelDesc<uchar4>();
+
+			cudaArray_t& pixelArray = textureArrays[textureID];
+			CUDA_CHECK(cudaMallocArray(&pixelArray,
+				&channel_desc,
+				width, height));
+
+			CUDA_CHECK(cudaMemcpy2DToArray(pixelArray,
+				/* offset */0, 0,
+				texture->pixel,
+				pitch, pitch, height,
+				cudaMemcpyHostToDevice));
+
+			res_desc.resType = cudaResourceTypeArray;
+			res_desc.res.array.array = pixelArray;
+
+			cudaTextureDesc tex_desc = {};
+			tex_desc.addressMode[0] = cudaAddressModeWrap;
+			tex_desc.addressMode[1] = cudaAddressModeWrap;
+			tex_desc.filterMode = cudaFilterModeLinear;
+			tex_desc.readMode = cudaReadModeNormalizedFloat;
+			tex_desc.normalizedCoords = 1;
+			tex_desc.maxAnisotropy = 1;
+			tex_desc.maxMipmapLevelClamp = 99;
+			tex_desc.minMipmapLevelClamp = 0;
+			tex_desc.mipmapFilterMode = cudaFilterModePoint;
+			tex_desc.borderColor[0] = 1.0f;
+			tex_desc.sRGB = 1; //png Convert sRGB
+
+			// Create texture object
+			cudaTextureObject_t cuda_tex = 0;
+			CUDA_CHECK(cudaCreateTextureObject(&cuda_tex, &res_desc, &tex_desc, nullptr));
+			textureObjects[textureID] = cuda_tex;
+
+		}
+
+		const size_t texture_object_size = sizeof(cudaTextureObject_t) * textureObjects.size();
+		CUDA_CHECK(cudaMalloc(reinterpret_cast<void**>(&renderData.d_textures), texture_object_size));
+		CUDA_CHECK(cudaMemcpy(
+			reinterpret_cast<void*>(renderData.d_textures),
+			textureObjects.data(),
+			texture_object_size,
+			cudaMemcpyHostToDevice
+		));
+		Log::DebugLog("Textures Loaded");
+	}
 public:
-	Renderer(unsigned int width,unsigned int height,const SceneData& sceneData,const std::string& filename):
-		width(width),height(height),sceneData(sceneData), filename(filename) {
+	Renderer(unsigned int width, unsigned int height, const SceneData& sceneData) :
+		width(width), height(height), sceneData(sceneData) {
 
 	}
 
@@ -510,7 +619,12 @@ public:
 		CUDA_CHECK(cudaFree(reinterpret_cast<void*>(sbt.missRecordBase)));
 		CUDA_CHECK(cudaFree(reinterpret_cast<void*>(sbt.hitgroupRecordBase)));
 		CUDA_CHECK(cudaFree(reinterpret_cast<void*>(d_gas_output_buffer)));
-
+		for (int i = 0; i < textureArrays.size(); i++) {
+			CUDA_CHECK(cudaFreeArray(textureArrays[i]));
+		}
+		for (int i = 0; i < textureObjects.size(); i++) {
+			CUDA_CHECK(cudaDestroyTextureObject(textureObjects[i]));
+		}
 		OPTIX_CHECK(optixPipelineDestroy(pipeline));
 		OPTIX_CHECK(optixProgramGroupDestroy(hitgroup_prog_group));
 		OPTIX_CHECK(optixProgramGroupDestroy(hitgroup_prog_occulusion));
@@ -543,14 +657,33 @@ public:
 
 		Log::StartLog("Shading Binding Table Initialize");
 		stbInit();
+		textureBind();
 		Log::EndLog("Shading Binding Table Initialize");
 	}
 
-	void render(unsigned int sampling) {
+	void render(unsigned int sampling, unsigned int RENDERMODE, const std::string& filename,CameraStatus& camera) {
 		sutil::CUDAOutputBuffer<uchar4> output_buffer(sutil::CUDAOutputBufferType::CUDA_DEVICE, width, height);
 		//
 		// launch
 		//
+		Log::StartLog("Rendering");
+		Log::DebugLog("Sample", sampling);
+		Log::DebugLog("Width", width);
+		Log::DebugLog("Height", height);
+
+		if (RENDERMODE == PATHTRACE) {
+			Log::DebugLog("RenderMode", "PathTrace");
+		}
+		else if (RENDERMODE == NORMALCHECK) {
+			Log::DebugLog("RenderMode", "NormalCheck");
+		}
+		else if (RENDERMODE == UVCHECK) {
+			Log::DebugLog("RenderMode", "UVCheck");
+		}
+		else if (RENDERMODE == ALBEDOCHECK) {
+			Log::DebugLog("RenderMode", "AlbedoCheck");
+		}
+
 		{
 			CUstream stream;
 			CUDA_CHECK(cudaStreamCreate(&stream));
@@ -565,8 +698,17 @@ public:
 			params.handle = gas_handle;
 			params.sampling = sampling;
 			params.cam_eye = cam.eye();
+			params.cam_ori = camera.origin;
+			params.cam_dir = camera.direciton;
+			params.f = camera.f;
+
+			params.textures = reinterpret_cast<cudaTextureObject_t*>(renderData.d_textures);
+			params.normals = reinterpret_cast<float3 *>(renderData.d_normal);
+			params.texcoords = reinterpret_cast<float2*>(renderData.d_texcoord);
+			params.vertices = reinterpret_cast<float3* > (renderData.d_vertex);
+
+			params.RENDERE_MODE = RENDERMODE;
 			cam.UVWFrame(params.cam_u, params.cam_v, params.cam_w);
-			std::cout << width << " : " << height << std::endl;
 
 			CUdeviceptr d_param;
 			CUDA_CHECK(cudaMalloc(reinterpret_cast<void**>(&d_param), sizeof(Params)));
@@ -580,7 +722,6 @@ public:
 
 			output_buffer.unmap();
 		}
-
 		//
 		// Display results
 		//
@@ -591,7 +732,7 @@ public:
 			buffer.height = height;
 			buffer.pixel_format = sutil::BufferImageFormat::UNSIGNED_BYTE4;
 			std::string imagename = filename + ".png";
-			sutil::displayBufferWindow("RayTracing", buffer);
+			sutil::displayBufferWindow(filename.c_str(), buffer);
 			sutil::saveImage(imagename.c_str(), buffer, false);
 		}
 	}

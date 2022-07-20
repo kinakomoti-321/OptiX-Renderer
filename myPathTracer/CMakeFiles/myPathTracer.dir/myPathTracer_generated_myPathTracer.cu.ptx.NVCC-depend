@@ -114,9 +114,20 @@ myPathTracer.obj : C:/Users/PC/Desktop/Program/OptixRenderer/SDK/myPathTracer/my
     C:/Program\ Files/Microsoft\ Visual\ Studio/2022/Community/VC/Tools/MSVC/14.31.31103/include/cstdio \
     C:/ProgramData/NVIDIA\ Corporation/OptiX\ SDK\ 7.4.0/include/internal/optix_7_device_impl_transformations.h \
     C:/Users/PC/Desktop/Program/OptixRenderer/SDK/myPathTracer/myPathTracer.h \
+    C:/Users/PC/Desktop/Program/OptixRenderer/build/myPathTracer/hash.h \
     C:/Users/PC/Desktop/Program/OptixRenderer/SDK/cuda/random.h \
-    C:/Users/PC/Desktop/Program/OptixRenderer/SDK/cuda/helpers.h \
-    C:/Program\ Files/NVIDIA\ GPU\ Computing\ Toolkit/CUDA/v11.7/include/vector_types.h \
+    C:/Users/PC/Desktop/Program/OptixRenderer/build/myPathTracer/color_converter.h \
     C:/Users/PC/Desktop/Program/OptixRenderer/SDK/sutil/vec_math.h \
     C:/Users/PC/Desktop/Program/OptixRenderer/SDK/sutil/Preprocessor.h \
-    C:/Program\ Files/NVIDIA\ GPU\ Computing\ Toolkit/CUDA/v11.7/include/vector_functions.h
+    C:/Program\ Files/NVIDIA\ GPU\ Computing\ Toolkit/CUDA/v11.7/include/vector_functions.h \
+    C:/Program\ Files/NVIDIA\ GPU\ Computing\ Toolkit/CUDA/v11.7/include/vector_types.h \
+    C:/Users/PC/Desktop/Program/OptixRenderer/SDK/cuda/helpers.h \
+    C:/Users/PC/Desktop/Program/OptixRenderer/build/myPathTracer/math.h \
+    C:/Users/PC/Desktop/Program/OptixRenderer/build/myPathTracer/camera.h \
+    C:/Users/PC/Desktop/Program/OptixRenderer/build/myPathTracer/RayTrace.h \
+    C:/Users/PC/Desktop/Program/OptixRenderer/build/myPathTracer/BSDF.h \
+    C:/Users/PC/Desktop/Program/OptixRenderer/build/myPathTracer/GGX.h \
+    C:/Users/PC/Desktop/Program/OptixRenderer/build/myPathTracer/constant.h \
+    C:/Users/PC/Desktop/Program/OptixRenderer/build/myPathTracer/random.h \
+    C:/Users/PC/Desktop/Program/OptixRenderer/build/myPathTracer/Lambert.h \
+    C:/Users/PC/Desktop/Program/OptixRenderer/build/myPathTracer/PathTrace.h

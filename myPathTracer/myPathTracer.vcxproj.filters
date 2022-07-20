@@ -9,21 +9,6 @@
     <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\myPathTracer\myPathTracer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="image.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="modelLoader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="renderer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="debugLog.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="material.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\myPathTracer\myPathTracer.cu">
@@ -48,9 +33,6 @@
     </Filter>
     <Filter Include="Source Files">
       <UniqueIdentifier>{A0D611AB-5C00-37AE-9A3F-B9C5DA882C0D}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\external">
-      <UniqueIdentifier>{191ccd65-0dca-42dd-83a8-2e865581545e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

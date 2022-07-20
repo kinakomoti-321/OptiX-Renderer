@@ -27,7 +27,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-
+/*
 template<unsigned int N>
 static __host__ __device__ __inline__ unsigned int tea(unsigned int val0, unsigned int val1)
 {
@@ -71,3 +71,4 @@ static __host__ __device__ __inline__ unsigned int rot_seed(unsigned int seed, u
     return seed ^ frame;
 }
 
+*/
