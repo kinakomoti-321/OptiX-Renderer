@@ -553,7 +553,9 @@ private:
 
 		for (int textureID = 0; textureID < numTextures; textureID++) {
 			auto texture = sceneData.textures[textureID];
-			Log::DebugLog("Texture : " + texture->tex_name + ", Texture ID : ", textureID);
+			Log::DebugLog("Texture ID " , textureID );
+			Log::DebugLog("Texture ", texture->tex_name);
+			Log::DebugLog("Texture Type", texture->tex_Type);
 			cudaResourceDesc res_desc = {};
 
 			cudaChannelFormatDesc channel_desc;
@@ -589,6 +591,10 @@ private:
 			tex_desc.mipmapFilterMode = cudaFilterModePoint;
 			tex_desc.borderColor[0] = 1.0f;
 			tex_desc.sRGB = 1; //png Convert sRGB
+
+			if (texture->tex_Type == "Normalmap") {
+				tex_desc.sRGB = 0;
+			}
 
 			// Create texture object
 			cudaTextureObject_t cuda_tex = 0;
@@ -740,6 +746,8 @@ public:
 			buffer.height = height;
 			buffer.pixel_format = sutil::BufferImageFormat::UNSIGNED_BYTE4;
 			std::string imagename = filename + ".png";
+			//std::string imagename = "1 .png";
+			//std::cout << imagename << std::endl;
 			sutil::displayBufferWindow(filename.c_str(), buffer);
 			sutil::saveImage(imagename.c_str(), buffer, false);
 		}

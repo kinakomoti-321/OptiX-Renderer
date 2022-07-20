@@ -45,6 +45,18 @@ private:
         return hemisphereVector(theta,phi);
     }
 
+
+public:
+    __device__ GGX(){
+        F0 = { 0.0,0.0,0.0 };
+        alpha = 0.0f;
+    }
+    __device__ GGX(const float3& F0,const float& in_alpha):F0(F0){
+        alpha = fmaxf(in_alpha, 0.01f);
+        alpha = alpha * alpha;
+
+    }
+
     __device__ float3 visibleNormalSampling(const float3& V_,float u,float v) {
         float a_x = alpha, a_y = alpha;
         float3 V = normalize(make_float3(a_x * V_.x, V_.y, a_y * V_.z));
@@ -72,17 +84,6 @@ private:
 
         N = normalize(make_float3(a_x * N.x, N.y, a_y * N.z));
         return N;
-    }
-
-public:
-    __device__ GGX(){
-        F0 = { 0.0,0.0,0.0 };
-        alpha = 0.0f;
-    }
-    __device__ GGX(const float3& F0,const float& in_alpha):F0(F0){
-        alpha = fmaxf(in_alpha, 0.01f);
-        alpha = alpha * alpha;
-
     }
 
     __device__ float3 sampleBSDF(const float3& wo, float3& wi, float& pdf, unsigned int& seed) {
@@ -147,7 +148,13 @@ public:
         float im = absDot(i, m);
 
         float D_ = GGX_D(m);
-        return D_ * BSDFMath::cosTheta(m) / (4.0f * absDot(m, o)) * shadowG_1(i) * im / absDot(i, n);
+        return D_ * shadowG_1(i) * im / (absDot(i, n)*4.0f * absDot(m,o));
+        //return D_ * BSDFMath::cosTheta(m) / (4.0f * absDot(m, o)) * shadowG_1(i) * im / absDot(i, n);
+    }
+       
+    //Woが決定した時点でウェイトとしてかかる値
+    __device__ float reflect_weight(const float3& wo) {
+        return  0.5f;
     }
 };
 

@@ -6,7 +6,7 @@
 #include <external/tinyobjloader/tiny_obj_loader.h>
 #include <myPathTracer/material.h>
 
-int loadTexture(std::vector<std::shared_ptr<Texture>>& textures, std::map<std::string, int>& known_tex, const std::string& filename, const std::string& modelpath) {
+int loadTexture(std::vector<std::shared_ptr<Texture>>& textures, std::map<std::string, int>& known_tex, const std::string& filename, const std::string& modelpath,const std::string& tex_type) {
     if (filename == "") return -1;
 
     if (known_tex.find(filename) != known_tex.end()) {
@@ -14,7 +14,7 @@ int loadTexture(std::vector<std::shared_ptr<Texture>>& textures, std::map<std::s
     }
     
     int textureID = (int)textures.size();
-    textures.push_back(std::make_shared<Texture>(modelpath +"/"+ filename));
+    textures.push_back(std::make_shared<Texture>(modelpath +"/"+ filename,tex_type));
     known_tex[filename] = textureID;
 
     return textureID;
@@ -65,33 +65,34 @@ inline bool objLoader(
 
             //Diffuse Color
             mat.base_color = { load_materials[i].diffuse[0],load_materials[i].diffuse[1],load_materials[i].diffuse[2] };
-            mat.base_color_tex = loadTexture(scenedata.textures, known_tex, load_materials[i].diffuse_texname,filepath);
+            mat.base_color_tex = loadTexture(scenedata.textures, known_tex, load_materials[i].diffuse_texname,filepath,"Diffuse");
 
             //Metallic
             mat.metallic = load_materials[i].metallic;
-            mat.metallic_tex = loadTexture(scenedata.textures, known_tex, load_materials[i].metallic_texname,filepath);
+            mat.metallic_tex = loadTexture(scenedata.textures, known_tex, load_materials[i].metallic_texname,filepath,"Metallic");
 
             //Roghness
             mat.roughness = load_materials[i].roughness;
             //mat.roughness = 0.5f;
-            mat.roughness_tex = loadTexture(scenedata.textures, known_tex, load_materials[i].roughness_texname,filepath);
+            mat.roughness_tex = loadTexture(scenedata.textures, known_tex, load_materials[i].roughness_texname,filepath,"Roughness");
 
             //Sheen
             mat.sheen = load_materials[i].sheen;
-            mat.sheen_tex = loadTexture(scenedata.textures, known_tex, load_materials[i].sheen_texname,filepath);
+            mat.sheen_tex = loadTexture(scenedata.textures, known_tex, load_materials[i].sheen_texname,filepath,"Sheen");
 
             //IOR
             mat.ior = load_materials[i].ior;
 
             //Specular
             mat.specular = { load_materials[i].specular[0],load_materials[i].specular[1],load_materials[i].specular[2] };
-            mat.specular_tex = loadTexture(scenedata.textures, known_tex, load_materials[i].specular_texname,filepath);
+            mat.specular_tex = loadTexture(scenedata.textures, known_tex, load_materials[i].specular_texname,filepath,"Specular");
 
             //Normal map
-            mat.normal_tex = loadTexture(scenedata.textures, known_tex, load_materials[i].normal_texname,filepath);
+            //mat.normal_tex = loadTexture(scenedata.textures, known_tex, load_materials[i].normal_texname,filepath,"Normalmap");
+            mat.normal_tex = loadTexture(scenedata.textures, known_tex, load_materials[i].bump_texname,filepath,"Normalmap");
 
             //Bump map
-            mat.bump_tex = loadTexture(scenedata.textures, known_tex, load_materials[i].bump_texname,filepath);
+            mat.bump_tex = loadTexture(scenedata.textures, known_tex, load_materials[i].bump_texname,filepath,"Bumpmap");
             
             //Emmision
             mat.emmision_color = { load_materials[i].emission[0],load_materials[i].emission[1],load_materials[i].emission[2] };

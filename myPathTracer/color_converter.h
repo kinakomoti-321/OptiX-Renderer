@@ -19,3 +19,7 @@ static __forceinline __device__ void matrixConvert(float3& color) {
 	color.y = powf(color.y, 4.0f / 5.0f);
 	color.z = powf(color.z, 3.0f / 2.0f);
 }
+
+static __forceinline__ __device__ float RGB_to_Radiance(const float3& RGB) {
+	return 0.2126 * RGB.x + 0.7152 * RGB.y + 0.0722 * RGB.z;
+}

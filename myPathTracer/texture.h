@@ -9,10 +9,11 @@
 class Texture {
 public:
 	std::string tex_name;
+	std::string tex_Type;
 	unsigned int width, height;
 	uint32_t* pixel;
 
-	Texture(const std::string& filename) {
+	Texture(const std::string& filename,const std::string& tex_Type):tex_Type(tex_Type) {
 		tex_name = filename;
 		int resx, resy;
 		int comp;

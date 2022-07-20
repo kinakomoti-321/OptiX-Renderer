@@ -36,7 +36,7 @@ struct Material
 
 	//Emmision
 	float3 emmision_color;
-	int emmision_color_tex;	
+	int emmision_color_tex;
 
 	//Ideal Specular
 	bool ideal_specular = false;
@@ -45,13 +45,13 @@ struct Material
 
 std::ostream& operator<<(std::ostream& stream, const Material& f)
 {
-	stream << "diffuse " << f.base_color << " texID : " << f.base_color_tex;
-	stream << "specular " << f.specular << " texID : " << f.specular_tex;
-	stream << "roughness " << f.roughness << " texID : " << f.roughness_tex;
-	stream << "metallic " << f.metallic << " texID : " << f.metallic_tex;
-	stream << "sheen " << f.sheen << " texID : " << f.sheen_tex;
-	stream << "ior " << f.ior << " texID : " << f.sheen_tex;
-	stream << "emission " << f.emmision_color << " texID : " << f.emmision_color_tex;
-	
+	stream << "diffuse " << f.base_color << " texID : " << f.base_color_tex << std::endl;
+	stream << "specular " << f.specular << " texID : " << f.specular_tex << std::endl;
+	stream << "roughness " << f.roughness << " texID : " << f.roughness_tex << std::endl;
+	stream << "metallic " << f.metallic << " texID : " << f.metallic_tex << std::endl;
+	stream << "sheen " << f.sheen << " texID : " << f.sheen_tex << std::endl;
+	stream << "ior " << f.ior << " texID : " << f.sheen_tex << std::endl;
+	stream << "emission " << f.emmision_color << " texID : " << f.emmision_color_tex << std::endl;
+
 	return stream;
 }

@@ -21,14 +21,20 @@ static __forceinline__ __device__ float3 PathTrace(const float3 cameraRayOri, co
 	float3 ray_origin = cameraRayOri;
 	float3 ray_direction = cameraRayDir;
 	float3 LTE = { 0.0,0.0,0.0 };
-	unsigned int MAX_DEPTH = 10;
+	unsigned int MAX_DEPTH = 100;
 	PRD prd;
 	prd.seed = seed;
 	prd.done = false;
 	prd.throughput = { 1.0f,1.0f,1.0f };
-
+	
+	float p = 1.0;
 	for (int depth = 0; depth < MAX_DEPTH; depth++) {
+	
+		p = fminf(fmaxf(fmaxf(prd.throughput.x, prd.throughput.y), prd.throughput.z), 1.0f);
+		if (p < rnd(prd.seed)) break;
+		prd.throughput /= p;
 		
+
 		float3 wo = -ray_direction;
 		RayTrace(
 			params.handle,
