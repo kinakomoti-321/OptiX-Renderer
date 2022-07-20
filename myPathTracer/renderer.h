@@ -663,6 +663,9 @@ public:
 
 	void render(unsigned int sampling, unsigned int RENDERMODE, const std::string& filename,CameraStatus& camera) {
 		sutil::CUDAOutputBuffer<uchar4> output_buffer(sutil::CUDAOutputBufferType::CUDA_DEVICE, width, height);
+		sutil::CUDAOutputBuffer<uchar4> AOV_albedo(sutil::CUDAOutputBufferType::CUDA_DEVICE, width, height);
+		sutil::CUDAOutputBuffer<uchar4> AOV_normal(sutil::CUDAOutputBufferType::CUDA_DEVICE, width, height);
+
 		//
 		// launch
 		//
@@ -693,6 +696,8 @@ public:
 
 			Params params;
 			params.image = output_buffer.map();
+			params.AOV_albedo = AOV_albedo.map();
+			params.AOV_normal = AOV_normal.map();
 			params.image_width = width;
 			params.image_height = height;
 			params.handle = gas_handle;
@@ -728,6 +733,9 @@ public:
 		{
 			sutil::ImageBuffer buffer;
 			buffer.data = output_buffer.getHostPointer();
+			if (RENDERMODE == NORMALCHECK) buffer.data = AOV_normal.getHostPointer();
+			if (RENDERMODE == ALBEDOCHECK) buffer.data = AOV_albedo.getHostPointer();
+
 			buffer.width = width;
 			buffer.height = height;
 			buffer.pixel_format = sutil::BufferImageFormat::UNSIGNED_BYTE4;
