@@ -9,40 +9,10 @@
     <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\myPathTracer\myPathTracer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="BSDF.h">
-      <Filter>CUDA Files</Filter>
+    <ClInclude Include="rng.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="camera.h">
-      <Filter>CUDA Files</Filter>
-    </ClInclude>
-    <ClInclude Include="color_converter.h">
-      <Filter>CUDA Files</Filter>
-    </ClInclude>
-    <ClInclude Include="constant.h">
-      <Filter>CUDA Files</Filter>
-    </ClInclude>
-    <ClInclude Include="debugLog.h">
-      <Filter>CUDA Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GGX.h">
-      <Filter>CUDA Files</Filter>
-    </ClInclude>
-    <ClInclude Include="hash.h">
-      <Filter>CUDA Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IBL.h">
-      <Filter>CUDA Files</Filter>
-    </ClInclude>
-    <ClInclude Include="lambert.h">
-      <Filter>CUDA Files</Filter>
-    </ClInclude>
-    <ClInclude Include="material.h">
-      <Filter>CUDA Files</Filter>
-    </ClInclude>
-    <ClInclude Include="math.h">
-      <Filter>CUDA Files</Filter>
-    </ClInclude>
-    <ClInclude Include="modelLoader.h">
+    <ClInclude Include="disneyBRDF.h">
       <Filter>CUDA Files</Filter>
     </ClInclude>
     <ClInclude Include="normal_bumpmap.h">
@@ -51,16 +21,52 @@
     <ClInclude Include="PathTrace.h">
       <Filter>CUDA Files</Filter>
     </ClInclude>
-    <ClInclude Include="random.h">
+    <ClInclude Include="RayTrace.h">
       <Filter>CUDA Files</Filter>
     </ClInclude>
-    <ClInclude Include="RayTrace.h">
+    <ClInclude Include="lambert.h">
+      <Filter>CUDA Files</Filter>
+    </ClInclude>
+    <ClInclude Include="constant.h">
+      <Filter>CUDA Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BSDF.h">
+      <Filter>CUDA Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GGX.h">
+      <Filter>CUDA Files</Filter>
+    </ClInclude>
+    <ClInclude Include="color_converter.h">
+      <Filter>CUDA Files</Filter>
+    </ClInclude>
+    <ClInclude Include="math.h">
+      <Filter>CUDA Files</Filter>
+    </ClInclude>
+    <ClInclude Include="camera.h">
+      <Filter>CUDA Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IBL.h">
+      <Filter>CUDA Files</Filter>
+    </ClInclude>
+    <ClInclude Include="hash.h">
+      <Filter>CUDA Files</Filter>
+    </ClInclude>
+    <ClInclude Include="material.h">
+      <Filter>CUDA Files</Filter>
+    </ClInclude>
+    <ClInclude Include="debugLog.h">
       <Filter>CUDA Files</Filter>
     </ClInclude>
     <ClInclude Include="renderer.h">
       <Filter>CUDA Files</Filter>
     </ClInclude>
+    <ClInclude Include="modelLoader.h">
+      <Filter>CUDA Files</Filter>
+    </ClInclude>
     <ClInclude Include="texture.h">
+      <Filter>CUDA Files</Filter>
+    </ClInclude>
+    <ClInclude Include="random.h">
       <Filter>CUDA Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -73,6 +79,15 @@
   <ItemGroup>
     <None Include="C:\Users\PC\Desktop\Program\OptixRenderer\build\lib\ptx\myPathTracer_generated_myPathTracer.cu.ptx">
       <Filter>PTX Files</Filter>
+    </None>
+    <None Include="model\hdr\test_2k.hdr">
+      <Filter>CUDA Files</Filter>
+    </None>
+    <None Include="model\hdr\test_1.hdr">
+      <Filter>CUDA Files</Filter>
+    </None>
+    <None Include="model\hdr\test.hdr">
+      <Filter>CUDA Files</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

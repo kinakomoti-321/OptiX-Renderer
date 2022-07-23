@@ -103,7 +103,7 @@ struct SceneData {
 	std::vector<std::shared_ptr<Texture>> textures;
 	std::vector<int> texture_index;
 
-
+	std::shared_ptr<HDRTexture> ibl_texture = nullptr;
 	float3 backGround;
 };
 
@@ -129,8 +129,13 @@ private:
 	std::vector<cudaArray_t> textureArrays;
 	std::vector<cudaTextureObject_t> textureObjects;
 
+	cudaArray_t ibl_texture_array;
+	cudaTextureObject_t ibl_texture_object;
+	bool have_ibl = false;
+
 	SceneData sceneData;
 	RenderData renderData;
+
 
 	unsigned int width, height;
 
@@ -443,11 +448,11 @@ private:
 				OPTIX_CHECK(optixSbtRecordPackHeader(hitgroup_prog_group, &hitgroup_record[sbt_idx]));
 
 				Log::DebugLog(sceneData.material[i].material_name + " creating...");
-					
+
 				//Diffuse	
 				hitgroup_record[sbt_idx].data.diffuse = sceneData.material[i].base_color;
 				hitgroup_record[sbt_idx].data.diffuse_texID = sceneData.material[i].base_color_tex;
-				
+
 				//Specular
 				hitgroup_record[sbt_idx].data.specular = sceneData.material[i].specular;
 				hitgroup_record[sbt_idx].data.specular_texID = sceneData.material[i].specular_tex;
@@ -463,6 +468,14 @@ private:
 				//Sheen
 				hitgroup_record[sbt_idx].data.sheen = sceneData.material[i].sheen;
 				hitgroup_record[sbt_idx].data.sheen_texID = sceneData.material[i].sheen_tex;
+				
+				//Subsurface
+				hitgroup_record[sbt_idx].data.subsurface = sceneData.material[i].subsurface;
+				hitgroup_record[sbt_idx].data.subsurface_texID = sceneData.material[i].subsurface_tex;
+
+				// Clearcoat
+				hitgroup_record[sbt_idx].data.clearcoat = sceneData.material[i].clearcoat;
+				hitgroup_record[sbt_idx].data.clearcoat_texID = sceneData.material[i].clearcoat_tex;
 
 				//IOR
 				hitgroup_record[sbt_idx].data.ior = sceneData.material[i].ior;
@@ -491,7 +504,7 @@ private:
 				//Diffuse	
 				hitgroup_record[sbt_idx].data.diffuse = sceneData.material[i].base_color;
 				hitgroup_record[sbt_idx].data.diffuse_texID = sceneData.material[i].base_color_tex;
-				
+
 				//Specular
 				hitgroup_record[sbt_idx].data.specular = sceneData.material[i].specular;
 				hitgroup_record[sbt_idx].data.specular_texID = sceneData.material[i].specular_tex;
@@ -553,7 +566,7 @@ private:
 
 		for (int textureID = 0; textureID < numTextures; textureID++) {
 			auto texture = sceneData.textures[textureID];
-			Log::DebugLog("Texture ID " , textureID );
+			Log::DebugLog("Texture ID ", textureID);
 			Log::DebugLog("Texture ", texture->tex_name);
 			Log::DebugLog("Texture Type", texture->tex_Type);
 			cudaResourceDesc res_desc = {};
@@ -612,6 +625,52 @@ private:
 			cudaMemcpyHostToDevice
 		));
 		Log::DebugLog("Textures Loaded");
+
+		Log::DebugLog("IBL texture Load");
+		{
+			auto texture = sceneData.ibl_texture;
+			if (texture == nullptr) {
+				texture = std::make_shared<HDRTexture>(sceneData.backGround);
+			}
+			cudaResourceDesc res_desc = {};
+
+			cudaChannelFormatDesc channel_desc;
+			int32_t width = texture->width;
+			int32_t height = texture->height;
+			int32_t pitch = width * sizeof(float4);
+			channel_desc = cudaCreateChannelDesc<float4>();
+
+			CUDA_CHECK(cudaMallocArray(&ibl_texture_array,
+				&channel_desc,
+				width, height));
+
+			CUDA_CHECK(cudaMemcpy2DToArray(ibl_texture_array,
+				0, 0,
+				texture->pixel,
+				pitch, pitch, height,
+				cudaMemcpyHostToDevice));
+
+			res_desc.resType = cudaResourceTypeArray;
+			res_desc.res.array.array = ibl_texture_array;
+
+			cudaTextureDesc tex_desc = {};
+			tex_desc.addressMode[0] = cudaAddressModeWrap;
+			tex_desc.addressMode[1] = cudaAddressModeWrap;
+			tex_desc.filterMode = cudaFilterModeLinear;
+			tex_desc.readMode = cudaReadModeElementType;
+			tex_desc.normalizedCoords = 1;
+			tex_desc.maxAnisotropy = 1;
+			tex_desc.maxMipmapLevelClamp = 99;
+			tex_desc.minMipmapLevelClamp = 0;
+			tex_desc.mipmapFilterMode = cudaFilterModePoint;
+			tex_desc.borderColor[0] = 1.0f;
+			tex_desc.sRGB = 0;
+
+			CUDA_CHECK(cudaCreateTextureObject(&ibl_texture_object, &res_desc, &tex_desc, nullptr));
+
+			have_ibl = true;
+		}
+
 	}
 public:
 	Renderer(unsigned int width, unsigned int height, const SceneData& sceneData) :
@@ -631,6 +690,9 @@ public:
 		for (int i = 0; i < textureObjects.size(); i++) {
 			CUDA_CHECK(cudaDestroyTextureObject(textureObjects[i]));
 		}
+		CUDA_CHECK(cudaDestroyTextureObject(ibl_texture_object));
+		CUDA_CHECK(cudaFreeArray(ibl_texture_array));
+
 		OPTIX_CHECK(optixPipelineDestroy(pipeline));
 		OPTIX_CHECK(optixProgramGroupDestroy(hitgroup_prog_group));
 		OPTIX_CHECK(optixProgramGroupDestroy(hitgroup_prog_occulusion));
@@ -667,7 +729,7 @@ public:
 		Log::EndLog("Shading Binding Table Initialize");
 	}
 
-	void render(unsigned int sampling, unsigned int RENDERMODE, const std::string& filename,CameraStatus& camera) {
+	void render(unsigned int sampling, unsigned int RENDERMODE, const std::string& filename, CameraStatus& camera) {
 		sutil::CUDAOutputBuffer<uchar4> output_buffer(sutil::CUDAOutputBufferType::CUDA_DEVICE, width, height);
 		sutil::CUDAOutputBuffer<uchar4> AOV_albedo(sutil::CUDAOutputBufferType::CUDA_DEVICE, width, height);
 		sutil::CUDAOutputBuffer<uchar4> AOV_normal(sutil::CUDAOutputBufferType::CUDA_DEVICE, width, height);
@@ -714,9 +776,11 @@ public:
 			params.f = camera.f;
 
 			params.textures = reinterpret_cast<cudaTextureObject_t*>(renderData.d_textures);
-			params.normals = reinterpret_cast<float3 *>(renderData.d_normal);
+			params.ibl = ibl_texture_object;
+			params.has_ibl = have_ibl;
+			params.normals = reinterpret_cast<float3*>(renderData.d_normal);
 			params.texcoords = reinterpret_cast<float2*>(renderData.d_texcoord);
-			params.vertices = reinterpret_cast<float3* > (renderData.d_vertex);
+			params.vertices = reinterpret_cast<float3*> (renderData.d_vertex);
 
 			params.RENDERE_MODE = RENDERMODE;
 			cam.UVWFrame(params.cam_u, params.cam_v, params.cam_w);
@@ -728,9 +792,19 @@ public:
 				&params, sizeof(params),
 				cudaMemcpyHostToDevice
 			));
+
+			auto start = std::chrono::system_clock::now();
+
 			OPTIX_CHECK(optixLaunch(pipeline, stream, d_param, sizeof(Params), &sbt, width, height, /*depth=*/1));
 			CUDA_SYNC_CHECK();
 
+			auto end = std::chrono::system_clock::now();
+			auto Renderingtime = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+			std::cout << std::endl << "Rendering finish" << std::endl;
+			std::cout << "Rendering Time is " << Renderingtime << "ms" << std::endl;
+			std::cout << std::endl << "----------------------" << std::endl;
+			std::cout << "Rendering End" << std::endl;
+			std::cout << "----------------------" << std::endl;
 			output_buffer.unmap();
 		}
 		//

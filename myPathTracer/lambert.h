@@ -5,6 +5,13 @@
 #include <myPathTracer/constant.h>
 #include <myPathTracer/random.h>
 
+static __forceinline__ __device__ float3 hemisphere_sampling(float u1, float u2, float& pdf) {
+	const float theta = acosf(fmaxf(1.0f - u1, 0.0f));
+	const float phi = 2.0f * PI * u2;
+	pdf = 1.0f / (2.0f * PI);
+	return make_float3(cosf(phi) * sinf(theta), cosf(theta), sinf(phi) * sinf(theta));
+}
+
 class Lambert {
 private:
 	float3 rho;

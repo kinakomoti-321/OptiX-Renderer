@@ -25,6 +25,14 @@ struct Material
 	float sheen;
 	int sheen_tex;
 
+	//Subsurface
+	float subsurface;
+	int subsurface_tex;
+
+	//Clearcoat
+	float clearcoat;
+	int clearcoat_tex;
+
 	//IOR
 	float ior;
 
@@ -50,6 +58,8 @@ std::ostream& operator<<(std::ostream& stream, const Material& f)
 	stream << "roughness " << f.roughness << " texID : " << f.roughness_tex << std::endl;
 	stream << "metallic " << f.metallic << " texID : " << f.metallic_tex << std::endl;
 	stream << "sheen " << f.sheen << " texID : " << f.sheen_tex << std::endl;
+	stream << "subsurface " << f.subsurface << " texID : " << f.subsurface_tex << std::endl;
+	stream << "clearcoat " << f.clearcoat << " texID : " << f.clearcoat_tex << std::endl;
 	stream << "ior " << f.ior << " texID : " << f.sheen_tex << std::endl;
 	stream << "emission " << f.emmision_color << " texID : " << f.emmision_color_tex << std::endl;
 

@@ -129,6 +129,8 @@ myPathTracer.obj : C:/Users/PC/Desktop/Program/OptixRenderer/SDK/myPathTracer/my
     C:/Users/PC/Desktop/Program/OptixRenderer/build/myPathTracer/GGX.h \
     C:/Users/PC/Desktop/Program/OptixRenderer/build/myPathTracer/constant.h \
     C:/Users/PC/Desktop/Program/OptixRenderer/build/myPathTracer/random.h \
-    C:/Users/PC/Desktop/Program/OptixRenderer/build/myPathTracer/Lambert.h \
+    C:/Users/PC/Desktop/Program/OptixRenderer/build/myPathTracer/lambert.h \
+    C:/Users/PC/Desktop/Program/OptixRenderer/build/myPathTracer/disneyBRDF.h \
     C:/Users/PC/Desktop/Program/OptixRenderer/build/myPathTracer/PathTrace.h \
-    C:/Users/PC/Desktop/Program/OptixRenderer/build/myPathTracer/normal_bumpmap.h
+    C:/Users/PC/Desktop/Program/OptixRenderer/build/myPathTracer/normal_bumpmap.h \
+    C:/Users/PC/Desktop/Program/OptixRenderer/build/myPathTracer/IBL.h

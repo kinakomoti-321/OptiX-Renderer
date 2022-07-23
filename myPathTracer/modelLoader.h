@@ -80,6 +80,15 @@ inline bool objLoader(
             mat.sheen = load_materials[i].sheen;
             mat.sheen_tex = loadTexture(scenedata.textures, known_tex, load_materials[i].sheen_texname,filepath,"Sheen");
 
+            //Subsurface
+            //ClearCoutRoughness‚ðsubsurface‚Æ‚µ‚Äˆµ‚¤
+            mat.subsurface = load_materials[i].clearcoat_roughness;
+            mat.subsurface_tex = -1;
+
+            //Clearcoat
+            mat.clearcoat = load_materials[i].clearcoat_thickness;
+            mat.clearcoat_tex = -1;
+
             //IOR
             mat.ior = load_materials[i].ior;
 

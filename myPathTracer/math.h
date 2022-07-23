@@ -43,7 +43,10 @@ static __forceinline __device__ float3 hemisphereVector(const float theta, const
 }
 
 static __forceinline __device__ float absDot(const float3& a,const float3& b) {
-	return fabsf(dot(a,b));
+	return fmaxf(fabsf(dot(a,b)),0.001);
+}
+static __forceinline __device__ float lerp(const float& a, const float& b,const float& t) {
+	return (1 - t) * a + t * b;
 }
 namespace BSDFMath {
 	static __forceinline__ __device__ float cosTheta(const float3& w) { return w.y; }
@@ -66,3 +69,4 @@ namespace BSDFMath {
 	static __forceinline__ __device__ float cosPhi2(const float3& w) { return cosPhi(w) * cosPhi(w); }
 	static __forceinline__ __device__ float sinPhi2(const float3& w) { return sinPhi(w) * sinPhi(w); }
 }
+
