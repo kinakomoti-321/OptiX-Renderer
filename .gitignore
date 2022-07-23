@@ -364,4 +364,4 @@ FodyWeavers.xsd
 
 #external
 myPathTracer/model
-myPathTracer/.png
+myPathTracer/*.png
