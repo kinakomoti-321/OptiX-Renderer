@@ -33,6 +33,12 @@ struct CameraStatus {
 	float3 origin;
 	float3 direciton;
 	float f;
+	int cameraAnimationIndex;
+};
+struct FlameData {
+	float maxRenderTime;
+	float minRenderTime;
+	int frameRate;
 };
 template <typename T>
 struct SbtRecord
@@ -114,7 +120,6 @@ struct SceneData {
 	float3 backGround;
 
 	CameraStatus camera;
-	int CameraAnimationIndex;
 
 	std::vector<Animation> animation;
 	std::vector<GASData> gas_data;
@@ -481,7 +486,7 @@ private:
 				//Sheen
 				hitgroup_record[sbt_idx].data.sheen = sceneData.material[i].sheen;
 				hitgroup_record[sbt_idx].data.sheen_texID = sceneData.material[i].sheen_tex;
-				
+
 				//Subsurface
 				hitgroup_record[sbt_idx].data.subsurface = sceneData.material[i].subsurface;
 				hitgroup_record[sbt_idx].data.subsurface_texID = sceneData.material[i].subsurface_tex;
@@ -837,6 +842,116 @@ public:
 			//std::cout << imagename << std::endl;
 			sutil::displayBufferWindow(filename.c_str(), buffer);
 			sutil::saveImage(imagename.c_str(), buffer, false);
+		}
+	}
+
+	void animationRender(unsigned int sampling, unsigned int RENDERMODE, const std::string& filename, CameraStatus& camera, FlameData flamedata) {
+		float now_rendertime = flamedata.minRenderTime;
+		float delta_rendertime = 1.0f / static_cast<float>(flamedata.frameRate);
+		int renderIteration = static_cast<int>((flamedata.maxRenderTime - flamedata.minRenderTime)/delta_rendertime);
+
+		for (int frame = 0; frame < renderIteration; frame++) {
+			sutil::CUDAOutputBuffer<uchar4> output_buffer(sutil::CUDAOutputBufferType::CUDA_DEVICE, width, height);
+			sutil::CUDAOutputBuffer<uchar4> AOV_albedo(sutil::CUDAOutputBufferType::CUDA_DEVICE, width, height);
+			sutil::CUDAOutputBuffer<uchar4> AOV_normal(sutil::CUDAOutputBufferType::CUDA_DEVICE, width, height);
+			//
+			// launch
+			//
+			Log::StartLog("Rendering");
+			Log::DebugLog("Sample", sampling);
+			Log::DebugLog("Width", width);
+			Log::DebugLog("Height", height);
+
+			if (RENDERMODE == PATHTRACE) {
+				Log::DebugLog("RenderMode", "PathTrace");
+			}
+			else if (RENDERMODE == NORMALCHECK) {
+				Log::DebugLog("RenderMode", "NormalCheck");
+			}
+			else if (RENDERMODE == UVCHECK) {
+				Log::DebugLog("RenderMode", "UVCheck");
+			}
+			else if (RENDERMODE == ALBEDOCHECK) {
+				Log::DebugLog("RenderMode", "AlbedoCheck");
+			}
+
+			{
+				CUstream stream;
+				CUDA_CHECK(cudaStreamCreate(&stream));
+
+				sutil::Camera cam;
+				configureCamera(cam, width, height);
+
+				Params params;
+				params.image = output_buffer.map();
+				params.AOV_albedo = AOV_albedo.map();
+				params.AOV_normal = AOV_normal.map();
+				params.image_width = width;
+				params.image_height = height;
+				params.handle = gas_handle;
+				params.sampling = sampling;
+				params.cam_eye = cam.eye();
+
+				auto& cameraAnim = sceneData.animation[camera.cameraAnimationIndex];
+				float4 camera_origin = cameraAnim.getTranslateAnimationAffine(now_rendertime) * make_float4(camera.origin,1);
+				float4 camera_direction = cameraAnim.getRotateAnimationAffine(now_rendertime) * make_float4(camera.direciton, 0);
+				Log::DebugLog(camera_origin);
+				Log::DebugLog(normalize(make_float3(camera_direction)));
+
+				params.cam_ori = make_float3(camera_origin);
+				params.cam_dir = normalize(make_float3( - camera_origin));
+				params.f = camera.f;
+
+				params.textures = reinterpret_cast<cudaTextureObject_t*>(renderData.d_textures);
+				params.ibl = ibl_texture_object;
+				params.has_ibl = have_ibl;
+				params.normals = reinterpret_cast<float3*>(renderData.d_normal);
+				params.texcoords = reinterpret_cast<float2*>(renderData.d_texcoord);
+				params.vertices = reinterpret_cast<float3*> (renderData.d_vertex);
+
+				params.RENDERE_MODE = RENDERMODE;
+				cam.UVWFrame(params.cam_u, params.cam_v, params.cam_w);
+
+				CUdeviceptr d_param;
+				CUDA_CHECK(cudaMalloc(reinterpret_cast<void**>(&d_param), sizeof(Params)));
+				CUDA_CHECK(cudaMemcpy(
+					reinterpret_cast<void*>(d_param),
+					&params, sizeof(params),
+					cudaMemcpyHostToDevice
+				));
+
+				auto start = std::chrono::system_clock::now();
+
+				OPTIX_CHECK(optixLaunch(pipeline, stream, d_param, sizeof(Params), &sbt, width, height, /*depth=*/1));
+				CUDA_SYNC_CHECK();
+
+				auto end = std::chrono::system_clock::now();
+				auto Renderingtime = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+				std::cout << std::endl << "Rendering finish" << std::endl;
+				std::cout << "Rendering Time is " << Renderingtime << "ms" << std::endl;
+				std::cout << std::endl << "----------------------" << std::endl;
+				std::cout << "Rendering End" << std::endl;
+				std::cout << "----------------------" << std::endl;
+				output_buffer.unmap();
+			}
+			//
+			// Display results
+			//
+			{
+				sutil::ImageBuffer buffer;
+				buffer.data = output_buffer.getHostPointer();
+				if (RENDERMODE == NORMALCHECK) buffer.data = AOV_normal.getHostPointer();
+				if (RENDERMODE == ALBEDOCHECK) buffer.data = AOV_albedo.getHostPointer();
+
+				buffer.width = width;
+				buffer.height = height;
+				buffer.pixel_format = sutil::BufferImageFormat::UNSIGNED_BYTE4;
+				std::string imagename = filename + "_" + std::to_string(frame) + ".png";
+				//std::string imagename = "1 .png";
+				//std::cout << imagename << std::endl;
+				sutil::saveImage(imagename.c_str(), buffer, false);
+			}
+			now_rendertime += delta_rendertime;
 		}
 	}
 };

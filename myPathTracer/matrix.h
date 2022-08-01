@@ -29,21 +29,39 @@ Affine4x4 scaleAffine(const float3& s) {
 
 //Quatanion
 Affine4x4 rotateAffine(const float4& q) {
+	float q2xy = 2.0 * q.x * q.y;
+	float q2xz = 2.0 * q.x * q.z;
+	float q2xw = 2.0 * q.x * q.w;
+	float q2yz = 2.0 * q.y * q.z;
+	float q2yw = 2.0 * q.y * q.w;
+	float q2zw = 2.0 * q.z * q.w;
+	float q2ww = 2.0 * q.w * q.w;
+
+	float v[16] = {
+		q2ww + 2.0f * q.x * q.x - 1.0f, q2xy - q2zw, q2xz + q2yw,0,
+		q2xy + q2zw, q2ww + 2.0f * q.y * q.y - 1.0f, q2yz - q2xw,0,
+		q2xz - q2yw, q2yz + q2xw, q2ww + 2.0f * q.z * q.z - 1.0f,0,
+		0,0,0,1
+	};
+	/*
 	float v[16] = {
 		q.x * q.x + q.y * q.y - q.z * q.z - q.w * q.w, 2.0f * (q.y * q.z - q.x * q.w) , 2.0f * (q.x * q.z + q.y * q.w), 0,
 		2.0f * (q.x * q.w + q.y * q.z) , q.x * q.x - q.y * q.y + q.z * q.z - q.w * q.w,  2.0f * (-q.x * q.y + q.z * q.w), 0,
 		2.0f * (q.y * q.w - q.x * q.z) ,2.0f * (q.z * q.w + q.x * q.y) , q.x * q.x - q.y * q.y - q.z * q.z + q.w * q.w,0,
 		0,0,0,1
 	};
+	*/
 	return Affine4x4(v);
 }
 
-float4 operator*(const float4& p, const Affine4x4& affine) {
+float4 operator*(const Affine4x4& affine,const float4& p) {
+	//Log::DebugLog(p);
+	//Log::DebugLog(affine);
 	return make_float4(
-		p.x * affine[0] + p.y * affine[4] + p.z * affine[8] + p.w * affine[12],
-		p.x * affine[1] + p.y * affine[5] + p.z * affine[9] + p.w * affine[13],
-		p.x * affine[2] + p.y * affine[6] + p.z * affine[10] + p.w * affine[14],
-		p.x * affine[3] + p.y * affine[7] + p.z * affine[11] + p.w * affine[15]
+		p.x * affine[0] + p.y * affine[1] + p.z * affine[2] + p.w * affine[3],
+		p.x * affine[4] + p.y * affine[5] + p.z * affine[6] + p.w * affine[7],
+		p.x * affine[8] + p.y * affine[9] + p.z * affine[10] + p.w * affine[11],
+		p.x * affine[12] + p.y * affine[13] + p.z * affine[14] + p.w * affine[15]
 	);
 }
 
@@ -64,4 +82,15 @@ std::ostream& operator<<(std::ostream& stream, const Affine4x4& a)
 		stream << a[4 * j] << "," << a[1 + 4 * j] << "," << a[2 + 4 * j] << "," << a[3 + 4 * j] << std::endl;
 	}
 	return stream;
+}
+
+float3 quartanionToEuler(const float4& q) {
+	float roll = std::atan((2.0 * (q.x * q.y + q.z * q.w))/(q.x * q.x - q.y * q.y - q.z * q.z + q.w * q.w));
+	float pitch = std::asin(2.0f * (q.x * q.z - q.y * q.w));
+	float yaw = std::atan(2.0f * (q.x * q.w + q.y * q.z) / (q.x * q.x + q.y * q.y - q.z * q.z - q.w * q.w));
+
+	Log::DebugLog("roll", 360.0f * roll / (2.0f * M_PI));
+	Log::DebugLog("pitch", 360.0f * pitch / (2.0f * M_PI));
+	Log::DebugLog("yaw", 360.0f * yaw / (2.0f * M_PI));
+	return { roll,pitch,yaw };
 }
