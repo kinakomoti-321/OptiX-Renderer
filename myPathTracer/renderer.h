@@ -26,6 +26,7 @@
 #include <myPathTracer/debugLog.h>
 #include <myPathTracer/material.h>
 #include <myPathTracer/texture.h>
+#include <myPathTracer/animation.h>
 
 
 struct CameraStatus {
@@ -91,6 +92,12 @@ struct RenderData {
 	}
 };
 
+struct GASData {
+	unsigned int poly_n;
+	int vert_offset;
+	int animation_index;
+};
+
 struct SceneData {
 	std::vector<float3> vertices;
 	std::vector<float3> normal;
@@ -105,7 +112,15 @@ struct SceneData {
 
 	std::shared_ptr<HDRTexture> ibl_texture = nullptr;
 	float3 backGround;
+
+	CameraStatus camera;
+	int CameraAnimationIndex;
+
+	std::vector<Animation> animation;
+	std::vector<GASData> gas_data;
 };
+
+
 
 class Renderer {
 private:
@@ -162,8 +177,6 @@ private:
 		OptixAccelBuildOptions accel_options = {};
 		accel_options.buildFlags = OPTIX_BUILD_FLAG_NONE;
 		accel_options.operation = OPTIX_BUILD_OPERATION_BUILD;
-
-		// Triangle build input: simple list of three vertices
 
 		const size_t vertices_size = sizeof(float3) * sceneData.vertices.size();
 		CUdeviceptr d_vertices = 0;

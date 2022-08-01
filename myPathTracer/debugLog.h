@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <string>
+#include <map>
 
 namespace Log {
 	template <typename T>
@@ -35,8 +36,27 @@ std::ostream& operator<<(std::ostream& stream, const std::vector<T>& vec)
 	return stream;
 }
 
-std::ostream& operator<<(std::ostream& stream, const float3 f)
+std::ostream& operator<<(std::ostream& stream, const float4& f)
+{
+	stream << "(" << f.x << "," << f.y << "," << f.z << "," << f.w << ")";
+	return stream;
+}
+std::ostream& operator<<(std::ostream& stream, const float3& f)
 {
 	stream << "(" << f.x << "," << f.y << "," << f.z << ")";
+	return stream;
+}
+
+std::ostream& operator<<(std::ostream& stream, const float2& f)
+{
+	stream << "(" << f.x << "," << f.y << ")";
+	return stream;
+}
+template <typename T,typename Q>
+std::ostream& operator<<(std::ostream& stream, const std::map<T,Q> f)
+{
+	for (auto& f1 : f) {
+		stream << f1.first << "," << " ";
+	}
 	return stream;
 }

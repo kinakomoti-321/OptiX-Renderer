@@ -1,11 +1,10 @@
 #pragma once
-#define STB_IMAGE_IMPLEMENTATION
 #include <fstream>
 #include <iostream>
 #include <string>
 #include <myPathTracer/debugLog.h>
-#include <external/stb/stb_image.h>
 #include <algorithm>
+#include <external/tinygltf/stb_image.h>
 
 class Texture {
 public:
