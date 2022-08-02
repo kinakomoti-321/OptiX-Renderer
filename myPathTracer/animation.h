@@ -140,6 +140,11 @@ std::ostream& operator<<(std::ostream& stream, const Animation& a)
 	stream << "Translate Interpolate "<< std::endl << a.translation_data.interpolate_type << std::endl;
 
 	stream << "Rotation Data "<< std::endl << a.rotation_data.data << std::endl;
+	for (int i = 0; i < a.rotation_data.data.size(); i++) {
+		Log::DebugLog(a.rotation_data.key[i]);
+		quartanionToEuler(a.rotation_data.data[i]);
+		Log::DebugLog("");
+	}
 	stream << "Rotation Key "<< std::endl << a.rotation_data.key << std::endl;
 	stream << "Rotation Interpolate " << std::endl << a.rotation_data.interpolate_type << std::endl;
 

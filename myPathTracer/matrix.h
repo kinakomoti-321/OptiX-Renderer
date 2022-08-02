@@ -85,9 +85,9 @@ std::ostream& operator<<(std::ostream& stream, const Affine4x4& a)
 }
 
 float3 quartanionToEuler(const float4& q) {
-	float roll = std::atan((2.0 * (q.x * q.y + q.z * q.w))/(q.x * q.x - q.y * q.y - q.z * q.z + q.w * q.w));
+	float yaw = std::atan(-(2.0 * (q.x * q.y + q.z * q.w))/(q.x * q.x - q.y * q.y - q.z * q.z + q.w * q.w));
 	float pitch = std::asin(2.0f * (q.x * q.z - q.y * q.w));
-	float yaw = std::atan(2.0f * (q.x * q.w + q.y * q.z) / (q.x * q.x + q.y * q.y - q.z * q.z - q.w * q.w));
+	float roll = std::atan(-2.0f * (q.x * q.w + q.y * q.z) / (q.x * q.x + q.y * q.y - q.z * q.z - q.w * q.w));
 
 	Log::DebugLog("roll", 360.0f * roll / (2.0f * M_PI));
 	Log::DebugLog("pitch", 360.0f * pitch / (2.0f * M_PI));

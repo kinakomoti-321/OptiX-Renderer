@@ -134,6 +134,9 @@ private:
 	OptixTraversableHandle gas_handle;
 	CUdeviceptr d_gas_output_buffer;
 
+	OptixTraversableHandle ias_handle;
+	CUdeviceptr d_ias_output_buffer;
+
 	OptixModule module = nullptr;
 	OptixPipelineCompileOptions pipeline_compile_options = {};
 
@@ -229,6 +232,7 @@ private:
 			1, // Number of build inputs
 			&gas_buffer_sizes
 		));
+
 		CUdeviceptr d_temp_buffer_gas;
 		CUDA_CHECK(cudaMalloc(
 			reinterpret_cast<void**>(&d_temp_buffer_gas),
@@ -254,9 +258,70 @@ private:
 			0                   // num emitted properties
 		));
 
+		//IAS construct
+		OptixInstance instance = {};
+		float transform[12] = { 1,0,0,1,0,1,0,0,0,0,1,0 };
+		memcpy(instance.transform, transform, sizeof(float) * 12);
+		instance.instanceId = 0;
+		instance.visibilityMask = 255;
+		instance.sbtOffset = 0;
+		instance.flags = OPTIX_INSTANCE_FLAG_NONE;
+		instance.traversableHandle = gas_handle;
+		
+		CUdeviceptr d_instance;
+		CUDA_CHECK(cudaMalloc(reinterpret_cast<void**>(&d_instance), sizeof(OptixInstance)));
+		CUDA_CHECK(cudaMemcpy(reinterpret_cast<void*>(d_instance), &instance, sizeof(OptixInstance), cudaMemcpyHostToDevice));
+
+		OptixBuildInput instance_build = {};
+		instance_build.type = OPTIX_BUILD_INPUT_TYPE_INSTANCES;
+		instance_build.instanceArray.instances = d_instance;
+		instance_build.instanceArray.numInstances = static_cast<uint32_t>(1);
+
+		OptixAccelBuildOptions ias_accel_options = {};
+		ias_accel_options.buildFlags = OPTIX_BUILD_FLAG_NONE;
+		ias_accel_options.operation = OPTIX_BUILD_OPERATION_BUILD;
+
+		OptixAccelBufferSizes ias_buffer_sizes;
+		OPTIX_CHECK(optixAccelComputeMemoryUsage(
+			context,
+			&ias_accel_options,
+			&instance_build,
+			1, // Number of build inputs
+			&ias_buffer_sizes
+		));
+
+		CUdeviceptr d_temp_buffer_ias;
+		CUDA_CHECK(cudaMalloc(
+			reinterpret_cast<void**>(&d_temp_buffer_ias),
+			ias_buffer_sizes.tempSizeInBytes
+		));
+
+		CUDA_CHECK(cudaMalloc(
+			reinterpret_cast<void**>(&d_ias_output_buffer),
+			gas_buffer_sizes.outputSizeInBytes
+		));
+
+		OPTIX_CHECK(optixAccelBuild(
+			context,
+			0,                  // CUDA stream
+			&ias_accel_options,
+			&instance_build,
+			1,                  // num build inputs
+			d_temp_buffer_ias,
+			ias_buffer_sizes.tempSizeInBytes,
+			d_ias_output_buffer,
+			ias_buffer_sizes.outputSizeInBytes,
+			&ias_handle,
+			nullptr,            // emitted property list
+			0                   // num emitted properties
+		));
+
+
+
 		// We can now free the scratch space buffer used during build and the vertex
 		// inputs, since they are not needed by our trivial shading method
 		CUDA_CHECK(cudaFree(reinterpret_cast<void*>(d_temp_buffer_gas)));
+		CUDA_CHECK(cudaFree(reinterpret_cast<void*>(d_temp_buffer_ias)));
 		//CUDA_CHECK(cudaFree(reinterpret_cast<void*>(d_vertices)));
 		CUDA_CHECK(cudaFree(reinterpret_cast<void*>(d_material)));
 
@@ -702,6 +767,7 @@ public:
 		CUDA_CHECK(cudaFree(reinterpret_cast<void*>(sbt.missRecordBase)));
 		CUDA_CHECK(cudaFree(reinterpret_cast<void*>(sbt.hitgroupRecordBase)));
 		CUDA_CHECK(cudaFree(reinterpret_cast<void*>(d_gas_output_buffer)));
+		CUDA_CHECK(cudaFree(reinterpret_cast<void*>(d_ias_output_buffer)));
 		for (int i = 0; i < textureArrays.size(); i++) {
 			CUDA_CHECK(cudaFreeArray(textureArrays[i]));
 		}
@@ -786,7 +852,10 @@ public:
 			params.AOV_normal = AOV_normal.map();
 			params.image_width = width;
 			params.image_height = height;
-			params.handle = gas_handle;
+			
+			params.handle = ias_handle;
+			//params.handle = gas_handle;
+
 			params.sampling = sampling;
 			params.cam_eye = cam.eye();
 			params.cam_ori = camera.origin;
@@ -888,7 +957,9 @@ public:
 				params.AOV_normal = AOV_normal.map();
 				params.image_width = width;
 				params.image_height = height;
-				params.handle = gas_handle;
+
+				//params.handle = gas_handle;
+				params.handle = ias_handle;
 				params.sampling = sampling;
 				params.cam_eye = cam.eye();
 
@@ -897,9 +968,9 @@ public:
 				float4 camera_direction = cameraAnim.getRotateAnimationAffine(now_rendertime) * make_float4(camera.direciton, 0);
 				Log::DebugLog(camera_origin);
 				Log::DebugLog(normalize(make_float3(camera_direction)));
-
+				Log::DebugLog(normalize(make_float3(-camera_origin)));
 				params.cam_ori = make_float3(camera_origin);
-				params.cam_dir = normalize(make_float3( - camera_origin));
+				params.cam_dir = normalize(make_float3(camera_direction)); //normalize(make_float3( - camera_origin));
 				params.f = camera.f;
 
 				params.textures = reinterpret_cast<cudaTextureObject_t*>(renderData.d_textures);
