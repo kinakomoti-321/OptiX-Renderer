@@ -189,8 +189,8 @@ private:
 		accel_options.buildFlags = OPTIX_BUILD_FLAG_NONE;
 		accel_options.operation = OPTIX_BUILD_OPERATION_BUILD;
 
-		{
-			auto& gas_data = sceneData.gas_data[0];
+		for (int i = 0; i < sceneData.gas_data.size(); i++) {
+			auto& gas_data = sceneData.gas_data[i];
 			Log::DebugLog(gas_data.vert_offset);
 			Log::DebugLog(gas_data.poly_n);
 			Log::DebugLog(gas_data.animation_index);
@@ -279,13 +279,13 @@ private:
 		//IAS construct
 		for (int i = 0; i < gas_handle_array.size(); i++) {
 			OptixInstance instance = {};
-			float transform[12] = { 1,0,0,i,0,1,0,0,0,0,1,0 };
+			float transform[12] = { 1,0,0,0,0,1,0,0,0,0,1,0 };
 			memcpy(instance.transform, transform, sizeof(float) * 12);
 			instance.instanceId = 0;
 			instance.visibilityMask = 255;
 			instance.sbtOffset = 0;
 			instance.flags = OPTIX_INSTANCE_FLAG_NONE;
-			instance.traversableHandle = gas_handle_array[0];
+			instance.traversableHandle = gas_handle_array[i];
 
 			instance_array.push_back(instance);
 		}
