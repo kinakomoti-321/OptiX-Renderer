@@ -131,9 +131,12 @@ class Renderer {
 private:
 	OptixDeviceContext context = nullptr;
 
-	OptixTraversableHandle gas_handle;
-	CUdeviceptr d_gas_output_buffer;
+	//OptixTraversableHandle gas_handle;
+	//CUdeviceptr d_gas_output_buffer;
+	std::vector<OptixTraversableHandle> gas_handle_array;
+	std::vector<CUdeviceptr> d_gas_output_buffer_array;
 
+	std::vector<OptixInstance> instance_array;
 	OptixTraversableHandle ias_handle;
 	CUdeviceptr d_ias_output_buffer;
 
@@ -238,11 +241,14 @@ private:
 			reinterpret_cast<void**>(&d_temp_buffer_gas),
 			gas_buffer_sizes.tempSizeInBytes
 		));
+
+		CUdeviceptr d_gas_output_buffer;
 		CUDA_CHECK(cudaMalloc(
 			reinterpret_cast<void**>(&d_gas_output_buffer),
 			gas_buffer_sizes.outputSizeInBytes
 		));
 
+		OptixTraversableHandle gas_handle;
 		OPTIX_CHECK(optixAccelBuild(
 			context,
 			0,                  // CUDA stream
@@ -258,24 +264,31 @@ private:
 			0                   // num emitted properties
 		));
 
+		d_gas_output_buffer_array.push_back(d_gas_output_buffer);
+		gas_handle_array.push_back(gas_handle);
+
 		//IAS construct
-		OptixInstance instance = {};
-		float transform[12] = { 1,0,0,1,0,1,0,0,0,0,1,0 };
-		memcpy(instance.transform, transform, sizeof(float) * 12);
-		instance.instanceId = 0;
-		instance.visibilityMask = 255;
-		instance.sbtOffset = 0;
-		instance.flags = OPTIX_INSTANCE_FLAG_NONE;
-		instance.traversableHandle = gas_handle;
-		
+		for (int i = 0; i < gas_handle_array.size(); i++) {
+			OptixInstance instance = {};
+			float transform[12] = { 1,0,0,i,0,1,0,0,0,0,1,0 };
+			memcpy(instance.transform, transform, sizeof(float) * 12);
+			instance.instanceId = 0;
+			instance.visibilityMask = 255;
+			instance.sbtOffset = 0;
+			instance.flags = OPTIX_INSTANCE_FLAG_NONE;
+			instance.traversableHandle = gas_handle_array[0];
+			
+			instance_array.push_back(instance);
+		}
+
 		CUdeviceptr d_instance;
-		CUDA_CHECK(cudaMalloc(reinterpret_cast<void**>(&d_instance), sizeof(OptixInstance)));
-		CUDA_CHECK(cudaMemcpy(reinterpret_cast<void*>(d_instance), &instance, sizeof(OptixInstance), cudaMemcpyHostToDevice));
+		CUDA_CHECK(cudaMalloc(reinterpret_cast<void**>(&d_instance), sizeof(OptixInstance) * instance_array.size()));
+		CUDA_CHECK(cudaMemcpy(reinterpret_cast<void*>(d_instance), instance_array.data(), sizeof(OptixInstance) * instance_array.size(), cudaMemcpyHostToDevice));
 
 		OptixBuildInput instance_build = {};
 		instance_build.type = OPTIX_BUILD_INPUT_TYPE_INSTANCES;
 		instance_build.instanceArray.instances = d_instance;
-		instance_build.instanceArray.numInstances = static_cast<uint32_t>(1);
+		instance_build.instanceArray.numInstances = static_cast<uint32_t>(instance_array.size());
 
 		OptixAccelBuildOptions ias_accel_options = {};
 		ias_accel_options.buildFlags = OPTIX_BUILD_FLAG_NONE;
@@ -766,7 +779,10 @@ public:
 		CUDA_CHECK(cudaFree(reinterpret_cast<void*>(sbt.raygenRecord)));
 		CUDA_CHECK(cudaFree(reinterpret_cast<void*>(sbt.missRecordBase)));
 		CUDA_CHECK(cudaFree(reinterpret_cast<void*>(sbt.hitgroupRecordBase)));
-		CUDA_CHECK(cudaFree(reinterpret_cast<void*>(d_gas_output_buffer)));
+		//CUDA_CHECK(cudaFree(reinterpret_cast<void*>(d_gas_output_buffer)));
+		for (int i = 0; i < d_gas_output_buffer_array.size(); i++) {
+			CUDA_CHECK(cudaFree(reinterpret_cast<void*>(d_gas_output_buffer_array[i])));
+		}
 		CUDA_CHECK(cudaFree(reinterpret_cast<void*>(d_ias_output_buffer)));
 		for (int i = 0; i < textureArrays.size(); i++) {
 			CUDA_CHECK(cudaFreeArray(textureArrays[i]));
@@ -852,7 +868,7 @@ public:
 			params.AOV_normal = AOV_normal.map();
 			params.image_width = width;
 			params.image_height = height;
-			
+
 			params.handle = ias_handle;
 			//params.handle = gas_handle;
 
@@ -917,7 +933,7 @@ public:
 	void animationRender(unsigned int sampling, unsigned int RENDERMODE, const std::string& filename, CameraStatus& camera, FlameData flamedata) {
 		float now_rendertime = flamedata.minRenderTime;
 		float delta_rendertime = 1.0f / static_cast<float>(flamedata.frameRate);
-		int renderIteration = static_cast<int>((flamedata.maxRenderTime - flamedata.minRenderTime)/delta_rendertime);
+		int renderIteration = static_cast<int>((flamedata.maxRenderTime - flamedata.minRenderTime) / delta_rendertime);
 
 		for (int frame = 0; frame < renderIteration; frame++) {
 			sutil::CUDAOutputBuffer<uchar4> output_buffer(sutil::CUDAOutputBufferType::CUDA_DEVICE, width, height);
@@ -964,7 +980,7 @@ public:
 				params.cam_eye = cam.eye();
 
 				auto& cameraAnim = sceneData.animation[camera.cameraAnimationIndex];
-				float4 camera_origin = cameraAnim.getTranslateAnimationAffine(now_rendertime) * make_float4(camera.origin,1);
+				float4 camera_origin = cameraAnim.getTranslateAnimationAffine(now_rendertime) * make_float4(camera.origin, 1);
 				float4 camera_direction = cameraAnim.getRotateAnimationAffine(now_rendertime) * make_float4(camera.direciton, 0);
 				Log::DebugLog(camera_origin);
 				Log::DebugLog(normalize(make_float3(camera_direction)));
