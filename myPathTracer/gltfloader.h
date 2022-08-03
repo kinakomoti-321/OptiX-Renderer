@@ -1190,7 +1190,6 @@ bool gltfloader(std::string& filepath, SceneData& scenedata) {
 		int node_index = 0;
 		bool cameraCheck = false;
 		for (auto& nodes : model.nodes) {
-			Log::DebugLog(nodes.camera);
 			//AnimationÇÃèâä˙ê›íË
 			{
 				auto& node_animation = animation[node_index];
@@ -1230,6 +1229,7 @@ bool gltfloader(std::string& filepath, SceneData& scenedata) {
 				GASData gasdata;
 				gasdata.vert_offset = scenedata.vertices.size();
 				unsigned int mesh_poly = 0;
+
 				for (auto& primitives : meshs.primitives) {
 					std::unique_ptr<intArrayBase> indicesArrayPtr;
 					{
@@ -1364,11 +1364,14 @@ bool gltfloader(std::string& filepath, SceneData& scenedata) {
 						}
 						//Log::DebugLog("material", primitives.material);
 						scenedata.material_index.push_back(primitives.material);
-
 					}
 					mesh_poly += indices.size() / 3;
 				}
+
 				gasdata.poly_n = mesh_poly;
+				gasdata.animation_index = node_index;
+				scenedata.gas_data.push_back(gasdata);
+				
 			}
 			else {
 				//Camera
@@ -1378,7 +1381,6 @@ bool gltfloader(std::string& filepath, SceneData& scenedata) {
 				cameraCheck = true;
 				scenedata.camera.cameraAnimationIndex = node_index;
 			}
-
 			node_index += 1;
 		}
 		if (!cameraCheck) {
