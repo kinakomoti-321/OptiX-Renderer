@@ -189,83 +189,92 @@ private:
 		accel_options.buildFlags = OPTIX_BUILD_FLAG_NONE;
 		accel_options.operation = OPTIX_BUILD_OPERATION_BUILD;
 
-		const size_t vertices_size = sizeof(float3) * sceneData.vertices.size();
-		CUdeviceptr d_vertices = 0;
-		CUDA_CHECK(cudaMalloc(reinterpret_cast<void**>(&d_vertices), vertices_size));
-		CUDA_CHECK(cudaMemcpy(
-			reinterpret_cast<void*>(d_vertices),
-			sceneData.vertices.data(),
-			vertices_size,
-			cudaMemcpyHostToDevice
-		));
+		{
+			auto& gas_data = sceneData.gas_data[0];
+			Log::DebugLog(gas_data.vert_offset);
+			Log::DebugLog(gas_data.poly_n);
+			Log::DebugLog(gas_data.animation_index);
 
-		const size_t mat_size = sceneData.material_index.size() * sizeof(uint32_t);
-		CUdeviceptr d_material = 0;
-		CUDA_CHECK(cudaMalloc(reinterpret_cast<void**>(&d_material), mat_size));
-		CUDA_CHECK(cudaMemcpy(
-			reinterpret_cast<void*>(d_material),
-			sceneData.material_index.data(),
-			mat_size,
-			cudaMemcpyHostToDevice
-		));
+			const size_t vertices_size = sizeof(float3) * gas_data.poly_n * 3;
+			CUdeviceptr d_vertices = 0;
+			CUDA_CHECK(cudaMalloc(reinterpret_cast<void**>(&d_vertices), vertices_size));
+			CUDA_CHECK(cudaMemcpy(
+				reinterpret_cast<void*>(d_vertices),
+				sceneData.vertices.data() + gas_data.vert_offset,
+				vertices_size,
+				cudaMemcpyHostToDevice
+			));
 
-		//the number of flags is equal to the number of Material
-		std::vector<uint32_t> triangle_input_flags;
-		triangle_input_flags.resize(sceneData.material.size());
-		for (int i = 0; i < triangle_input_flags.size(); i++) {
-			triangle_input_flags[i] = OPTIX_GEOMETRY_FLAG_DISABLE_ANYHIT;
+			const size_t mat_size = sceneData.material_index.size() * sizeof(uint32_t);
+			CUdeviceptr d_material = 0;
+			CUDA_CHECK(cudaMalloc(reinterpret_cast<void**>(&d_material), mat_size));
+			CUDA_CHECK(cudaMemcpy(
+				reinterpret_cast<void*>(d_material),
+				sceneData.material_index.data(),
+				mat_size,
+				cudaMemcpyHostToDevice
+			));
+
+			//the number of flags is equal to the number of Material
+			std::vector<uint32_t> triangle_input_flags;
+			triangle_input_flags.resize(sceneData.material.size());
+			for (int i = 0; i < triangle_input_flags.size(); i++) {
+				triangle_input_flags[i] = OPTIX_GEOMETRY_FLAG_DISABLE_ANYHIT;
+			}
+
+			OptixBuildInput triangle_input = {};
+			triangle_input.type = OPTIX_BUILD_INPUT_TYPE_TRIANGLES;
+			triangle_input.triangleArray.vertexFormat = OPTIX_VERTEX_FORMAT_FLOAT3;
+			triangle_input.triangleArray.numVertices = static_cast<uint32_t>(gas_data.poly_n * 3);
+			triangle_input.triangleArray.vertexBuffers = &d_vertices;
+			triangle_input.triangleArray.flags = triangle_input_flags.data();
+			triangle_input.triangleArray.numSbtRecords = sceneData.material.size();
+			triangle_input.triangleArray.sbtIndexOffsetBuffer = d_material;
+			triangle_input.triangleArray.sbtIndexOffsetSizeInBytes = sizeof(uint32_t);
+			triangle_input.triangleArray.sbtIndexOffsetStrideInBytes = sizeof(uint32_t);
+
+			OptixAccelBufferSizes gas_buffer_sizes;
+			OPTIX_CHECK(optixAccelComputeMemoryUsage(
+				context,
+				&accel_options,
+				&triangle_input,
+				1, // Number of build inputs
+				&gas_buffer_sizes
+			));
+
+			CUdeviceptr d_temp_buffer_gas;
+			CUDA_CHECK(cudaMalloc(
+				reinterpret_cast<void**>(&d_temp_buffer_gas),
+				gas_buffer_sizes.tempSizeInBytes
+			));
+
+			CUdeviceptr d_gas_output_buffer;
+			CUDA_CHECK(cudaMalloc(
+				reinterpret_cast<void**>(&d_gas_output_buffer),
+				gas_buffer_sizes.outputSizeInBytes
+			));
+
+			OptixTraversableHandle gas_handle;
+			OPTIX_CHECK(optixAccelBuild(
+				context,
+				0,                  // CUDA stream
+				&accel_options,
+				&triangle_input,
+				1,                  // num build inputs
+				d_temp_buffer_gas,
+				gas_buffer_sizes.tempSizeInBytes,
+				d_gas_output_buffer,
+				gas_buffer_sizes.outputSizeInBytes,
+				&gas_handle,
+				nullptr,            // emitted property list
+				0                   // num emitted properties
+			));
+
+			d_gas_output_buffer_array.push_back(d_gas_output_buffer);
+			gas_handle_array.push_back(gas_handle);
+			CUDA_CHECK(cudaFree(reinterpret_cast<void*>(d_temp_buffer_gas)));
+			CUDA_CHECK(cudaFree(reinterpret_cast<void*>(d_material)));
 		}
-
-		OptixBuildInput triangle_input = {};
-		triangle_input.type = OPTIX_BUILD_INPUT_TYPE_TRIANGLES;
-		triangle_input.triangleArray.vertexFormat = OPTIX_VERTEX_FORMAT_FLOAT3;
-		triangle_input.triangleArray.numVertices = static_cast<uint32_t>(sceneData.vertices.size());
-		triangle_input.triangleArray.vertexBuffers = &d_vertices;
-		triangle_input.triangleArray.flags = triangle_input_flags.data();
-		triangle_input.triangleArray.numSbtRecords = sceneData.material.size();
-		triangle_input.triangleArray.sbtIndexOffsetBuffer = d_material;
-		triangle_input.triangleArray.sbtIndexOffsetSizeInBytes = sizeof(uint32_t);
-		triangle_input.triangleArray.sbtIndexOffsetStrideInBytes = sizeof(uint32_t);
-
-		OptixAccelBufferSizes gas_buffer_sizes;
-		OPTIX_CHECK(optixAccelComputeMemoryUsage(
-			context,
-			&accel_options,
-			&triangle_input,
-			1, // Number of build inputs
-			&gas_buffer_sizes
-		));
-
-		CUdeviceptr d_temp_buffer_gas;
-		CUDA_CHECK(cudaMalloc(
-			reinterpret_cast<void**>(&d_temp_buffer_gas),
-			gas_buffer_sizes.tempSizeInBytes
-		));
-
-		CUdeviceptr d_gas_output_buffer;
-		CUDA_CHECK(cudaMalloc(
-			reinterpret_cast<void**>(&d_gas_output_buffer),
-			gas_buffer_sizes.outputSizeInBytes
-		));
-
-		OptixTraversableHandle gas_handle;
-		OPTIX_CHECK(optixAccelBuild(
-			context,
-			0,                  // CUDA stream
-			&accel_options,
-			&triangle_input,
-			1,                  // num build inputs
-			d_temp_buffer_gas,
-			gas_buffer_sizes.tempSizeInBytes,
-			d_gas_output_buffer,
-			gas_buffer_sizes.outputSizeInBytes,
-			&gas_handle,
-			nullptr,            // emitted property list
-			0                   // num emitted properties
-		));
-
-		d_gas_output_buffer_array.push_back(d_gas_output_buffer);
-		gas_handle_array.push_back(gas_handle);
 
 		//IAS construct
 		for (int i = 0; i < gas_handle_array.size(); i++) {
@@ -277,7 +286,7 @@ private:
 			instance.sbtOffset = 0;
 			instance.flags = OPTIX_INSTANCE_FLAG_NONE;
 			instance.traversableHandle = gas_handle_array[0];
-			
+
 			instance_array.push_back(instance);
 		}
 
@@ -311,7 +320,7 @@ private:
 
 		CUDA_CHECK(cudaMalloc(
 			reinterpret_cast<void**>(&d_ias_output_buffer),
-			gas_buffer_sizes.outputSizeInBytes
+			ias_buffer_sizes.outputSizeInBytes
 		));
 
 		OPTIX_CHECK(optixAccelBuild(
@@ -333,11 +342,18 @@ private:
 
 		// We can now free the scratch space buffer used during build and the vertex
 		// inputs, since they are not needed by our trivial shading method
-		CUDA_CHECK(cudaFree(reinterpret_cast<void*>(d_temp_buffer_gas)));
-		CUDA_CHECK(cudaFree(reinterpret_cast<void*>(d_temp_buffer_ias)));
-		//CUDA_CHECK(cudaFree(reinterpret_cast<void*>(d_vertices)));
-		CUDA_CHECK(cudaFree(reinterpret_cast<void*>(d_material)));
 
+		CUDA_CHECK(cudaFree(reinterpret_cast<void*>(d_temp_buffer_ias)));
+
+		const size_t vertices_size = sizeof(float3) * sceneData.vertices.size();
+		CUdeviceptr d_vertices = 0;
+		CUDA_CHECK(cudaMalloc(reinterpret_cast<void**>(&d_vertices), vertices_size));
+		CUDA_CHECK(cudaMemcpy(
+			reinterpret_cast<void*>(d_vertices),
+			sceneData.vertices.data(),
+			vertices_size,
+			cudaMemcpyHostToDevice
+		));
 
 		const size_t normals_size = sizeof(float3) * sceneData.normal.size();
 		CUdeviceptr d_normals = 0;
