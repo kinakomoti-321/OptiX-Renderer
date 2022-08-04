@@ -104,6 +104,29 @@ struct GASData {
 	int animation_index;
 };
 
+struct AccelationStructureData {
+	std::vector<OptixTraversableHandle> gas_handle_array;
+	std::vector<CUdeviceptr> d_gas_output_buffer_array;
+
+	std::vector<OptixInstance> instance_array;
+	OptixTraversableHandle ias_handle;
+	CUdeviceptr d_ias_output_buffer;
+	CUdeviceptr d_instance;
+	OptixBuildInput instance_build = {};
+	OptixAccelBuildOptions ias_accel_options = {};
+	OptixAccelBufferSizes ias_buffer_sizes;
+	CUdeviceptr d_temp_buffer_ias;
+
+	~AccelationStructureData() {
+		CUDA_CHECK(cudaFree(reinterpret_cast<void*>(d_ias_output_buffer)));
+		CUDA_CHECK(cudaFree(reinterpret_cast<void*>(d_instance)));
+		CUDA_CHECK(cudaFree(reinterpret_cast<void*>(d_temp_buffer_ias)));
+		for (int i = 0; i < d_gas_output_buffer_array.size(); i++) {
+			CUDA_CHECK(cudaFree(reinterpret_cast<void*>(d_gas_output_buffer_array[i])));
+		}
+	}
+};
+
 struct SceneData {
 	std::vector<float3> vertices;
 	std::vector<float3> normal;
@@ -133,12 +156,7 @@ private:
 
 	//OptixTraversableHandle gas_handle;
 	//CUdeviceptr d_gas_output_buffer;
-	std::vector<OptixTraversableHandle> gas_handle_array;
-	std::vector<CUdeviceptr> d_gas_output_buffer_array;
-
-	std::vector<OptixInstance> instance_array;
-	OptixTraversableHandle ias_handle;
-	CUdeviceptr d_ias_output_buffer;
+	AccelationStructureData ac_data = {};
 
 	OptixModule module = nullptr;
 	OptixPipelineCompileOptions pipeline_compile_options = {};
@@ -270,14 +288,14 @@ private:
 				0                   // num emitted properties
 			));
 
-			d_gas_output_buffer_array.push_back(d_gas_output_buffer);
-			gas_handle_array.push_back(gas_handle);
+			ac_data.d_gas_output_buffer_array.push_back(d_gas_output_buffer);
+			ac_data.gas_handle_array.push_back(gas_handle);
 			CUDA_CHECK(cudaFree(reinterpret_cast<void*>(d_temp_buffer_gas)));
 			CUDA_CHECK(cudaFree(reinterpret_cast<void*>(d_material)));
 		}
 
 		//IAS construct
-		for (int i = 0; i < gas_handle_array.size(); i++) {
+		for (int i = 0; i < ac_data.gas_handle_array.size(); i++) {
 			OptixInstance instance = {};
 			float transform[12] = { 1,0,0,0,0,1,0,0,0,0,1,0 };
 			memcpy(instance.transform, transform, sizeof(float) * 12);
@@ -285,65 +303,56 @@ private:
 			instance.visibilityMask = 255;
 			instance.sbtOffset = 0;
 			instance.flags = OPTIX_INSTANCE_FLAG_NONE;
-			instance.traversableHandle = gas_handle_array[i];
+			instance.traversableHandle = ac_data.gas_handle_array[i];
 
-			instance_array.push_back(instance);
+			ac_data.instance_array.push_back(instance);
 		}
 
-		CUdeviceptr d_instance;
-		CUDA_CHECK(cudaMalloc(reinterpret_cast<void**>(&d_instance), sizeof(OptixInstance) * instance_array.size()));
-		CUDA_CHECK(cudaMemcpy(reinterpret_cast<void*>(d_instance), instance_array.data(), sizeof(OptixInstance) * instance_array.size(), cudaMemcpyHostToDevice));
+		CUDA_CHECK(cudaMalloc(reinterpret_cast<void**>(&ac_data.d_instance), sizeof(OptixInstance) * ac_data.instance_array.size()));
+		CUDA_CHECK(cudaMemcpy(reinterpret_cast<void*>(ac_data.d_instance), ac_data.instance_array.data(), sizeof(OptixInstance) * ac_data.instance_array.size(), cudaMemcpyHostToDevice));
 
-		OptixBuildInput instance_build = {};
-		instance_build.type = OPTIX_BUILD_INPUT_TYPE_INSTANCES;
-		instance_build.instanceArray.instances = d_instance;
-		instance_build.instanceArray.numInstances = static_cast<uint32_t>(instance_array.size());
+		ac_data.instance_build.type = OPTIX_BUILD_INPUT_TYPE_INSTANCES;
+		ac_data.instance_build.instanceArray.instances = ac_data.d_instance;
+		ac_data.instance_build.instanceArray.numInstances = static_cast<uint32_t>(ac_data.instance_array.size());
 
-		OptixAccelBuildOptions ias_accel_options = {};
-		ias_accel_options.buildFlags = OPTIX_BUILD_FLAG_NONE;
-		ias_accel_options.operation = OPTIX_BUILD_OPERATION_BUILD;
+		ac_data.ias_accel_options.buildFlags = OPTIX_BUILD_FLAG_ALLOW_UPDATE;
+		ac_data.ias_accel_options.operation = OPTIX_BUILD_OPERATION_BUILD;
 
-		OptixAccelBufferSizes ias_buffer_sizes;
 		OPTIX_CHECK(optixAccelComputeMemoryUsage(
 			context,
-			&ias_accel_options,
-			&instance_build,
+			&ac_data.ias_accel_options,
+			&ac_data.instance_build,
 			1, // Number of build inputs
-			&ias_buffer_sizes
-		));
-
-		CUdeviceptr d_temp_buffer_ias;
-		CUDA_CHECK(cudaMalloc(
-			reinterpret_cast<void**>(&d_temp_buffer_ias),
-			ias_buffer_sizes.tempSizeInBytes
+			&ac_data.ias_buffer_sizes
 		));
 
 		CUDA_CHECK(cudaMalloc(
-			reinterpret_cast<void**>(&d_ias_output_buffer),
-			ias_buffer_sizes.outputSizeInBytes
+			reinterpret_cast<void**>(&ac_data.d_temp_buffer_ias),
+			ac_data.ias_buffer_sizes.tempSizeInBytes
+		));
+
+		CUDA_CHECK(cudaMalloc(
+			reinterpret_cast<void**>(&ac_data.d_ias_output_buffer),
+			ac_data.ias_buffer_sizes.outputSizeInBytes
 		));
 
 		OPTIX_CHECK(optixAccelBuild(
 			context,
 			0,                  // CUDA stream
-			&ias_accel_options,
-			&instance_build,
+			&ac_data.ias_accel_options,
+			&ac_data.instance_build,
 			1,                  // num build inputs
-			d_temp_buffer_ias,
-			ias_buffer_sizes.tempSizeInBytes,
-			d_ias_output_buffer,
-			ias_buffer_sizes.outputSizeInBytes,
-			&ias_handle,
+			ac_data.d_temp_buffer_ias,
+			ac_data.ias_buffer_sizes.tempSizeInBytes,
+			ac_data.d_ias_output_buffer,
+			ac_data.ias_buffer_sizes.outputSizeInBytes,
+			&ac_data.ias_handle,
 			nullptr,            // emitted property list
 			0                   // num emitted properties
 		));
 
-
-
 		// We can now free the scratch space buffer used during build and the vertex
 		// inputs, since they are not needed by our trivial shading method
-
-		CUDA_CHECK(cudaFree(reinterpret_cast<void*>(d_temp_buffer_ias)));
 
 		const size_t vertices_size = sizeof(float3) * sceneData.vertices.size();
 		CUdeviceptr d_vertices = 0;
@@ -379,6 +388,35 @@ private:
 		renderData.d_vertex = d_vertices;
 		renderData.d_normal = d_normals;
 		renderData.d_texcoord = d_texcoords;
+	}
+
+	void IASUpdate(float time) {
+		Log::DebugLog("IAS Updating");
+		for (int i = 0; i < ac_data.instance_array.size(); i++) {
+			Affine4x4 tf = sceneData.animation[sceneData.gas_data[i].animation_index].getAnimationAffine(time);
+			float transform[12] = { tf[0],tf[1],tf[2],tf[3],tf[4],tf[5],tf[6],tf[7],tf[8],tf[9],tf[10],tf[11]};
+			memcpy(ac_data.instance_array[i].transform, transform, sizeof(float) * 12);
+		}
+		
+		ac_data.ias_accel_options.buildFlags = OPTIX_BUILD_FLAG_ALLOW_UPDATE;
+		ac_data.ias_accel_options.operation = OPTIX_BUILD_OPERATION_UPDATE;
+
+		CUDA_CHECK(cudaMemcpy(reinterpret_cast<void*>(ac_data.d_instance), ac_data.instance_array.data(), sizeof(OptixInstance) * ac_data.instance_array.size(), cudaMemcpyHostToDevice));
+		OPTIX_CHECK(optixAccelBuild(
+			context,
+			0,                  // CUDA stream
+			&ac_data.ias_accel_options,
+			&ac_data.instance_build,
+			1,                  // num build inputs
+			ac_data.d_temp_buffer_ias,
+			ac_data.ias_buffer_sizes.tempSizeInBytes,
+			ac_data.d_ias_output_buffer,
+			ac_data.ias_buffer_sizes.outputSizeInBytes,
+			&ac_data.ias_handle,
+			nullptr,            // emitted property list
+			0                   // num emitted properties
+		));
+		Log::DebugLog("IAS Updating Finished");
 	}
 
 	void moduleInit() {
@@ -796,10 +834,6 @@ public:
 		CUDA_CHECK(cudaFree(reinterpret_cast<void*>(sbt.missRecordBase)));
 		CUDA_CHECK(cudaFree(reinterpret_cast<void*>(sbt.hitgroupRecordBase)));
 		//CUDA_CHECK(cudaFree(reinterpret_cast<void*>(d_gas_output_buffer)));
-		for (int i = 0; i < d_gas_output_buffer_array.size(); i++) {
-			CUDA_CHECK(cudaFree(reinterpret_cast<void*>(d_gas_output_buffer_array[i])));
-		}
-		CUDA_CHECK(cudaFree(reinterpret_cast<void*>(d_ias_output_buffer)));
 		for (int i = 0; i < textureArrays.size(); i++) {
 			CUDA_CHECK(cudaFreeArray(textureArrays[i]));
 		}
@@ -875,6 +909,8 @@ public:
 			CUstream stream;
 			CUDA_CHECK(cudaStreamCreate(&stream));
 
+			IASUpdate(0.0);
+
 			sutil::Camera cam;
 			configureCamera(cam, width, height);
 
@@ -885,7 +921,7 @@ public:
 			params.image_width = width;
 			params.image_height = height;
 
-			params.handle = ias_handle;
+			params.handle = ac_data.ias_handle;
 			//params.handle = gas_handle;
 
 			params.sampling = sampling;
@@ -980,6 +1016,8 @@ public:
 				CUstream stream;
 				CUDA_CHECK(cudaStreamCreate(&stream));
 
+				IASUpdate(now_rendertime);
+
 				sutil::Camera cam;
 				configureCamera(cam, width, height);
 
@@ -991,7 +1029,7 @@ public:
 				params.image_height = height;
 
 				//params.handle = gas_handle;
-				params.handle = ias_handle;
+				params.handle = ac_data.ias_handle;
 				params.sampling = sampling;
 				params.cam_eye = cam.eye();
 
