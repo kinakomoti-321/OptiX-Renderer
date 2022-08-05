@@ -88,6 +88,8 @@ struct RenderData {
 	CUdeviceptr d_normal = 0;
 	CUdeviceptr d_texcoord = 0;
 	CUdeviceptr d_textures = 0;
+	CUdeviceptr d_instanceID = 0;
+	CUdeviceptr d_insatnceData = 0;
 
 	RenderData() {}
 	~RenderData() {
@@ -95,6 +97,8 @@ struct RenderData {
 		CUDA_CHECK(cudaFree(reinterpret_cast<void*>(d_normal)));
 		CUDA_CHECK(cudaFree(reinterpret_cast<void*>(d_texcoord)));
 		CUDA_CHECK(cudaFree(reinterpret_cast<void*>(d_textures)));
+		CUDA_CHECK(cudaFree(reinterpret_cast<void*>(d_instanceID)));
+		CUDA_CHECK(cudaFree(reinterpret_cast<void*>(d_insatnceData)));
 	}
 };
 
@@ -104,12 +108,19 @@ struct GASData {
 	int animation_index;
 };
 
+struct InsatanceData {
+	int instanceID;
+	float transform[12];
+	int faceIDoffset;
+};
+
 struct AccelationStructureData {
 	std::vector<OptixTraversableHandle> gas_handle_array;
 	std::vector<CUdeviceptr> d_gas_output_buffer_array;
 
 	std::vector<OptixInstance> instance_array;
 	OptixTraversableHandle ias_handle;
+
 	CUdeviceptr d_ias_output_buffer;
 	CUdeviceptr d_instance;
 	OptixBuildInput instance_build = {};
@@ -117,13 +128,56 @@ struct AccelationStructureData {
 	OptixAccelBufferSizes ias_buffer_sizes;
 	CUdeviceptr d_temp_buffer_ias;
 
+	std::vector<InsatanceData> instance_data;
+	std::vector<unsigned int> face_instanceID;
+
+	CUdeviceptr d_instance_data = 0;
+	CUdeviceptr d_face_instanceID = 0;
+
 	~AccelationStructureData() {
 		CUDA_CHECK(cudaFree(reinterpret_cast<void*>(d_ias_output_buffer)));
 		CUDA_CHECK(cudaFree(reinterpret_cast<void*>(d_instance)));
 		CUDA_CHECK(cudaFree(reinterpret_cast<void*>(d_temp_buffer_ias)));
+		CUDA_CHECK(cudaFree(reinterpret_cast<void*>(d_instance_data)));
+		CUDA_CHECK(cudaFree(reinterpret_cast<void*>(d_face_instanceID)));
 		for (int i = 0; i < d_gas_output_buffer_array.size(); i++) {
 			CUDA_CHECK(cudaFree(reinterpret_cast<void*>(d_gas_output_buffer_array[i])));
 		}
+	}
+	
+	void insatnceTransformInit() {
+		const size_t instance_data_size = sizeof(InsatanceData) * instance_data.size();
+		CUDA_CHECK(cudaMalloc(reinterpret_cast<void**>(&d_instance_data), instance_data_size));
+		CUDA_CHECK(
+			cudaMemcpy(
+				reinterpret_cast<void*>(d_instance_data),
+				instance_data.data(),
+				instance_data_size,
+				cudaMemcpyHostToDevice
+			)
+		);
+		
+		const size_t face_instanceID_size = sizeof(unsigned int) * face_instanceID.size();
+		CUDA_CHECK(cudaMalloc(reinterpret_cast<void**>(&d_face_instanceID), face_instanceID_size));
+		CUDA_CHECK(
+			cudaMemcpy(
+				reinterpret_cast<void*>(d_face_instanceID),
+				face_instanceID.data(),
+				face_instanceID_size,
+				cudaMemcpyHostToDevice
+			)
+		);
+	}
+	void instanceTransformUpdate() {
+		const size_t instance_data_size = sizeof(InsatanceData) * instance_data.size();
+		CUDA_CHECK(
+			cudaMemcpy(
+				reinterpret_cast<void*>(d_instance_data),
+				instance_data.data(),
+				instance_data_size,
+				cudaMemcpyHostToDevice
+			)
+		);
 	}
 };
 
@@ -161,6 +215,7 @@ private:
 	OptixModule module = nullptr;
 	OptixPipelineCompileOptions pipeline_compile_options = {};
 
+
 	OptixProgramGroup raygen_prog_group = nullptr;
 	OptixProgramGroup miss_prog_group = nullptr;
 	OptixProgramGroup hitgroup_prog_group = nullptr;
@@ -179,7 +234,6 @@ private:
 
 	SceneData sceneData;
 	RenderData renderData;
-
 
 	unsigned int width, height;
 
@@ -204,7 +258,7 @@ private:
 	}
 	void accelInit() {
 		OptixAccelBuildOptions accel_options = {};
-		accel_options.buildFlags = OPTIX_BUILD_FLAG_NONE;
+		accel_options.buildFlags = OPTIX_BUILD_FLAG_ALLOW_RANDOM_VERTEX_ACCESS;
 		accel_options.operation = OPTIX_BUILD_OPERATION_BUILD;
 
 		for (int i = 0; i < sceneData.gas_data.size(); i++) {
@@ -292,21 +346,40 @@ private:
 			ac_data.gas_handle_array.push_back(gas_handle);
 			CUDA_CHECK(cudaFree(reinterpret_cast<void*>(d_temp_buffer_gas)));
 			CUDA_CHECK(cudaFree(reinterpret_cast<void*>(d_material)));
+
 		}
 
+		unsigned int sum_face = 0;
 		//IAS construct
 		for (int i = 0; i < ac_data.gas_handle_array.size(); i++) {
 			OptixInstance instance = {};
 			float transform[12] = { 1,0,0,0,0,1,0,0,0,0,1,0 };
 			memcpy(instance.transform, transform, sizeof(float) * 12);
-			instance.instanceId = 0;
+			instance.instanceId = i;
 			instance.visibilityMask = 255;
 			instance.sbtOffset = 0;
 			instance.flags = OPTIX_INSTANCE_FLAG_NONE;
 			instance.traversableHandle = ac_data.gas_handle_array[i];
 
 			ac_data.instance_array.push_back(instance);
+			InsatanceData instance_data;
+			instance_data.faceIDoffset = sum_face;
+			instance_data.instanceID = instance.instanceId;
+			memcpy(instance_data.transform, transform, sizeof(float) * 12);
+
+			Log::DebugLog(instance_data.faceIDoffset);
+			Log::DebugLog(instance_data.instanceID);
+
+			ac_data.instance_data.push_back(instance_data);
+			sum_face += sceneData.gas_data[i].poly_n;
+			for (int j = 0; j < sceneData.gas_data[i].poly_n; j++) {
+				ac_data.face_instanceID.push_back(instance.instanceId);
+			}
 		}
+		
+		Log::DebugLog("insatnce ID equel sum face",sceneData.vertices.size() / 3 == ac_data.face_instanceID.size());
+		Log::DebugLog("insatnce Data check",ac_data.instance_data.size() == ac_data.instance_array.size());
+		ac_data.insatnceTransformInit();
 
 		CUDA_CHECK(cudaMalloc(reinterpret_cast<void**>(&ac_data.d_instance), sizeof(OptixInstance) * ac_data.instance_array.size()));
 		CUDA_CHECK(cudaMemcpy(reinterpret_cast<void*>(ac_data.d_instance), ac_data.instance_array.data(), sizeof(OptixInstance) * ac_data.instance_array.size(), cudaMemcpyHostToDevice));
@@ -350,9 +423,6 @@ private:
 			nullptr,            // emitted property list
 			0                   // num emitted properties
 		));
-
-		// We can now free the scratch space buffer used during build and the vertex
-		// inputs, since they are not needed by our trivial shading method
 
 		const size_t vertices_size = sizeof(float3) * sceneData.vertices.size();
 		CUdeviceptr d_vertices = 0;
@@ -416,6 +486,7 @@ private:
 			nullptr,            // emitted property list
 			0                   // num emitted properties
 		));
+
 		Log::DebugLog("IAS Updating Finished");
 	}
 
