@@ -1140,8 +1140,9 @@ bool gltfloader(std::string& filepath,std::string& filename, SceneData& scenedat
 
 		mat.metallic = float(mat_pram.metallicFactor);
 		mat.metallic_tex = mat.roughness_tex;
-
+		
 		mat.emmision_color = { float(material.emissiveFactor[0]),float(material.emissiveFactor[1]),float(material.emissiveFactor[2]) };
+		mat.emmision_color *= 10.0;
 		mat.emmision_color_tex = -1;
 		
 		if (material.normalTexture.index != -1) {
