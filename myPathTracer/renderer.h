@@ -267,12 +267,12 @@ private:
 				cudaMemcpyHostToDevice
 			));
 
-			const size_t mat_size = sceneData.material_index.size() * sizeof(uint32_t);
+			const size_t mat_size = sizeof(uint32_t) * gas_data.poly_n;
 			CUdeviceptr d_material = 0;
 			CUDA_CHECK(cudaMalloc(reinterpret_cast<void**>(&d_material), mat_size));
 			CUDA_CHECK(cudaMemcpy(
 				reinterpret_cast<void*>(d_material),
-				sceneData.material_index.data(),
+				sceneData.material_index.data() + gas_data.vert_offset / 3,
 				mat_size,
 				cudaMemcpyHostToDevice
 			));
@@ -1053,6 +1053,7 @@ public:
 		
 		long long animation_renderingTime = 0;
 		for (int frame = 0; frame < renderIteration; frame++) {
+			auto start = std::chrono::system_clock::now();
 			sutil::CUDAOutputBuffer<uchar4> output_buffer(sutil::CUDAOutputBufferType::CUDA_DEVICE, width, height);
 			sutil::CUDAOutputBuffer<uchar4> AOV_albedo(sutil::CUDAOutputBufferType::CUDA_DEVICE, width, height);
 			sutil::CUDAOutputBuffer<uchar4> AOV_normal(sutil::CUDAOutputBufferType::CUDA_DEVICE, width, height);
@@ -1117,6 +1118,8 @@ public:
 				params.texcoords = reinterpret_cast<float2*>(renderData.d_texcoord);
 				params.vertices = reinterpret_cast<float3*> (renderData.d_vertex);
 
+				params.frame = frame;
+
 				params.RENDERE_MODE = RENDERMODE;
 				cam.UVWFrame(params.cam_u, params.cam_v, params.cam_w);
 
@@ -1128,7 +1131,6 @@ public:
 					cudaMemcpyHostToDevice
 				));
 
-				auto start = std::chrono::system_clock::now();
 
 				OPTIX_CHECK(optixLaunch(pipeline, stream, d_param, sizeof(Params), &sbt, width, height, /*depth=*/1));
 				CUDA_SYNC_CHECK();

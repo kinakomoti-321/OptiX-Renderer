@@ -46,14 +46,14 @@ public:
 		float sheenTint = 0.0;
 		float specularTint = 0.0;
 
+		alpha = fmaxf(param.roughness * param.roughness,0.001f);
+
 		rho_tint = param.diffuse / RGB_to_Radiance(param.diffuse);
 		rho_sheen = lerp(make_float3(1.0), rho_tint, sheenTint);
 		rho_specular = lerp(make_float3(1.0), rho_tint, specularTint);
 
 		float specular = 1.0;
 		F_s0 = lerp(0.08 * specular * rho_specular, param.diffuse, param.metallic);
-
-		alpha = clamp(param.roughness, 0.01f, 1.0f);
 
 		float clearcoatGloss = 1.0;
 		//alpha_clearcoat = lerp(0.1f, 0.001f, clearcoatGloss);
@@ -127,7 +127,7 @@ public:
 		pdf = ggx.pdfBSDF(wi, wo);
 		*/
 		/*
-		wo = hemisphere_sampling(rnd(seed),rnd(seed),pdf);
+		wo = hemisphere_sampling(rnd(eed),rnd(seed),pdf);
 		h = normalize(wi + wo);
 		*/
 

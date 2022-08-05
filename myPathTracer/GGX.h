@@ -64,11 +64,10 @@ public:
 public:
 	__device__ GGX() {
 		F0 = { 0.0,0.0,0.0 };
-		alpha = 0.0f;
+		alpha = 0.001f;
 	}
 	__device__ GGX(const float3& F0, const float& in_alpha) :F0(F0) {
-		alpha = clamp(in_alpha * in_alpha, 0.01f, 1.0f);
-
+		alpha = fmaxf(in_alpha,0.001f);
 	}
 
 	__device__ float3 visibleNormalSampling(const float3& V_, float u, float v) {

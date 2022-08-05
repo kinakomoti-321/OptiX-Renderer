@@ -8,6 +8,7 @@
 #include <cstdio>
 #include <fstream>
 #include <iostream>
+#include <myPathTracer/modelLoader.h>
 
 static std::string GetFilePathExtension(const std::string& FileName) {
 	if (FileName.find_last_of(".") != std::string::npos)
@@ -1054,7 +1055,7 @@ struct v4dArray {
 };
 
 
-bool gltfloader(std::string& filepath, SceneData& scenedata) {
+bool gltfloader(std::string& filepath,std::string& filename, SceneData& scenedata) {
 
 	// Store original JSON string for `extras` and `extensions`
 	bool store_original_json_for_extras_and_extensions = true;
@@ -1063,7 +1064,7 @@ bool gltfloader(std::string& filepath, SceneData& scenedata) {
 	tinygltf::TinyGLTF gltf_ctx;
 	std::string err;
 	std::string warn;
-	std::string input_filename = filepath;
+	std::string input_filename = filepath + "/"+ filename;
 	std::string ext = GetFilePathExtension(input_filename);
 
 	gltf_ctx.SetStoreOriginalJSONForExtrasAndExtensions(
@@ -1105,6 +1106,7 @@ bool gltfloader(std::string& filepath, SceneData& scenedata) {
 	std::vector<Animation> animation;
 	animation.resize(model.nodes.size());
 	//Material
+	std::map<std::string, int> known_tex;
 	for (int i = 0; i < model.materials.size(); i++) {
 		auto material = model.materials[i];
 		auto mat_pram = material.pbrMetallicRoughness;
@@ -1112,20 +1114,44 @@ bool gltfloader(std::string& filepath, SceneData& scenedata) {
 		Material mat;
 		mat.material_name = material.name;
 
+
 		mat.base_color = { float(mat_pram.baseColorFactor[0]),float(mat_pram.baseColorFactor[1]),float(mat_pram.baseColorFactor[2]) };
-		mat.base_color_tex = mat_pram.baseColorTexture.index;
-
+		if (mat_pram.baseColorTexture.index != -1) {
+			std::string diffuse_texture_name = model.images[model.textures[mat_pram.baseColorTexture.index].source].uri;
+			Log::DebugLog(diffuse_texture_name);
+			mat.base_color_tex = loadTexture(scenedata.textures, known_tex, diffuse_texture_name, filepath, "Diffuse");
+		}
+		else {
+			mat.base_color_tex = -1;
+		}
+		
+		Log::DebugLog(mat_pram.metallicRoughnessTexture.index);
 		mat.roughness = float(mat_pram.roughnessFactor);
+		if (mat_pram.metallicRoughnessTexture.index != -1) {
+			Log::DebugLog("roughness texture");
+			std::string roughness_texture_name = model.images[model.textures[mat_pram.metallicRoughnessTexture.index].source].uri;
+			Log::DebugLog(roughness_texture_name);
+			mat.roughness_tex = loadTexture(scenedata.textures, known_tex, roughness_texture_name, filepath, "Roughness");
+		}
+		else {
+			mat.roughness_tex = -1;
+		}
 
-		mat.roughness_tex = mat_pram.metallicRoughnessTexture.index;
 
 		mat.metallic = float(mat_pram.metallicFactor);
-		mat.metallic_tex = mat_pram.metallicRoughnessTexture.index;
+		mat.metallic_tex = mat.roughness_tex;
 
 		mat.emmision_color = { float(material.emissiveFactor[0]),float(material.emissiveFactor[1]),float(material.emissiveFactor[2]) };
-		mat.emmision_color_tex = material.emissiveTexture.index;
-
-		mat.normal_tex = material.normalTexture.index;
+		mat.emmision_color_tex = -1;
+		
+		if (material.normalTexture.index != -1) {
+			std::string normal_texture_name = model.images[model.textures[material.normalTexture.index].source].uri;
+			Log::DebugLog(normal_texture_name);
+			mat.normal_tex = loadTexture(scenedata.textures, known_tex, normal_texture_name, filepath, "Roughness");
+		}
+		else {
+			mat.normal_tex = -1;
+		}
 
 		mat.sheen = 0;
 		mat.sheen_tex = -1;
