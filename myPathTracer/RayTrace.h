@@ -60,6 +60,11 @@ static __forceinline__ __device__ PRD* getPRD() {
 	return reinterpret_cast<PRD*>(unpackPointer(u0, u1));
 }
 
+static __forceinline__ __device__ void getInstanceAffine(float* affine,const unsigned int instanceID) {
+	for (int i = 0; i < 12; i++) {
+		affine[i] = params.instance_data[instanceID].transform[i];
+	}
+}
 static __forceinline__ __device__ void TraceOcculution(
 	OptixTraversableHandle handle,
 	float3 ray_origin,

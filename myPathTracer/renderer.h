@@ -35,6 +35,7 @@ struct CameraStatus {
 	float f;
 	int cameraAnimationIndex;
 };
+
 struct FlameData {
 	float maxRenderTime;
 	float minRenderTime;
@@ -102,17 +103,6 @@ struct RenderData {
 	}
 };
 
-struct GASData {
-	unsigned int poly_n;
-	int vert_offset;
-	int animation_index;
-};
-
-struct InsatanceData {
-	int instanceID;
-	float transform[12];
-	int faceIDoffset;
-};
 
 struct AccelationStructureData {
 	std::vector<OptixTraversableHandle> gas_handle_array;
@@ -371,10 +361,11 @@ private:
 			Log::DebugLog(instance_data.instanceID);
 
 			ac_data.instance_data.push_back(instance_data);
-			sum_face += sceneData.gas_data[i].poly_n;
 			for (int j = 0; j < sceneData.gas_data[i].poly_n; j++) {
 				ac_data.face_instanceID.push_back(instance.instanceId);
 			}
+
+			sum_face += sceneData.gas_data[i].poly_n;
 		}
 		
 		Log::DebugLog("insatnce ID equel sum face",sceneData.vertices.size() / 3 == ac_data.face_instanceID.size());
@@ -466,7 +457,9 @@ private:
 			Affine4x4 tf = sceneData.animation[sceneData.gas_data[i].animation_index].getAnimationAffine(time);
 			float transform[12] = { tf[0],tf[1],tf[2],tf[3],tf[4],tf[5],tf[6],tf[7],tf[8],tf[9],tf[10],tf[11]};
 			memcpy(ac_data.instance_array[i].transform, transform, sizeof(float) * 12);
+			memcpy(ac_data.instance_data[i].transform, transform, sizeof(float) * 12);
 		}
+		ac_data.instanceTransformUpdate();
 		
 		ac_data.ias_accel_options.buildFlags = OPTIX_BUILD_FLAG_ALLOW_UPDATE;
 		ac_data.ias_accel_options.operation = OPTIX_BUILD_OPERATION_UPDATE;
@@ -1057,7 +1050,8 @@ public:
 		float now_rendertime = flamedata.minRenderTime;
 		float delta_rendertime = 1.0f / static_cast<float>(flamedata.frameRate);
 		int renderIteration = static_cast<int>((flamedata.maxRenderTime - flamedata.minRenderTime) / delta_rendertime);
-
+		
+		long long animation_renderingTime = 0;
 		for (int frame = 0; frame < renderIteration; frame++) {
 			sutil::CUDAOutputBuffer<uchar4> output_buffer(sutil::CUDAOutputBufferType::CUDA_DEVICE, width, height);
 			sutil::CUDAOutputBuffer<uchar4> AOV_albedo(sutil::CUDAOutputBufferType::CUDA_DEVICE, width, height);
@@ -1069,6 +1063,7 @@ public:
 			Log::DebugLog("Sample", sampling);
 			Log::DebugLog("Width", width);
 			Log::DebugLog("Height", height);
+			Log::DebugLog("Frame", frame);
 
 			if (RENDERMODE == PATHTRACE) {
 				Log::DebugLog("RenderMode", "PathTrace");
@@ -1107,12 +1102,13 @@ public:
 				auto& cameraAnim = sceneData.animation[camera.cameraAnimationIndex];
 				float4 camera_origin = cameraAnim.getTranslateAnimationAffine(now_rendertime) * make_float4(camera.origin, 1);
 				float4 camera_direction = cameraAnim.getRotateAnimationAffine(now_rendertime) * make_float4(camera.direciton, 0);
-				Log::DebugLog(camera_origin);
-				Log::DebugLog(normalize(make_float3(camera_direction)));
-				Log::DebugLog(normalize(make_float3(-camera_origin)));
+
 				params.cam_ori = make_float3(camera_origin);
 				params.cam_dir = normalize(make_float3(camera_direction)); //normalize(make_float3( - camera_origin));
 				params.f = camera.f;
+
+				params.instance_data = reinterpret_cast<InsatanceData*>(ac_data.d_instance_data);
+				params.face_instanceID = reinterpret_cast<unsigned int*>(ac_data.d_face_instanceID);
 
 				params.textures = reinterpret_cast<cudaTextureObject_t*>(renderData.d_textures);
 				params.ibl = ibl_texture_object;
@@ -1139,6 +1135,7 @@ public:
 
 				auto end = std::chrono::system_clock::now();
 				auto Renderingtime = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+				animation_renderingTime += Renderingtime;
 				std::cout << std::endl << "Rendering finish" << std::endl;
 				std::cout << "Rendering Time is " << Renderingtime << "ms" << std::endl;
 				std::cout << std::endl << "----------------------" << std::endl;
@@ -1164,7 +1161,9 @@ public:
 				sutil::saveImage(imagename.c_str(), buffer, false);
 			}
 			now_rendertime += delta_rendertime;
+
 		}
+		std::cout << "Animation Rendering Time " << animation_renderingTime << "ms" << std::endl;
 	}
 };
 

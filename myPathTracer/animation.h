@@ -54,14 +54,11 @@ struct Animation{
 			}
 		}
 		int offset = first - 1;
-		Log::DebugLog("offset", offset);
 		if (key.size()-1 <= offset) return animation[key.size() - 1];
 
 		float time_offset = time - key[offset];
 		float time_delta = key[offset + 1] - key[offset];
 
-		Log::DebugLog("time_offset", time_offset);
-		Log::DebugLog("time_delta", time_delta);
 		float delta = time_offset / time_delta;
 		
 		return interpolate(animation[offset],animation[offset+1],type,delta);
@@ -99,7 +96,6 @@ struct Animation{
 		float4 rotate_frame = (rotation_data.key.size() != 0) ? animationInterpolate(rotation_data.data, rotation_data.key, 
 			rotation_data.interpolate_type, time): make_float4(0);
 		Affine4x4 rotate_affine = rotateAffine(rotate_frame);
-		Log::DebugLog(rotate_frame);
 		quartanionToEuler(rotate_frame);
 
 		return rotate_affine;
