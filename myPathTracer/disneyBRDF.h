@@ -46,7 +46,7 @@ public:
 		float sheenTint = 0.0;
 		float specularTint = 0.0;
 
-		alpha = fmaxf(param.roughness * param.roughness,0.001f);
+		alpha = fmaxf(param.roughness * param.roughness, 0.001f);
 
 		rho_tint = param.diffuse / RGB_to_Radiance(param.diffuse);
 		rho_sheen = lerp(make_float3(1.0), rho_tint, sheenTint);
@@ -60,7 +60,7 @@ public:
 
 		ggx = GGX(F_s0, alpha);
 		lan = Lambert(param.diffuse);
-		clear = ClearcoatGGX(make_float3(0.04),param.clearcoat);
+		clear = ClearcoatGGX(make_float3(0.04), param.clearcoat);
 	}
 
 	__device__ float3 sampleBRDF(const float3& wi, float3& wo, float& pdf, unsigned int& seed) {
@@ -71,10 +71,44 @@ public:
 		{
 			float lan_w = lan.reflect_weight(wo) * (1.0 - param.metallic);
 			float ggx_w = ggx.reflect_weight(wo);
+
+			float sum_weight = lan_w + ggx_w;
+			float lan_pdf = 0.5;
+			float lanbert_pdf;
+			float ggx_pdf;
+
+			if (rnd(seed) < lan_pdf) {
+				wo = lan.cosineSampling(rnd(seed), rnd(seed), lanbert_pdf);
+				lanbert_pdf *= lan_pdf;
+
+				ggx_pdf = ggx.pdfBSDF(wi, wo);
+				ggx_pdf *= (1.0 - lan_pdf);
+
+				pdf = lanbert_pdf + ggx_pdf;
+			}
+			else {
+				h = ggx.visibleNormalSampling(wi, rnd(seed), rnd(seed));
+				wo = reflect(-wi, h);
+				if (wi.y < 0.0) {
+					pdf = 1.0;
+					return { 0.0,0.0,0.0 };
+				}
+				ggx_pdf = ggx.pdfBSDF(wi, wo);
+				ggx_pdf *= (1.0f - lan_pdf);
+
+				lanbert_pdf = lan.pdfBSDF(wi, wo);
+				lanbert_pdf *= lan_pdf;
+
+				pdf = lanbert_pdf + ggx_pdf;
+			}
+
+			/*
+			float lan_w = lan.reflect_weight(wo) * (1.0 - param.metallic);
+			float ggx_w = ggx.reflect_weight(wo);
 			float clear_w = clear.reflect_weight(wo) * param.clearcoat;
 
 			float sum_weight = lan_w + ggx_w + clear_w;
-			float lan_pdf = lan_w/sum_weight;
+			float lan_pdf = lan_w / sum_weight;
 			float ggx_pdf = ggx_w / sum_weight;
 			float clear_pdf = clear_w / sum_weight;
 
@@ -93,31 +127,37 @@ public:
 				cp = clear.pdfBSDF(wi, wo);
 				cp *= clear_pdf;
 
-				pdf = gp + cp + lp;
+				pdf = gp + lp;
 			}
-			else if(p < lan_pdf + clear_pdf) {
+			else if (p < lan_pdf + clear_pdf) {
 				//Clear Coat Sampling	
 				wo = clear.visibleNormalSampling(wi, rnd(seed), rnd(seed));
 				wo = reflect(-wi, wo);
-				if (wi.y < 0.0) return { 0.0,0.0,0.0 };
+				if (wi.y < 0.0) {
+					pdf = 1.0f;
+					return { 0.0,0.0,0.0 };
+				}
 
-				cp = clear.pdfBSDF(wi, wo) * clear_pdf;
+				//cp = clear.pdfBSDF(wi, wo) * clear_pdf;
 				gp = ggx.pdfBSDF(wi, wo) * ggx_pdf;
 				lp = lan.pdfBSDF(wi, wo) * lan_pdf;
 
-				pdf = gp + cp + lp;
+				pdf = gp + lp;
 			}
 			else {
 				wo = ggx.visibleNormalSampling(wi, rnd(seed), rnd(seed));
 				wo = reflect(-wi, wo);
-				if (wi.y < 0.0) return { 0.0,0.0,0.0 };
-
+				if (wi.y < 0.0) {
+					pdf = 1.0f;
+					return { 0.0,0.0,0.0 };
+				}
 				cp = clear.pdfBSDF(wi, wo) * clear_pdf;
 				gp = ggx.pdfBSDF(wi, wo) * ggx_pdf;
 				lp = lan.pdfBSDF(wi, wo) * lan_pdf;
 
 				pdf = gp + cp + lp;
 			}
+			*/
 		}
 
 		/*
@@ -173,9 +213,9 @@ public:
 
 		//clearcoat
 		{
-			f_clearcoat = clear.evaluateBSDF(wi,wo);
+			f_clearcoat = clear.evaluateBSDF(wi, wo);
 		}
-		return (lerp(f_diffuse,f_subsurface,param.subsurface) + f_sheen)* (1.0f - param.metallic) + f_specular + f_clearcoat;
+		return (lerp(f_diffuse, f_subsurface, param.subsurface) + f_sheen) * (1.0f - param.metallic) + f_specular + f_clearcoat * param.clearcoat;
 		//return ggx.sampleBSDF(wi, wo, pdf, seed);
 		//return f_sheen;
 

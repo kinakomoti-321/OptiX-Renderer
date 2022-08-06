@@ -61,7 +61,10 @@ public:
 		else {
 			wi = ggx.visibleNormalSampling(wo, rnd(seed), rnd(seed));
 			wi = reflect(-wo, wi);
-			if (wi.y < 0.0) return { 0.0,0.0,0.0 };
+			if (wi.y < 0.0) {
+				pdf = 1.0;
+				return { 0.0,0.0,0.0 };
+			}
 			ggx_pdf = ggx.pdfBSDF(wo, wi);
 			ggx_pdf *= (1.0f - lan_pdf);
 

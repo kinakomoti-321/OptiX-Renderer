@@ -30,10 +30,15 @@ public:
 	float alpha;
 
 	__device__ float lambda(const float3& v) const {
+		/*
 		float absTan = BSDFMath::tanTheta(v);
-		if (absTan > 1e40) return 0.0;
+		if (isinf(absTan)) return 0.0;
 		float delta = fmaxf(alpha * BSDFMath::tanTheta(v), 0.0f);
 		return fmaxf((-1.0f + sqrtf(1.0f + delta * delta)) / 2.0f, 0.0f);
+		*/
+
+		float delta = 1 + (alpha * alpha * v.x * v.x + alpha * alpha * v.z * v.z) / (v.y * v.y);
+		return (-1.0 + sqrtf(delta)) / 2.0f;
 	}
 
 	//Height correlated Smith shadowing-masking
@@ -46,10 +51,15 @@ public:
 
 	//GGX normal distiribution
 	__device__ float GGX_D(const float3& m) {
+		/*
 		const float tan2theta = BSDFMath::tan2Theta(m);
 		const float cos4theta = BSDFMath::cos2Theta(m) * BSDFMath::cos2Theta(m);
 		const float term = 1.0f + tan2theta / (alpha * alpha);
 		return 1.0f / ((PI * alpha * alpha * cos4theta) * term * term);
+		*/
+
+		float delta = m.x * m.x / (alpha * alpha) + m.z * m.z / (alpha * alpha) + m.y * m.y;
+		return 1.0 / (PI * alpha * alpha * delta * delta);
 	}
 
 	//Importance Sampling
@@ -115,7 +125,10 @@ public:
 
 		float3 o = reflect(-wo, m);
 		wi = o;
-		if (wi.y < 0.0f) return { 0.0,0.0,0.0 };
+		if (wi.y < 0.0f) {
+			pdf = 1;
+			return { 0.0,0.0,0.0 };
+		}
 
 		float im = absDot(i, m);
 		float in = absDot(i, n);
@@ -126,7 +139,11 @@ public:
 		float D_ = GGX_D(m);
 
 		float3 brdf = F * G_ * D_ / (4.0f * in * on);
-		//float3 brdf = make_float3(1.0) * G_  / (4.0f * in * on);
+
+		if (isnan(brdf.x) || isnan(brdf.y) || isnan(brdf.z)) {
+			brdf = make_float3(0);
+			pdf = 1.0f;
+		}
 
 		//Walter sampling PDF
 		//pdf = D_ * BSDFMath::cosTheta(m) / (4.0f * absDot(m, o));
@@ -134,7 +151,6 @@ public:
 		//Visible Normal Sampling PDF
 		pdf = D_ * shadowG_1(i) * im / (absDot(i, n)*4.0f * absDot(m,o));
 
-		//pdf = 1.0;
 		return brdf;
 	}
 
@@ -146,7 +162,7 @@ public:
 		if (wi.y < 0.0f) return { 0.0,0.0,0.0 };
 		if (wo.y < 0.0f) return { 0.0,0.0,0.0 };
 
-		float im = absDot(i, m);
+		float im = fmaxf(absDot(i, m),0.0001);
 		float in = fmaxf(absDot(i, n), 0.0001);
 		float on = fmaxf(absDot(o, n),0.0001);
 
@@ -155,8 +171,26 @@ public:
 		float D_ = GGX_D(m);
 
 		float3 brdf = F * G_ * D_ / (4.0f * in * on);
-		//float3 brdf = make_float3(1.0)  / (4.0f * in * on);
 
+		if (isnan(brdf.x) || isnan(brdf.y) || isnan(brdf.z)) {
+
+			/*
+			printf("brdf (%f,%f,%f) \n", brdf.x, brdf.y, brdf.z);
+			printf("m (%f,%f,%f) \n", m.x, m.y, m.z);
+			printf("wo (%f,%f,%f) \n", wo.x, wo.y, wo.z);
+			printf("wi (%f,%f,%f) \n", wi.x, wi.y, wi.z);
+			printf("F (%f,%f,%f) \n", F.x, F.y, F.z);
+			printf("G_ (%f,%f,%f) \n", G_);
+			printf("D_ (%f,%f,%f) \n", D_);
+			printf("im %f \n",im);
+			printf("in %f \n",in);
+			printf("on %f \n",on);
+			*/
+			brdf = make_float3(0);
+
+		}
+
+		
 		return brdf;
 	}
 
@@ -168,9 +202,6 @@ public:
 		float im = absDot(i, m);
 
 		float D_ = GGX_D(m);
-		//return D_ * shadowG_1(i) * im / (absDot(i, n)*4.0f * absDot(m,o));
-		//return D_ * BSDFMath::cosTheta(m) / (4.0f * absDot(m, o)) * shadowG_1(i) * im / absDot(i, n);
-		//return D_ * BSDFMath::cosTheta(m) / (4.0f * absDot(m, o));
 		return D_ * shadowG_1(i) * im / (absDot(i, n)*4.0f * absDot(m,o));
 	}
 
