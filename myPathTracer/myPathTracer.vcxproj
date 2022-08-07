@@ -408,9 +408,37 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\myPathTracer\myPathTracer.cpp" />
+    <ClInclude Include="animation.h" />
+    <ClInclude Include="BSDF.h" />
     <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\myPathTracer\myPathTracer.h" />
+    <ClInclude Include="camera.h" />
+    <ClInclude Include="color_converter.h" />
+    <ClInclude Include="constant.h" />
+    <ClInclude Include="debugLog.h" />
+    <ClInclude Include="disneyBRDF.h" />
+    <ClInclude Include="GGX.h" />
+    <ClInclude Include="gltfloader.h" />
+    <ClInclude Include="hash.h" />
+    <ClInclude Include="IBL.h" />
+    <ClInclude Include="lambert.h" />
+    <ClInclude Include="light_sampling.h" />
+    <ClInclude Include="material.h" />
+    <ClInclude Include="math.h" />
+    <ClInclude Include="matrix.h" />
+    <ClInclude Include="modelLoader.h" />
+    <ClInclude Include="NEE.h" />
+    <ClInclude Include="normal_bumpmap.h" />
+    <ClInclude Include="PathTrace.h" />
+    <ClInclude Include="random.h" />
+    <ClInclude Include="RayTrace.h" />
+    <ClInclude Include="renderer.h" />
+    <ClInclude Include="rng.h" />
+    <ClInclude Include="texture.h" />
     <None Include="C:\Users\PC\Desktop\Program\OptixRenderer\build\lib\ptx\myPathTracer_generated_myPathTracer.cu.ptx">
     </None>
+    <None Include="model\hdr\test.hdr" />
+    <None Include="model\hdr\test_1.hdr" />
+    <None Include="model\hdr\test_2k.hdr" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="C:\Users\PC\Desktop\Program\OptixRenderer\build\ZERO_CHECK.vcxproj">

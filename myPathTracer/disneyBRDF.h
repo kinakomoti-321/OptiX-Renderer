@@ -68,113 +68,62 @@ public:
 		float3 n = make_float3(0, 1, 0);
 		float3 h;
 		//Sampling
-		{/*
-			float lan_w = lan.reflect_weight(wi) * (1.0 - param.metallic);
-			float ggx_w = ggx.reflect_weight(wi);
+		{
+			float Lambert_Weight = lan.reflect_weight(wi) * (1.0 - param.metallic);
+			float Specular_Weight = ggx.reflect_weight(wi);
+			float Sum_Weight = Lambert_Weight + Specular_Weight;
 
-			float sum_weight = lan_w + ggx_w;
-			float lan_pdf = lan_w/sum_weight;
-			float lanbert_pdf;
-			float ggx_pdf;
-
-			if (rnd(seed) < lan_pdf) {
-				wo = lan.cosineSampling(rnd(seed), rnd(seed), lanbert_pdf);
-				lanbert_pdf *= lan_pdf;
-
-				ggx_pdf = ggx.pdfBSDF(wi, wo);
-				ggx_pdf *= (1.0 - lan_pdf);
-
-				h = normalize(wo + wi);
-
-				pdf = lanbert_pdf + ggx_pdf;
-			}
-			else {
-				h = ggx.visibleNormalSampling(wi, rnd(seed), rnd(seed));
-				wo = reflect(-wi, h);
-				if (wi.y < 0.0) {
-					pdf = 1.0;
-					return { 0.0,0.0,0.0 };
-				}
-				ggx_pdf = ggx.pdfBSDF(wi, wo);
-				ggx_pdf *= (1.0f - lan_pdf);
-
-				lanbert_pdf = lan.pdfBSDF(wi, wo);
-				lanbert_pdf *= lan_pdf;
-
-				pdf = lanbert_pdf + ggx_pdf;
-			}
-
-			//wo = lan.cosineSampling(rnd(seed), rnd(seed), pdf);
-			//h = normalize(wo + wi);
-			*/
-
-			float lan_w = lan.reflect_weight(wi) * (1.0 - param.metallic);
-			float ggx_w = ggx.reflect_weight(wi);
-			float clear_w = clear.reflect_weight(wi) * param.clearcoat;
-
-			float sum_weight = lan_w + ggx_w + clear_w;
-			float lan_pdf = lan_w / sum_weight;
-			float ggx_pdf = ggx_w / sum_weight;
-			float clear_pdf = clear_w / sum_weight;
+			float Lambert_pdf = Lambert_Weight / Sum_Weight;
+			float Specular_pdf = Specular_Weight / Sum_Weight;
 
 			float p = rnd(seed);
+			
 
-			float lp, cp, gp;
-
-			if (p < lan_pdf) {
-				//Lambert Sampling
-				wo = lan.cosineSampling(rnd(seed), rnd(seed), lp);
+			if(p < Lambert_pdf) {
+				float sample_pdf;
+				wo = lan.cosineSampling(rnd(seed),rnd(seed),sample_pdf);
+				//wo = hemisphere_sampling(rnd(seed), rnd(seed), sample_pdf);
 				h = normalize(wo + wi);
-				lp *= lan_pdf;
 
-				gp = ggx.pdfBSDF(wi, wo);
-				gp *= ggx_pdf;
+				float lam_pdf = Lambert_pdf * sample_pdf;
+				float ggx_pdf = Specular_pdf * ggx.pdfBSDF(wi,wo);
 
-				cp = clear.pdfBSDF(wi, wo);
-				cp *= clear_pdf;
-
-				pdf = gp + lp;
-			}
-			else if (p < lan_pdf + clear_pdf) {
-				//Clear Coat Sampling	
-				wo = clear.visibleNormalSampling(wi, rnd(seed), rnd(seed));
-				wo = reflect(-wi, wo);
-				if (wi.y < 0.0) {
-					pdf = 1.0f;
-					return { 0.0,0.0,0.0 };
-				}
-
-				//cp = clear.pdfBSDF(wi, wo) * clear_pdf;
-				gp = ggx.pdfBSDF(wi, wo) * ggx_pdf;
-				lp = lan.pdfBSDF(wi, wo) * lan_pdf;
-
-				pdf = gp + lp;
+				pdf = lam_pdf + ggx_pdf;
 			}
 			else {
-				wo = ggx.visibleNormalSampling(wi, rnd(seed), rnd(seed));
-				wo = reflect(-wi, wo);
-				if (wi.y < 0.0) {
-					pdf = 1.0f;
-					return { 0.0,0.0,0.0 };
-				}
-				cp = clear.pdfBSDF(wi, wo) * clear_pdf;
-				gp = ggx.pdfBSDF(wi, wo) * ggx_pdf;
-				lp = lan.pdfBSDF(wi, wo) * lan_pdf;
+				float sample_pdf;
+				h = ggx.visibleNormalSampling(wi, rnd(seed), rnd(seed));
+				wo = reflect(-wi, h);
+				sample_pdf = ggx.pdfBSDF(wi, wo);
 
-				pdf = gp + cp + lp;
+				float lam_pdf = Lambert_pdf * lan.pdfBSDF(wi, wo);
+				//float lam_pdf = Lambert_pdf  * (1 / (2.0f * PI));
+				float ggx_pdf = Specular_pdf * sample_pdf;
+
+				pdf = lam_pdf + ggx_pdf;
 			}
-		}
+			
+			if (wo.y < 0) {
+				pdf = 1.0;
+				return {0,0,0};
+			}
 
-		/*
-		h = ggx.visibleNormalSampling(wi, rnd(seed), rnd(seed));
-		wo = reflect(-wi, h);
-		if (wo.y < 0) return { 0,0,0 };
-		pdf = ggx.pdfBSDF(wi, wo);
-		*/
-		/*
-		wo = hemisphere_sampling(rnd(eed),rnd(seed),pdf);
-		h = normalize(wi + wo);
-		*/
+			/*
+			unsigned int seed1 = seed;
+			unsigned int seed2 = seed;
+			ggx.sampleBSDF(wi, wo, pdf, seed1);
+			h = normalize(wi + wo);
+
+			float3 h1 = ggx.visibleNormalSampling(wi, rnd(seed2), rnd(seed2));
+
+			wo = reflect(-wi, h1);
+			float3 half = normalize(wo + wi);
+			float pdf1 = ggx.pdfBSDF(wi, wo);
+			//printf("pdf %f, pdf1 %f h (%f,%f,%f) h (%f,%f,%f)  \n",pdf,pdf1,h1.x,h1.y,h1.z,half.x,half.y,half.z);
+			
+			if(wo.y < 0)
+			*/
+		}
 
 		float cosine_d = absDot(wi, h);
 		float F_D90 = 0.5 + 2.0 * alpha * cosine_d * cosine_d;
@@ -224,11 +173,13 @@ public:
 		//return ggx.sampleBSDF(wi, wo, pdf, seed);
 		//return f_sheen;
 
+
 	}
 
-	__device__ float3 evalutateBRDF(const float3& wi,const float3& wo) {
+	__device__ float3 evalutateBRDF(const float3& wi, const float3& wo) {
 		float3 n = { 0,1,0 };
 		float3 h = normalize(wi + wo);
+
 		float cosine_d = absDot(wi, h);
 		float F_D90 = 0.5 + 2.0 * alpha * cosine_d * cosine_d;
 		float F_SS90 = alpha * cosine_d * cosine_d;
@@ -273,6 +224,7 @@ public:
 		{
 			f_clearcoat = clear.evaluateBSDF(wi, wo);
 		}
+
 		return (lerp(f_diffuse, f_subsurface, param.subsurface) + f_sheen) * (1.0f - param.metallic) + f_specular + f_clearcoat * param.clearcoat;
 	}
 };

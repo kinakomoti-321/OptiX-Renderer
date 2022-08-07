@@ -33,7 +33,7 @@ public:
 	}
 
 	__device__ float pdfBSDF(const float3& wo,const float3& wi) {
-		return fabsf(wo.y);
+		return fabsf(wi.y) / PI;
 	}
 
     __device__ float reflect_weight(const float3& wo) {

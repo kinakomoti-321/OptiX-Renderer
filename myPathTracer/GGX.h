@@ -200,7 +200,6 @@ public:
 		float3 o = wi;
 		float3 n = make_float3(0, 1, 0);
 		float im = absDot(i, m);
-
 		float D_ = GGX_D(m);
 		return D_ * shadowG_1(i) * im / (absDot(i, n)*4.0f * absDot(m,o));
 	}
