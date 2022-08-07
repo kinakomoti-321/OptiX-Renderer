@@ -1145,6 +1145,9 @@ bool gltfloader(std::string& filepath, std::string& filename, SceneData& sceneda
 		mat.emmision_color = { float(material.emissiveFactor[0]),float(material.emissiveFactor[1]),float(material.emissiveFactor[2]) };
 		mat.emmision_color *= 10.0;
 		mat.emmision_color_tex = -1;
+
+		scenedata.light_color.push_back(mat.emmision_color);
+
 		if (mat.emmision_color.x + mat.emmision_color.y + mat.emmision_color.z > 0.0) {
 			mat.is_light = true;
 		}
@@ -1407,6 +1410,7 @@ bool gltfloader(std::string& filepath, std::string& filename, SceneData& sceneda
 							float area = length(cross(p1, p2));
 							float radiance = 0.2126 * light_color.x + 0.7152 * light_color.y + 0.0722 * light_color.z;
 							scenedata.light_weight.push_back(area * radiance);
+							scenedata.light_colorIndex.push_back(primitives.material);
 						}
 
 						prim_id++;

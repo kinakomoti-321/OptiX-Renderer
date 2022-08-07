@@ -62,7 +62,8 @@ static __forceinline__ __device__ float3 NEE(const float3 cameraRayOri, const fl
 
 			float light_pdf;
 			float3 light_color;
-			float3 light_position = lightPointSampling(prd.seed,light_pdf,light_color);
+			float3 light_normal;
+			float3 light_position = lightPointSampling(prd.seed,light_pdf,light_color,light_normal);
 
 			float3 light_shadowRay_origin = prd.origin;
 			float3 light_shadowRay_direciton = normalize(light_position - light_shadowRay_origin);
@@ -81,7 +82,7 @@ static __forceinline__ __device__ float3 NEE(const float3 cameraRayOri, const fl
 
 			if (light_shot.done) {
 				float cosine1 = absDot(normal,light_shadowRay_direciton);
-				float cosine2 = 1.0f;
+				float cosine2 = absDot(light_normal,-light_shadowRay_direciton);
 
 				wi = light_shadowRay_direciton;
 

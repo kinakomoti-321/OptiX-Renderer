@@ -41,6 +41,7 @@ public:
 		}
 		*/
 		return disney.sampleBRDF(wo, wi, pdf, seed);
+		/*
 		float lan_w = lan.reflect_weight(wo) * (1.0 - param.metallic);
 		float ggx_w = ggx.reflect_weight(wo);
 
@@ -73,6 +74,7 @@ public:
 
 			pdf = lanbert_pdf + ggx_pdf;
 		}
+		*/
 		//return ggx.sampleBSDF(wo, wi, pdf, seed);
 
 		//wi = lan.cosineSampling(rnd(seed), rnd(seed), pdf);
@@ -88,7 +90,7 @@ public:
 	}
 
 	__device__ float3 evaluateBSDF(const float3& wo,const float3& wi) {
-		//return lan.evaluateBSDF(wo,wi);
+		//return lan.evaluateBSDF(wo, wi) * (1.0 - param.metallic) + ggx.evaluateBSDF(wo, wi);
 		return disney.evalutateBRDF(wo,wi);
 	}
 

@@ -93,6 +93,8 @@ struct RenderData {
 	CUdeviceptr d_insatnceData = 0;
 	CUdeviceptr d_light_primID = 0;
 	CUdeviceptr d_light_nee_weight = 0;
+	CUdeviceptr d_light_color = 0;
+	CUdeviceptr d_light_colorIndex = 0;
 
 	RenderData() {}
 	~RenderData() {
@@ -104,6 +106,8 @@ struct RenderData {
 		CUDA_CHECK(cudaFree(reinterpret_cast<void*>(d_insatnceData)));
 		CUDA_CHECK(cudaFree(reinterpret_cast<void*>(d_light_primID)));
 		CUDA_CHECK(cudaFree(reinterpret_cast<void*>(d_light_nee_weight)));
+		CUDA_CHECK(cudaFree(reinterpret_cast<void*>(d_light_color)));
+		CUDA_CHECK(cudaFree(reinterpret_cast<void*>(d_light_colorIndex)));
 	}
 };
 
@@ -185,6 +189,8 @@ struct SceneData {
 	std::vector<unsigned int> material_index;
 
 	std::vector<unsigned int> light_faceID;
+	std::vector<float3> light_color;
+	std::vector<unsigned int> light_colorIndex;
 	std::vector<float> light_weight;
 	std::vector<float> light_nee_weight;
 
@@ -487,11 +493,33 @@ private:
 			cudaMemcpyHostToDevice
 		));
 
+		const size_t light_color_size = sizeof(float3) * sceneData.light_color.size();
+		CUdeviceptr d_light_color = 0;
+		CUDA_CHECK(cudaMalloc(reinterpret_cast<void**>(&d_light_color), light_color_size));
+		CUDA_CHECK(cudaMemcpy(
+			reinterpret_cast<void*>(d_light_color),
+			sceneData.light_color.data(),
+			light_color_size,
+			cudaMemcpyHostToDevice
+		));
+		
+		const size_t light_colorIndex_size = sizeof(float3) * sceneData.light_color.size();
+		CUdeviceptr d_light_colorIndex = 0;
+		CUDA_CHECK(cudaMalloc(reinterpret_cast<void**>(&d_light_colorIndex), light_colorIndex_size));
+		CUDA_CHECK(cudaMemcpy(
+			reinterpret_cast<void*>(d_light_colorIndex),
+			sceneData.light_colorIndex.data(),
+			light_colorIndex_size,
+			cudaMemcpyHostToDevice
+		));
+
 		renderData.d_vertex = d_vertices;
 		renderData.d_normal = d_normals;
 		renderData.d_texcoord = d_texcoords;
 		renderData.d_light_primID = d_light_faceID;
 		renderData.d_light_nee_weight = d_light_nee_weight;
+		renderData.d_light_color = d_light_color;
+		renderData.d_light_colorIndex = d_light_colorIndex;
 	}
 
 	void IASUpdate(float time) {
@@ -1052,10 +1080,14 @@ public:
 				params.normals = reinterpret_cast<float3*>(renderData.d_normal);
 				params.texcoords = reinterpret_cast<float2*>(renderData.d_texcoord);
 				params.vertices = reinterpret_cast<float3*> (renderData.d_vertex);
+
 				params.light_nee_weight = reinterpret_cast<float*>(renderData.d_light_nee_weight);
 				params.light_faceID = reinterpret_cast<unsigned int*>(renderData.d_light_primID);
 				params.light_polyn = sceneData.light_faceID.size();
 
+				params.light_nee_weight = reinterpret_cast<float*>(renderData.d_light_nee_weight);
+				params.light_faceID = reinterpret_cast<unsigned int*>(renderData.d_light_primID);
+				params.light_polyn = sceneData.light_faceID.size();
 
 				params.frame = frame;
 
@@ -1171,6 +1203,12 @@ public:
 				params.normals = reinterpret_cast<float3*>(renderData.d_normal);
 				params.texcoords = reinterpret_cast<float2*>(renderData.d_texcoord);
 				params.vertices = reinterpret_cast<float3*> (renderData.d_vertex);
+
+				params.light_nee_weight = reinterpret_cast<float*>(renderData.d_light_nee_weight);
+				params.light_faceID = reinterpret_cast<unsigned int*>(renderData.d_light_primID);
+				params.light_polyn = sceneData.light_faceID.size();
+				params.light_color = reinterpret_cast<float3*>(renderData.d_light_color);
+				params.light_colorIndex = reinterpret_cast<unsigned int*>(renderData.d_light_colorIndex);
 
 				params.frame = frame;
 

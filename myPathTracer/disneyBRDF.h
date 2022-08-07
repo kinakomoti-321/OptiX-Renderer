@@ -68,12 +68,12 @@ public:
 		float3 n = make_float3(0, 1, 0);
 		float3 h;
 		//Sampling
-		{
-			float lan_w = lan.reflect_weight(wo) * (1.0 - param.metallic);
-			float ggx_w = ggx.reflect_weight(wo);
+		{/*
+			float lan_w = lan.reflect_weight(wi) * (1.0 - param.metallic);
+			float ggx_w = ggx.reflect_weight(wi);
 
 			float sum_weight = lan_w + ggx_w;
-			float lan_pdf = 0.5;
+			float lan_pdf = lan_w/sum_weight;
 			float lanbert_pdf;
 			float ggx_pdf;
 
@@ -83,6 +83,8 @@ public:
 
 				ggx_pdf = ggx.pdfBSDF(wi, wo);
 				ggx_pdf *= (1.0 - lan_pdf);
+
+				h = normalize(wo + wi);
 
 				pdf = lanbert_pdf + ggx_pdf;
 			}
@@ -102,10 +104,13 @@ public:
 				pdf = lanbert_pdf + ggx_pdf;
 			}
 
-			/*
-			float lan_w = lan.reflect_weight(wo) * (1.0 - param.metallic);
-			float ggx_w = ggx.reflect_weight(wo);
-			float clear_w = clear.reflect_weight(wo) * param.clearcoat;
+			//wo = lan.cosineSampling(rnd(seed), rnd(seed), pdf);
+			//h = normalize(wo + wi);
+			*/
+
+			float lan_w = lan.reflect_weight(wi) * (1.0 - param.metallic);
+			float ggx_w = ggx.reflect_weight(wi);
+			float clear_w = clear.reflect_weight(wi) * param.clearcoat;
 
 			float sum_weight = lan_w + ggx_w + clear_w;
 			float lan_pdf = lan_w / sum_weight;
@@ -119,6 +124,7 @@ public:
 			if (p < lan_pdf) {
 				//Lambert Sampling
 				wo = lan.cosineSampling(rnd(seed), rnd(seed), lp);
+				h = normalize(wo + wi);
 				lp *= lan_pdf;
 
 				gp = ggx.pdfBSDF(wi, wo);
@@ -157,7 +163,6 @@ public:
 
 				pdf = gp + cp + lp;
 			}
-			*/
 		}
 
 		/*
