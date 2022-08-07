@@ -91,6 +91,8 @@ struct RenderData {
 	CUdeviceptr d_textures = 0;
 	CUdeviceptr d_instanceID = 0;
 	CUdeviceptr d_insatnceData = 0;
+	CUdeviceptr d_light_primID = 0;
+	CUdeviceptr d_light_nee_weight = 0;
 
 	RenderData() {}
 	~RenderData() {
@@ -100,6 +102,8 @@ struct RenderData {
 		CUDA_CHECK(cudaFree(reinterpret_cast<void*>(d_textures)));
 		CUDA_CHECK(cudaFree(reinterpret_cast<void*>(d_instanceID)));
 		CUDA_CHECK(cudaFree(reinterpret_cast<void*>(d_insatnceData)));
+		CUDA_CHECK(cudaFree(reinterpret_cast<void*>(d_light_primID)));
+		CUDA_CHECK(cudaFree(reinterpret_cast<void*>(d_light_nee_weight)));
 	}
 };
 
@@ -463,10 +467,31 @@ private:
 			cudaMemcpyHostToDevice
 		));
 
+		const size_t light_faceID_size = sizeof(unsigned int) * sceneData.light_faceID.size();
+		CUdeviceptr d_light_faceID = 0;
+		CUDA_CHECK(cudaMalloc(reinterpret_cast<void**>(&d_light_faceID), light_faceID_size));
+		CUDA_CHECK(cudaMemcpy(
+			reinterpret_cast<void*>(d_light_faceID),
+			sceneData.light_faceID.data(),
+			light_faceID_size,
+			cudaMemcpyHostToDevice
+		));
+
+		const size_t light_nee_weight_size = sizeof(float) * sceneData.light_nee_weight.size();
+		CUdeviceptr d_light_nee_weight = 0;
+		CUDA_CHECK(cudaMalloc(reinterpret_cast<void**>(&d_light_nee_weight), light_nee_weight_size));
+		CUDA_CHECK(cudaMemcpy(
+			reinterpret_cast<void*>(d_light_nee_weight),
+			sceneData.light_nee_weight.data(),
+			light_nee_weight_size,
+			cudaMemcpyHostToDevice
+		));
 
 		renderData.d_vertex = d_vertices;
 		renderData.d_normal = d_normals;
 		renderData.d_texcoord = d_texcoords;
+		renderData.d_light_primID = d_light_faceID;
+		renderData.d_light_nee_weight = d_light_nee_weight;
 	}
 
 	void IASUpdate(float time) {
@@ -1027,6 +1052,10 @@ public:
 				params.normals = reinterpret_cast<float3*>(renderData.d_normal);
 				params.texcoords = reinterpret_cast<float2*>(renderData.d_texcoord);
 				params.vertices = reinterpret_cast<float3*> (renderData.d_vertex);
+				params.light_nee_weight = reinterpret_cast<float*>(renderData.d_light_nee_weight);
+				params.light_faceID = reinterpret_cast<unsigned int*>(renderData.d_light_primID);
+				params.light_polyn = sceneData.light_faceID.size();
+
 
 				params.frame = frame;
 

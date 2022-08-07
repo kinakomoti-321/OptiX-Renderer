@@ -220,4 +220,54 @@ public:
 		//return f_sheen;
 
 	}
+
+	__device__ float3 evalutateBRDF(const float3& wi,const float3& wo) {
+		float3 n = { 0,1,0 };
+		float3 h = normalize(wi + wo);
+		float cosine_d = absDot(wi, h);
+		float F_D90 = 0.5 + 2.0 * alpha * cosine_d * cosine_d;
+		float F_SS90 = alpha * cosine_d * cosine_d;
+
+		float dot_wi_n = absDot(wi, n);
+		float dot_wo_n = absDot(wo, n);
+		float dot_wi_m = absDot(wi, h);
+
+		float3 f_diffuse;
+		float3 f_subsurface;
+		float3 f_sheen;
+		float3 f_specular;
+		float3 f_clearcoat;
+
+		float f_tsi = f_tSchlick(dot_wi_n, F_D90);
+		float f_tso = f_tSchlick(dot_wo_n, F_D90);
+
+		//Diffuse;		
+		{
+			f_diffuse = param.diffuse * f_tsi * f_tso * invPI;
+		}
+
+		//SubSurface
+		{
+			float deltacos = 1 / (dot_wi_n + dot_wo_n) - 0.5;
+			f_subsurface = param.diffuse * invPI * 1.25 * (f_tsi * f_tso * deltacos + 0.5);
+		}
+
+		//Specular
+		{
+			f_specular = ggx.evaluateBSDF(wi, wo);
+		}
+
+		//sheen
+		{
+			float3 wh = normalize(wo + wi);
+			float delta = fmaxf(1.0f - absDot(wi, wh), 0.0);
+			f_sheen = param.sheen * make_float3(1.0f) * delta * delta * delta * delta * delta;
+		}
+
+		//clearcoat
+		{
+			f_clearcoat = clear.evaluateBSDF(wi, wo);
+		}
+		return (lerp(f_diffuse, f_subsurface, param.subsurface) + f_sheen) * (1.0f - param.metallic) + f_specular + f_clearcoat * param.clearcoat;
+	}
 };

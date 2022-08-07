@@ -87,5 +87,10 @@ public:
 		//return ggx.sampleBSDF(wo, wi, pdf, seed);
 	}
 
+	__device__ float3 evaluateBSDF(const float3& wo,const float3& wi) {
+		//return lan.evaluateBSDF(wo,wi);
+		return disney.evalutateBRDF(wo,wi);
+	}
+
 };
 

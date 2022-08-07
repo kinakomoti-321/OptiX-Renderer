@@ -154,7 +154,7 @@ public:
 		return brdf;
 	}
 
-	__device__ float3 evaluateBSDF(const float3& wo, float3& wi) {
+	__device__ float3 evaluateBSDF(const float3& wo,const float3& wi) {
 		float3 i = wo;
 		float3 n = { 0.0, 1.0, 0.0 };
 		float3 m = normalize(wi + wo);
@@ -337,7 +337,7 @@ public:
 		return brdf;
 	}
 
-	__device__ float3 evaluateBSDF(const float3& wo, float3& wi) {
+	__device__ float3 evaluateBSDF(const float3& wo,const float3& wi) {
 		float3 i = wo;
 		float3 n = { 0.0, 1.0, 0.0 };
 		float3 m = normalize(wi + wo);

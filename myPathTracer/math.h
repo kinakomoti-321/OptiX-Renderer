@@ -70,3 +70,18 @@ namespace BSDFMath {
 	static __forceinline__ __device__ float sinPhi2(const float3& w) { return sinPhi(w) * sinPhi(w); }
 }
 
+static __forceinline __device__ float3 AffineConvertPoint(float a[12], float3& point) {
+	return make_float3(
+		a[0] * point.x + a[1] * point.y + a[2] * point.z + a[3],
+		a[4] * point.x + a[5] * point.y + a[6] * point.z + a[7],
+		a[8] * point.x + a[9] * point.y + a[10] * point.z + a[11]
+	);
+}
+
+static __forceinline __device__ float3 AffineConvertVector(float a[12], float3& point) {
+	return make_float3(
+		a[0] * point.x + a[1] * point.y + a[2] * point.z ,
+		a[4] * point.x + a[5] * point.y + a[6] * point.z ,
+		a[8] * point.x + a[9] * point.y + a[10] * point.z
+	);
+}
