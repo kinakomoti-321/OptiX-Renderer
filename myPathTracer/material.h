@@ -45,6 +45,7 @@ struct Material
 	//Emmision
 	float3 emmision_color;
 	int emmision_color_tex;
+	bool is_light;
 
 	//Ideal Specular
 	bool ideal_specular = false;

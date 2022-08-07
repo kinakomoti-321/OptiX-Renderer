@@ -180,6 +180,10 @@ struct SceneData {
 	std::vector<Material> material;
 	std::vector<unsigned int> material_index;
 
+	std::vector<unsigned int> light_faceID;
+	std::vector<float> light_weight;
+	std::vector<float> light_nee_weight;
+
 	std::vector<std::shared_ptr<Texture>> textures;
 	std::vector<int> texture_index;
 
@@ -190,6 +194,20 @@ struct SceneData {
 
 	std::vector<Animation> animation;
 	std::vector<GASData> gas_data;
+
+	void lightWeightUpData() {
+		if(light_weight.size() == 0)return ;
+		float weight_sum = 0;
+		for (int i = 0; i < light_weight.size(); i++) {
+			weight_sum += light_weight[i];
+		}
+		
+		light_nee_weight.resize(light_weight.size());
+		light_nee_weight[0] = light_weight[0] / weight_sum;
+		for (int i = 1; i < light_weight.size(); i++) {
+			light_nee_weight[i] = light_weight[i - 1] / weight_sum;
+		}
+	}
 };
 
 
@@ -943,123 +961,15 @@ public:
 		Log::EndLog("Shading Binding Table Initialize");
 	}
 
-	void render(unsigned int sampling, unsigned int RENDERMODE, const std::string& filename, CameraStatus& camera) {
-		sutil::CUDAOutputBuffer<uchar4> output_buffer(sutil::CUDAOutputBufferType::CUDA_DEVICE, width, height);
-		sutil::CUDAOutputBuffer<uchar4> AOV_albedo(sutil::CUDAOutputBufferType::CUDA_DEVICE, width, height);
-		sutil::CUDAOutputBuffer<uchar4> AOV_normal(sutil::CUDAOutputBufferType::CUDA_DEVICE, width, height);
+	void render(unsigned int sampling, unsigned int RENDERMODE, const std::string& filename, CameraStatus& camera,float time) {
+		float now_rendertime = time;
 
-		//
-		// launch
-		//
-		Log::StartLog("Rendering");
-		Log::DebugLog("Sample", sampling);
-		Log::DebugLog("Width", width);
-		Log::DebugLog("Height", height);
-
-		if (RENDERMODE == PATHTRACE) {
-			Log::DebugLog("RenderMode", "PathTrace");
-		}
-		else if (RENDERMODE == NORMALCHECK) {
-			Log::DebugLog("RenderMode", "NormalCheck");
-		}
-		else if (RENDERMODE == UVCHECK) {
-			Log::DebugLog("RenderMode", "UVCheck");
-		}
-		else if (RENDERMODE == ALBEDOCHECK) {
-			Log::DebugLog("RenderMode", "AlbedoCheck");
-		}
-
-		{
-			CUstream stream;
-			CUDA_CHECK(cudaStreamCreate(&stream));
-
-			IASUpdate(0.0);
-
-			sutil::Camera cam;
-			configureCamera(cam, width, height);
-
-			Params params;
-			params.image = output_buffer.map();
-			params.AOV_albedo = AOV_albedo.map();
-			params.AOV_normal = AOV_normal.map();
-			params.image_width = width;
-			params.image_height = height;
-
-			params.handle = ac_data.ias_handle;
-			//params.handle = gas_handle;
-
-			params.sampling = sampling;
-			params.cam_eye = cam.eye();
-			params.cam_ori = camera.origin;
-			params.cam_dir = camera.direciton;
-			params.f = camera.f;
-
-			params.textures = reinterpret_cast<cudaTextureObject_t*>(renderData.d_textures);
-			params.ibl = ibl_texture_object;
-			params.has_ibl = have_ibl;
-			params.normals = reinterpret_cast<float3*>(renderData.d_normal);
-			params.texcoords = reinterpret_cast<float2*>(renderData.d_texcoord);
-			params.vertices = reinterpret_cast<float3*> (renderData.d_vertex);
-
-			params.RENDERE_MODE = RENDERMODE;
-			cam.UVWFrame(params.cam_u, params.cam_v, params.cam_w);
-
-			CUdeviceptr d_param;
-			CUDA_CHECK(cudaMalloc(reinterpret_cast<void**>(&d_param), sizeof(Params)));
-			CUDA_CHECK(cudaMemcpy(
-				reinterpret_cast<void*>(d_param),
-				&params, sizeof(params),
-				cudaMemcpyHostToDevice
-			));
-
-			auto start = std::chrono::system_clock::now();
-
-			OPTIX_CHECK(optixLaunch(pipeline, stream, d_param, sizeof(Params), &sbt, width, height, /*depth=*/1));
-			CUDA_SYNC_CHECK();
-
-			auto end = std::chrono::system_clock::now();
-			auto Renderingtime = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
-			std::cout << std::endl << "Rendering finish" << std::endl;
-			std::cout << "Rendering Time is " << Renderingtime << "ms" << std::endl;
-			std::cout << std::endl << "----------------------" << std::endl;
-			std::cout << "Rendering End" << std::endl;
-			std::cout << "----------------------" << std::endl;
-			output_buffer.unmap();
-		}
-		//
-		// Display results
-		//
-		{
-			sutil::ImageBuffer buffer;
-			buffer.data = output_buffer.getHostPointer();
-			if (RENDERMODE == NORMALCHECK) buffer.data = AOV_normal.getHostPointer();
-			if (RENDERMODE == ALBEDOCHECK) buffer.data = AOV_albedo.getHostPointer();
-
-			buffer.width = width;
-			buffer.height = height;
-			buffer.pixel_format = sutil::BufferImageFormat::UNSIGNED_BYTE4;
-			std::string imagename = filename + ".png";
-			//std::string imagename = "1 .png";
-			//std::cout << imagename << std::endl;
-			sutil::displayBufferWindow(filename.c_str(), buffer);
-			sutil::saveImage(imagename.c_str(), buffer, false);
-		}
-	}
-
-	void animationRender(unsigned int sampling, unsigned int RENDERMODE, const std::string& filename, CameraStatus& camera, FlameData flamedata) {
-		float now_rendertime = flamedata.minRenderTime;
-		float delta_rendertime = 1.0f / static_cast<float>(flamedata.frameRate);
-		int renderIteration = static_cast<int>((flamedata.maxRenderTime - flamedata.minRenderTime) / delta_rendertime);
-		
-		long long animation_renderingTime = 0;
-		for (int frame = 0; frame < renderIteration; frame++) {
+		for (int frame = 0; frame < 1; frame++) {
 			auto start = std::chrono::system_clock::now();
 			sutil::CUDAOutputBuffer<uchar4> output_buffer(sutil::CUDAOutputBufferType::CUDA_DEVICE, width, height);
 			sutil::CUDAOutputBuffer<uchar4> AOV_albedo(sutil::CUDAOutputBufferType::CUDA_DEVICE, width, height);
 			sutil::CUDAOutputBuffer<uchar4> AOV_normal(sutil::CUDAOutputBufferType::CUDA_DEVICE, width, height);
-			//
-			// launch
-			//
+
 			Log::StartLog("Rendering");
 			Log::DebugLog("Sample", sampling);
 			Log::DebugLog("Width", width);
@@ -1135,19 +1045,9 @@ public:
 				OPTIX_CHECK(optixLaunch(pipeline, stream, d_param, sizeof(Params), &sbt, width, height, /*depth=*/1));
 				CUDA_SYNC_CHECK();
 
-				auto end = std::chrono::system_clock::now();
-				auto Renderingtime = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
-				animation_renderingTime += Renderingtime;
-				std::cout << std::endl << "Rendering finish" << std::endl;
-				std::cout << "Rendering Time is " << Renderingtime << "ms" << std::endl;
-				std::cout << std::endl << "----------------------" << std::endl;
-				std::cout << "Rendering End" << std::endl;
-				std::cout << "----------------------" << std::endl;
 				output_buffer.unmap();
 			}
-			//
-			// Display results
-			//
+
 			{
 				sutil::ImageBuffer buffer;
 				buffer.data = output_buffer.getHostPointer();
@@ -1161,6 +1061,130 @@ public:
 				//std::string imagename = "1 .png";
 				//std::cout << imagename << std::endl;
 				sutil::saveImage(imagename.c_str(), buffer, false);
+
+				auto end = std::chrono::system_clock::now();
+				auto Renderingtime = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+				std::cout << std::endl << "Rendering finish" << std::endl;
+				std::cout << "Rendering Time is " << Renderingtime << "ms" << std::endl;
+				std::cout << std::endl << "----------------------" << std::endl;
+				std::cout << "Rendering End" << std::endl;
+				std::cout << "----------------------" << std::endl;
+			}
+		}
+	}
+
+	void animationRender(unsigned int sampling, unsigned int RENDERMODE, const std::string& filename, CameraStatus& camera, FlameData flamedata) {
+		float now_rendertime = flamedata.minRenderTime;
+		float delta_rendertime = 1.0f / static_cast<float>(flamedata.frameRate);
+		int renderIteration = static_cast<int>((flamedata.maxRenderTime - flamedata.minRenderTime) / delta_rendertime);
+		
+		long long animation_renderingTime = 0;
+		for (int frame = 0; frame < renderIteration; frame++) {
+			auto start = std::chrono::system_clock::now();
+			sutil::CUDAOutputBuffer<uchar4> output_buffer(sutil::CUDAOutputBufferType::CUDA_DEVICE, width, height);
+			sutil::CUDAOutputBuffer<uchar4> AOV_albedo(sutil::CUDAOutputBufferType::CUDA_DEVICE, width, height);
+			sutil::CUDAOutputBuffer<uchar4> AOV_normal(sutil::CUDAOutputBufferType::CUDA_DEVICE, width, height);
+
+			Log::StartLog("Rendering");
+			Log::DebugLog("Sample", sampling);
+			Log::DebugLog("Width", width);
+			Log::DebugLog("Height", height);
+			Log::DebugLog("Frame", frame);
+
+			if (RENDERMODE == PATHTRACE) {
+				Log::DebugLog("RenderMode", "PathTrace");
+			}
+			else if (RENDERMODE == NORMALCHECK) {
+				Log::DebugLog("RenderMode", "NormalCheck");
+			}
+			else if (RENDERMODE == UVCHECK) {
+				Log::DebugLog("RenderMode", "UVCheck");
+			}
+			else if (RENDERMODE == ALBEDOCHECK) {
+				Log::DebugLog("RenderMode", "AlbedoCheck");
+			}
+
+			{
+				CUstream stream;
+				CUDA_CHECK(cudaStreamCreate(&stream));
+
+				IASUpdate(now_rendertime);
+
+				sutil::Camera cam;
+				configureCamera(cam, width, height);
+
+				Params params;
+				params.image = output_buffer.map();
+				params.AOV_albedo = AOV_albedo.map();
+				params.AOV_normal = AOV_normal.map();
+				params.image_width = width;
+				params.image_height = height;
+
+				//params.handle = gas_handle;
+				params.handle = ac_data.ias_handle;
+				params.sampling = sampling;
+				params.cam_eye = cam.eye();
+
+				auto& cameraAnim = sceneData.animation[camera.cameraAnimationIndex];
+				float4 camera_origin = cameraAnim.getTranslateAnimationAffine(now_rendertime) * make_float4(camera.origin, 1);
+				float4 camera_direction = cameraAnim.getRotateAnimationAffine(now_rendertime) * make_float4(camera.direciton, 0);
+
+				params.cam_ori = make_float3(camera_origin);
+				params.cam_dir = normalize(make_float3(camera_direction)); //normalize(make_float3( - camera_origin));
+				params.f = camera.f;
+
+				params.instance_data = reinterpret_cast<InsatanceData*>(ac_data.d_instance_data);
+				params.face_instanceID = reinterpret_cast<unsigned int*>(ac_data.d_face_instanceID);
+
+				params.textures = reinterpret_cast<cudaTextureObject_t*>(renderData.d_textures);
+				params.ibl = ibl_texture_object;
+				params.has_ibl = have_ibl;
+				params.normals = reinterpret_cast<float3*>(renderData.d_normal);
+				params.texcoords = reinterpret_cast<float2*>(renderData.d_texcoord);
+				params.vertices = reinterpret_cast<float3*> (renderData.d_vertex);
+
+				params.frame = frame;
+
+				params.RENDERE_MODE = RENDERMODE;
+				cam.UVWFrame(params.cam_u, params.cam_v, params.cam_w);
+
+				CUdeviceptr d_param;
+				CUDA_CHECK(cudaMalloc(reinterpret_cast<void**>(&d_param), sizeof(Params)));
+				CUDA_CHECK(cudaMemcpy(
+					reinterpret_cast<void*>(d_param),
+					&params, sizeof(params),
+					cudaMemcpyHostToDevice
+				));
+
+
+				OPTIX_CHECK(optixLaunch(pipeline, stream, d_param, sizeof(Params), &sbt, width, height, /*depth=*/1));
+				CUDA_SYNC_CHECK();
+
+				output_buffer.unmap();
+			}
+
+			{
+				sutil::ImageBuffer buffer;
+				buffer.data = output_buffer.getHostPointer();
+				if (RENDERMODE == NORMALCHECK) buffer.data = AOV_normal.getHostPointer();
+				if (RENDERMODE == ALBEDOCHECK) buffer.data = AOV_albedo.getHostPointer();
+
+				buffer.width = width;
+				buffer.height = height;
+				buffer.pixel_format = sutil::BufferImageFormat::UNSIGNED_BYTE4;
+				std::string imagename = filename + "_" + std::to_string(frame) + ".png";
+				//std::string imagename = "1 .png";
+				//std::cout << imagename << std::endl;
+				sutil::saveImage(imagename.c_str(), buffer, false);
+
+				auto end = std::chrono::system_clock::now();
+				auto Renderingtime = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+				animation_renderingTime += Renderingtime;
+				std::cout << std::endl << "Rendering finish" << std::endl;
+				std::cout << "Rendering Time is " << Renderingtime << "ms" << std::endl;
+				std::cout << std::endl << "----------------------" << std::endl;
+				std::cout << "Rendering End" << std::endl;
+				std::cout << "----------------------" << std::endl;
 			}
 			now_rendertime += delta_rendertime;
 

@@ -1055,7 +1055,7 @@ struct v4dArray {
 };
 
 
-bool gltfloader(std::string& filepath,std::string& filename, SceneData& scenedata) {
+bool gltfloader(std::string& filepath, std::string& filename, SceneData& scenedata) {
 
 	// Store original JSON string for `extras` and `extensions`
 	bool store_original_json_for_extras_and_extensions = true;
@@ -1064,7 +1064,7 @@ bool gltfloader(std::string& filepath,std::string& filename, SceneData& scenedat
 	tinygltf::TinyGLTF gltf_ctx;
 	std::string err;
 	std::string warn;
-	std::string input_filename = filepath + "/"+ filename;
+	std::string input_filename = filepath + "/" + filename;
 	std::string ext = GetFilePathExtension(input_filename);
 
 	gltf_ctx.SetStoreOriginalJSONForExtrasAndExtensions(
@@ -1107,6 +1107,7 @@ bool gltfloader(std::string& filepath,std::string& filename, SceneData& scenedat
 	animation.resize(model.nodes.size());
 	//Material
 	std::map<std::string, int> known_tex;
+	std::vector<bool> is_light;
 	for (int i = 0; i < model.materials.size(); i++) {
 		auto material = model.materials[i];
 		auto mat_pram = material.pbrMetallicRoughness;
@@ -1124,7 +1125,7 @@ bool gltfloader(std::string& filepath,std::string& filename, SceneData& scenedat
 		else {
 			mat.base_color_tex = -1;
 		}
-		
+
 		Log::DebugLog(mat_pram.metallicRoughnessTexture.index);
 		mat.roughness = float(mat_pram.roughnessFactor);
 		if (mat_pram.metallicRoughnessTexture.index != -1) {
@@ -1140,11 +1141,16 @@ bool gltfloader(std::string& filepath,std::string& filename, SceneData& scenedat
 
 		mat.metallic = float(mat_pram.metallicFactor);
 		mat.metallic_tex = mat.roughness_tex;
-		
+
 		mat.emmision_color = { float(material.emissiveFactor[0]),float(material.emissiveFactor[1]),float(material.emissiveFactor[2]) };
 		mat.emmision_color *= 10.0;
 		mat.emmision_color_tex = -1;
-		
+		if (mat.emmision_color.x + mat.emmision_color.y + mat.emmision_color.z > 0.0) {
+			mat.is_light = true;
+		}
+		else {
+			mat.is_light = false;
+		}
 		if (material.normalTexture.index != -1) {
 			std::string normal_texture_name = model.images[model.textures[material.normalTexture.index].source].uri;
 			Log::DebugLog(normal_texture_name);
@@ -1257,6 +1263,7 @@ bool gltfloader(std::string& filepath,std::string& filename, SceneData& scenedat
 				gasdata.vert_offset = scenedata.vertices.size();
 				unsigned int mesh_poly = 0;
 
+				int prim_id = scenedata.vertices.size() / 3;
 				for (auto& primitives : meshs.primitives) {
 					std::unique_ptr<intArrayBase> indicesArrayPtr;
 					{
@@ -1391,6 +1398,18 @@ bool gltfloader(std::string& filepath,std::string& filename, SceneData& scenedat
 						}
 						//Log::DebugLog("material", primitives.material);
 						scenedata.material_index.push_back(primitives.material);
+
+						if (scenedata.material[primitives.material].is_light) {
+							scenedata.light_faceID.push_back(prim_id);
+							float3 p1 = vert[1] - vert[0];
+							float3 p2 = vert[2] - vert[0];
+							float3 light_color = scenedata.material[primitives.material].emmision_color;
+							float area = length(cross(p1, p2));
+							float radiance = 0.2126 * light_color.x + 0.7152 * light_color.y + 0.0722 * light_color.z;
+							scenedata.light_weight.push_back(area * radiance);
+						}
+
+						prim_id++;
 					}
 					mesh_poly += indices.size() / 3;
 				}
@@ -1398,7 +1417,7 @@ bool gltfloader(std::string& filepath,std::string& filename, SceneData& scenedat
 				gasdata.poly_n = mesh_poly;
 				gasdata.animation_index = node_index;
 				scenedata.gas_data.push_back(gasdata);
-				
+
 			}
 			else {
 				//Camera
@@ -1417,7 +1436,8 @@ bool gltfloader(std::string& filepath,std::string& filename, SceneData& scenedat
 			scenedata.camera.cameraAnimationIndex = -1;
 		}
 	}
-	
+
+	scenedata.lightWeightUpData();
 
 	//Animation
 	{
