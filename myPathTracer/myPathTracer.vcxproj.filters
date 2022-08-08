@@ -9,6 +9,9 @@
     <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\myPathTracer\myPathTracer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="MIS.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="NEE.h">
       <Filter>Header Files</Filter>
     </ClInclude>

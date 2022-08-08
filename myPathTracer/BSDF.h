@@ -93,6 +93,9 @@ public:
 		//return lan.evaluateBSDF(wo, wi) * (1.0 - param.metallic) + ggx.evaluateBSDF(wo, wi);
 		return disney.evalutateBRDF(wo,wi);
 	}
-
+	
+	__device__ float pdfBSDF(const float3& wo, const float3& wi) {
+		return disney.pdfBSDF(wo, wi);
+	}
 };
 

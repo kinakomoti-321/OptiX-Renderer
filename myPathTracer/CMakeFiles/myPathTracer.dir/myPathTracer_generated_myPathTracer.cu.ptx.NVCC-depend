@@ -135,4 +135,5 @@ myPathTracer.obj : C:/Users/PC/Desktop/Program/OptixRenderer/SDK/myPathTracer/my
     C:/Users/PC/Desktop/Program/OptixRenderer/build/myPathTracer/normal_bumpmap.h \
     C:/Users/PC/Desktop/Program/OptixRenderer/build/myPathTracer/NEE.h \
     C:/Users/PC/Desktop/Program/OptixRenderer/build/myPathTracer/light_sampling.h \
+    C:/Users/PC/Desktop/Program/OptixRenderer/build/myPathTracer/MIS.h \
     C:/Users/PC/Desktop/Program/OptixRenderer/build/myPathTracer/IBL.h

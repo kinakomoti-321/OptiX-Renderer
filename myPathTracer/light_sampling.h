@@ -42,3 +42,20 @@ static __forceinline__ __device__ float3 lightPointSampling(unsigned int& seed,f
 	light_color = params.light_color[color_id];
 	return vert;
 }
+
+
+static __forceinline__ __device__ float lightPointPDF(unsigned int primitiveID) {
+	unsigned int primitive_id = primitiveID;
+	unsigned int instance_id = params.face_instanceID[primitive_id];
+	float affine[12];
+	getInstanceAffine(affine, instance_id);
+
+	float3 v1 = AffineConvertPoint(affine, params.vertices[primitive_id * 3]);
+	float3 v2 = AffineConvertPoint(affine, params.vertices[primitive_id * 3 + 1]);
+	float3 v3 = AffineConvertPoint(affine, params.vertices[primitive_id * 3 + 2]);
+
+	float lightArea = length(cross(v2 - v1, v3 - v1)) / 2.0f;
+
+	return 1.0f / float(params.light_polyn * lightArea);
+}
+

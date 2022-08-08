@@ -227,4 +227,15 @@ public:
 
 		return (lerp(f_diffuse, f_subsurface, param.subsurface) + f_sheen) * (1.0f - param.metallic) + f_specular + f_clearcoat * param.clearcoat;
 	}
+
+	__device__ float pdfBSDF(const float3& wi, const float3& wo) {
+			float Lambert_Weight = lan.reflect_weight(wi) * (1.0 - param.metallic);
+			float Specular_Weight = ggx.reflect_weight(wi);
+			float Sum_Weight = Lambert_Weight + Specular_Weight;
+
+			float Lambert_pdf = Lambert_Weight / Sum_Weight;
+			float Specular_pdf = Specular_Weight / Sum_Weight;
+
+			return Lambert_pdf * lan.pdfBSDF(wi, wo) + Specular_pdf * ggx.pdfBSDF(wi, wo);
+	}
 };
