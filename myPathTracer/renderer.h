@@ -142,7 +142,7 @@ struct AccelationStructureData {
 			CUDA_CHECK(cudaFree(reinterpret_cast<void*>(d_gas_output_buffer_array[i])));
 		}
 	}
-	
+
 	void insatnceTransformInit() {
 		const size_t instance_data_size = sizeof(InsatanceData) * instance_data.size();
 		CUDA_CHECK(cudaMalloc(reinterpret_cast<void**>(&d_instance_data), instance_data_size));
@@ -154,7 +154,7 @@ struct AccelationStructureData {
 				cudaMemcpyHostToDevice
 			)
 		);
-		
+
 		const size_t face_instanceID_size = sizeof(unsigned int) * face_instanceID.size();
 		CUDA_CHECK(cudaMalloc(reinterpret_cast<void**>(&d_face_instanceID), face_instanceID_size));
 		CUDA_CHECK(
@@ -206,17 +206,24 @@ struct SceneData {
 	std::vector<GASData> gas_data;
 
 	void lightWeightUpData() {
-		if(light_weight.size() == 0)return ;
+		if (light_weight.size() == 0)return;
 		float weight_sum = 0;
 		for (int i = 0; i < light_weight.size(); i++) {
 			weight_sum += light_weight[i];
 		}
-		
+
 		light_nee_weight.resize(light_weight.size());
-		light_nee_weight[0] = light_weight[0] / weight_sum;
+		light_nee_weight[0] = 0;
 		for (int i = 1; i < light_weight.size(); i++) {
-			light_nee_weight[i] = light_weight[i - 1] / weight_sum;
+			light_nee_weight[i] = light_weight[i - 1] / weight_sum + light_nee_weight[i - 1];
 		}
+
+		/*
+		Log::DebugLog(light_faceID);
+		Log::DebugLog(light_weight);
+		Log::DebugLog(light_nee_weight);
+		Log::DebugLog(light_nee_weight.size());
+		*/
 	}
 };
 
@@ -395,9 +402,9 @@ private:
 
 			sum_face += sceneData.gas_data[i].poly_n;
 		}
-		
-		Log::DebugLog("insatnce ID equel sum face",sceneData.vertices.size() / 3 == ac_data.face_instanceID.size());
-		Log::DebugLog("insatnce Data check",ac_data.instance_data.size() == ac_data.instance_array.size());
+
+		Log::DebugLog("insatnce ID equel sum face", sceneData.vertices.size() / 3 == ac_data.face_instanceID.size());
+		Log::DebugLog("insatnce Data check", ac_data.instance_data.size() == ac_data.instance_array.size());
 		ac_data.insatnceTransformInit();
 
 		CUDA_CHECK(cudaMalloc(reinterpret_cast<void**>(&ac_data.d_instance), sizeof(OptixInstance) * ac_data.instance_array.size()));
@@ -502,8 +509,8 @@ private:
 			light_color_size,
 			cudaMemcpyHostToDevice
 		));
-		
-		const size_t light_colorIndex_size = sizeof(float3) * sceneData.light_color.size();
+
+		const size_t light_colorIndex_size = sizeof(unsigned int) * sceneData.light_colorIndex.size();
 		CUdeviceptr d_light_colorIndex = 0;
 		CUDA_CHECK(cudaMalloc(reinterpret_cast<void**>(&d_light_colorIndex), light_colorIndex_size));
 		CUDA_CHECK(cudaMemcpy(
@@ -526,12 +533,12 @@ private:
 		Log::DebugLog("IAS Updating");
 		for (int i = 0; i < ac_data.instance_array.size(); i++) {
 			Affine4x4 tf = sceneData.animation[sceneData.gas_data[i].animation_index].getAnimationAffine(time);
-			float transform[12] = { tf[0],tf[1],tf[2],tf[3],tf[4],tf[5],tf[6],tf[7],tf[8],tf[9],tf[10],tf[11]};
+			float transform[12] = { tf[0],tf[1],tf[2],tf[3],tf[4],tf[5],tf[6],tf[7],tf[8],tf[9],tf[10],tf[11] };
 			memcpy(ac_data.instance_array[i].transform, transform, sizeof(float) * 12);
 			memcpy(ac_data.instance_data[i].transform, transform, sizeof(float) * 12);
 		}
 		ac_data.instanceTransformUpdate();
-		
+
 		ac_data.ias_accel_options.buildFlags = OPTIX_BUILD_FLAG_ALLOW_UPDATE;
 		ac_data.ias_accel_options.operation = OPTIX_BUILD_OPERATION_UPDATE;
 
@@ -1014,7 +1021,7 @@ public:
 		Log::EndLog("Shading Binding Table Initialize");
 	}
 
-	void render(unsigned int sampling, unsigned int RENDERMODE, const std::string& filename, CameraStatus& camera,float time) {
+	void render(unsigned int sampling, unsigned int RENDERMODE, const std::string& filename, CameraStatus& camera, float time) {
 		float now_rendertime = time;
 
 		for (int frame = 0; frame < 1; frame++) {
@@ -1085,10 +1092,6 @@ public:
 				params.light_faceID = reinterpret_cast<unsigned int*>(renderData.d_light_primID);
 				params.light_polyn = sceneData.light_faceID.size();
 
-				params.light_nee_weight = reinterpret_cast<float*>(renderData.d_light_nee_weight);
-				params.light_faceID = reinterpret_cast<unsigned int*>(renderData.d_light_primID);
-				params.light_polyn = sceneData.light_faceID.size();
-
 				params.frame = frame;
 
 				params.RENDERE_MODE = RENDERMODE;
@@ -1138,7 +1141,7 @@ public:
 		float now_rendertime = flamedata.minRenderTime;
 		float delta_rendertime = 1.0f / static_cast<float>(flamedata.frameRate);
 		int renderIteration = static_cast<int>((flamedata.maxRenderTime - flamedata.minRenderTime) / delta_rendertime);
-		
+
 		long long animation_renderingTime = 0;
 		for (int frame = 0; frame < renderIteration; frame++) {
 			auto start = std::chrono::system_clock::now();

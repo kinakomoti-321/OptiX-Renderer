@@ -1143,10 +1143,8 @@ bool gltfloader(std::string& filepath, std::string& filename, SceneData& sceneda
 		mat.metallic_tex = mat.roughness_tex;
 
 		mat.emmision_color = { float(material.emissiveFactor[0]),float(material.emissiveFactor[1]),float(material.emissiveFactor[2]) };
-		mat.emmision_color *= 10.0;
 		mat.emmision_color_tex = -1;
 
-		scenedata.light_color.push_back(mat.emmision_color);
 
 		if (mat.emmision_color.x + mat.emmision_color.y + mat.emmision_color.z > 0.0) {
 			mat.is_light = true;
@@ -1195,7 +1193,6 @@ bool gltfloader(std::string& filepath, std::string& filename, SceneData& sceneda
 				tinygltf::Value::Object::const_iterator it(o.begin());
 				tinygltf::Value::Object::const_iterator itEnd(o.end());
 				for (; it != itEnd; it++) {
-
 				}
 			}
 			else if (mat_extensions.first == "KHR_materials_transmission") {
@@ -1211,12 +1208,23 @@ bool gltfloader(std::string& filepath, std::string& filename, SceneData& sceneda
 				tinygltf::Value::Object::const_iterator it(o.begin());
 				tinygltf::Value::Object::const_iterator itEnd(o.end());
 				for (; it != itEnd; it++) {
+				}
+			}
 
+			else if (mat_extensions.first == "KHR_materials_emissive_strength") {
+				const tinygltf::Value::Object& o = mat_extensions.second.Get<tinygltf::Value::Object>();
+				tinygltf::Value::Object::const_iterator it(o.begin());
+				tinygltf::Value::Object::const_iterator itEnd(o.end());
+				for (; it != itEnd; it++) {
+					if (it->first == "emissiveStrength") {
+						mat.emmision_color *= it->second.Get<double>();
+					}
 				}
 			}
 		}
 
 		mat.ideal_specular = false;
+		scenedata.light_color.push_back(mat.emmision_color);
 		scenedata.material.push_back(mat);
 		Log::DebugLog(mat);
 	}
