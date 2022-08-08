@@ -218,12 +218,10 @@ struct SceneData {
 			light_nee_weight[i] = light_weight[i - 1] / weight_sum + light_nee_weight[i - 1];
 		}
 
-		/*
 		Log::DebugLog(light_faceID);
 		Log::DebugLog(light_weight);
 		Log::DebugLog(light_nee_weight);
 		Log::DebugLog(light_nee_weight.size());
-		*/
 	}
 };
 
@@ -531,12 +529,14 @@ private:
 
 	void IASUpdate(float time) {
 		Log::DebugLog("IAS Updating");
+
 		for (int i = 0; i < ac_data.instance_array.size(); i++) {
 			Affine4x4 tf = sceneData.animation[sceneData.gas_data[i].animation_index].getAnimationAffine(time);
 			float transform[12] = { tf[0],tf[1],tf[2],tf[3],tf[4],tf[5],tf[6],tf[7],tf[8],tf[9],tf[10],tf[11] };
 			memcpy(ac_data.instance_array[i].transform, transform, sizeof(float) * 12);
 			memcpy(ac_data.instance_data[i].transform, transform, sizeof(float) * 12);
 		}
+
 		ac_data.instanceTransformUpdate();
 
 		ac_data.ias_accel_options.buildFlags = OPTIX_BUILD_FLAG_ALLOW_UPDATE;
@@ -557,7 +557,33 @@ private:
 			nullptr,            // emitted property list
 			0                   // num emitted properties
 		));
+		
+		//Light Weight Update
+		for (int i = 0; i < sceneData.light_faceID.size(); i++) {
+			unsigned int primitive_id = sceneData.light_faceID[i];
+			unsigned int instance_id = ac_data.face_instanceID[primitive_id];
+			Affine4x4 affine = sceneData.animation[sceneData.gas_data[instance_id].animation_index].getAnimationAffine(time);
+			
+			float3 v1 = affineConvertPoint(affine,sceneData.vertices[primitive_id * 3]);
+			float3 v2 = affineConvertPoint(affine,sceneData.vertices[primitive_id * 3 + 1]);
+			float3 v3 = affineConvertPoint(affine,sceneData.vertices[primitive_id * 3 + 2]);
+			float Area = length(cross(v2 - v1, v3 - v1)) * 0.5f;
+			
+			float3 light_color =sceneData.light_color[sceneData.light_colorIndex[i]];
+			float radiance = 0.2126 * light_color.x + 0.7152 * light_color.y + 0.0722 * light_color.z;
+			sceneData.light_weight[i] = Area * radiance;
+		}
 
+		sceneData.lightWeightUpData();
+
+		const size_t light_nee_weight_size = sizeof(float) * sceneData.light_nee_weight.size();
+
+		CUDA_CHECK(cudaMemcpy(
+			reinterpret_cast<void*>(renderData.d_light_nee_weight),
+			sceneData.light_nee_weight.data(),
+			light_nee_weight_size,
+			cudaMemcpyHostToDevice
+		));
 		Log::DebugLog("IAS Updating Finished");
 	}
 

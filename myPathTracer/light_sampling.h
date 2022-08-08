@@ -22,11 +22,10 @@ static __forceinline__ __device__ float3 lightPointSampling(unsigned int& seed, 
 		
 	}
 	*/
-
 	//Weighted
 	{
 		//“ñ•ª’Tõ‚Åoffset‚ð“¾‚é
-		int first = 0, len = params.light_polyn - 1;
+		int first = 0, len = params.light_polyn;
 		while (len > 0) {
 			int half = len >> 1, middle = first + half;
 			if (params.light_nee_weight[middle] <= p) {
@@ -46,7 +45,7 @@ static __forceinline__ __device__ float3 lightPointSampling(unsigned int& seed, 
 			light_index = offset;
 			selection_pdf =  params.light_nee_weight[light_index + 1] - params.light_nee_weight[light_index];
 		}
-		//printf("light_index %d, light_weight %f offset %d \n", light_index,offset);
+		//printf("light_index %d, light_weight %f offset %d \n",light_index, selection_pdf,offset);
 	}
 
 	//printf("sampling \n");
@@ -86,6 +85,39 @@ static __forceinline__ __device__ float3 lightPointSampling(unsigned int& seed, 
 
 static __forceinline__ __device__ float lightPointPDF(unsigned int primitiveID) {
 	unsigned int primitive_id = primitiveID;
+	float selection_pdf;
+	/*
+	//Uniform;
+	{
+		selection_pdf = 1.0f / float(params.light_polyn);
+	}
+	*/
+	
+	//Weighted
+	{
+		int first = 0, len = params.light_polyn;
+		while (len > 0) {
+			int half = len >> 1, middle = first + half;
+			if (params.light_faceID[middle] <= primitive_id) {
+				first = middle + 1;
+				len -= half + 1;
+			}
+			else {
+				len = half;
+			}
+		}
+		int offset = first-1;
+		unsigned int light_index = offset;
+		if (light_index >= params.light_polyn-1) {
+			selection_pdf = 1.0 - params.light_nee_weight[light_index];
+		}
+		else
+		{
+			selection_pdf =  params.light_nee_weight[light_index + 1] - params.light_nee_weight[light_index];
+		}
+		//printf("light_index %d, light_weight %f offset %d primID %d \n",light_index, selection_pdf,offset,primitiveID);
+	}
+
 	unsigned int instance_id = params.face_instanceID[primitive_id];
 	float affine[12];
 	getInstanceAffine(affine, instance_id);
@@ -96,6 +128,6 @@ static __forceinline__ __device__ float lightPointPDF(unsigned int primitiveID) 
 
 	float lightArea = length(cross(v2 - v1, v3 - v1)) / 2.0f;
 
-	return 1.0f / float(params.light_polyn * lightArea);
+	return  selection_pdf / lightArea;
 }
 

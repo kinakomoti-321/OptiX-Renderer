@@ -76,6 +76,18 @@ Affine4x4 operator*(const Affine4x4& a,const Affine4x4& b) {
 	return Affine4x4(v);
 }
 
+float3 affineConvertPoint(const Affine4x4& affine,const float3& point) {
+	float4 point_vec4 = make_float4(point, 1.0);
+	point_vec4 = affine * point_vec4;
+	return make_float3(point_vec4);
+}
+
+float3 affineConvertVector(const Affine4x4& affine,const float3& point) {
+	float4 point_vec4 = make_float4(point, 0.0);
+	point_vec4 = affine * point_vec4;
+	return make_float3(point_vec4);
+}
+
 std::ostream& operator<<(std::ostream& stream, const Affine4x4& a)
 {
 	for (int j = 0; j < 4; j++) {

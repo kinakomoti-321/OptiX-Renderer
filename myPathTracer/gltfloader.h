@@ -1415,7 +1415,7 @@ bool gltfloader(std::string& filepath, std::string& filename, SceneData& sceneda
 							float3 p1 = vert[1] - vert[0];
 							float3 p2 = vert[2] - vert[0];
 							float3 light_color = scenedata.material[primitives.material].emmision_color;
-							float area = length(cross(p1, p2));
+							float area = length(cross(p1, p2)) / 2;
 							float radiance = 0.2126 * light_color.x + 0.7152 * light_color.y + 0.0722 * light_color.z;
 							scenedata.light_weight.push_back(area * radiance);
 							scenedata.light_colorIndex.push_back(primitives.material);
