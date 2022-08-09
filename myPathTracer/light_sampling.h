@@ -6,7 +6,18 @@
 #include <myPathTracer/RayTrace.h>
 #include <myPathTracer/math.h>
 
-static __forceinline__ __device__ float3 lightPointSampling(unsigned int& seed, float& pdf, float3& light_color, float3& light_normal) {
+static __forceinline__ __device__ float3 lightPointSampling(unsigned int& seed, float& pdf, float3& light_color, float3& light_normal,bool& is_direciton) {
+
+	float direction_p = rnd(seed);
+	if (direction_p < params.directional_light_weight) {
+		light_color = params.directional_light_color;
+		light_normal = -params.directional_light_direction;
+		pdf = params.directional_light_weight;
+		is_direciton = true;
+		return make_float3(1);
+	}
+
+	is_direciton = false;
 	float p = rnd(seed);
 
 	float selection_pdf = 0;
@@ -77,7 +88,8 @@ static __forceinline__ __device__ float3 lightPointSampling(unsigned int& seed, 
 	float3 normal = normalize(AffineConvertVector(affine,n1 * f1 + n2 * f2 + n3 * f3));
 	light_normal = normal;
 
-	pdf = selection_pdf / lightArea;
+	//pdf = selection_pdf / lightArea;
+	pdf = (1.0f - params.directional_light_weight) * selection_pdf / lightArea;
 	light_color = params.light_color[color_id];
 	return vert;
 }
@@ -128,6 +140,6 @@ static __forceinline__ __device__ float lightPointPDF(unsigned int primitiveID) 
 
 	float lightArea = length(cross(v2 - v1, v3 - v1)) / 2.0f;
 
-	return  selection_pdf / lightArea;
+	return (1.0f - params.directional_light_weight) * selection_pdf / lightArea;
 }
 

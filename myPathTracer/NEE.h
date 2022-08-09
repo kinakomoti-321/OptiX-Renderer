@@ -58,17 +58,20 @@ static __forceinline__ __device__ float3 NEE(const float3 cameraRayOri, const fl
 
 		{
 			PRD light_shot;
-			light_shot.done = false;
+			light_shot.intersection = false;
 
 			float light_pdf;
 			float3 light_color;
 			float3 light_normal;
-			float3 light_position = lightPointSampling(prd.seed,light_pdf,light_color,light_normal);
+			bool is_direction = false;
+			float3 light_position = lightPointSampling(prd.seed,light_pdf,light_color,light_normal,is_direction);
 
 			float3 light_shadowRay_origin = prd.origin;
-			float3 light_shadowRay_direciton = normalize(light_position - light_shadowRay_origin);
+			//float3 light_shadowRay_direciton =  normalize(light_position - light_shadowRay_origin);
+			float3 light_shadowRay_direciton = (is_direction) ? - light_normal : normalize(light_position - light_shadowRay_origin);
+			//printf("(%f,%f,%f,%d)\n", light_normal.x, light_normal.y, light_normal.z,is_direction);
 
-			float light_distance = length(light_position - light_shadowRay_origin);
+			float light_distance = (is_direction) ? 1e16f :length(light_position - light_shadowRay_origin);
 			float ipsiron_distance = 0.001;
 
 			TraceOcculution(
@@ -80,7 +83,7 @@ static __forceinline__ __device__ float3 NEE(const float3 cameraRayOri, const fl
 				&light_shot
 			);
 
-			if (light_shot.done) {
+			if (!light_shot.intersection) {
 				float cosine1 = absDot(normal,light_shadowRay_direciton);
 				float cosine2 = absDot(light_normal,-light_shadowRay_direciton);
 
@@ -91,7 +94,7 @@ static __forceinline__ __device__ float3 NEE(const float3 cameraRayOri, const fl
 
 				float3 bsdf = CurrentBSDF.evaluateBSDF(local_wo,local_wi);
 
-				float G = cosine2 / (light_distance * light_distance);
+				float G = (is_direction) ? 1.0f :cosine2 / (light_distance * light_distance);
 
 				LTE += prd.throughput * (bsdf * G * cosine1 / light_pdf) * light_color;
 			}

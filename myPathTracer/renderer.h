@@ -194,6 +194,10 @@ struct SceneData {
 	std::vector<float> light_weight;
 	std::vector<float> light_nee_weight;
 
+	float3 directional_light_direction = normalize(make_float3(1,1,0));
+	float3 directional_light_color = make_float3(1);
+	float directional_light_weight;
+
 	std::vector<std::shared_ptr<Texture>> textures;
 	std::vector<int> texture_index;
 
@@ -1238,6 +1242,10 @@ public:
 				params.light_polyn = sceneData.light_faceID.size();
 				params.light_color = reinterpret_cast<float3*>(renderData.d_light_color);
 				params.light_colorIndex = reinterpret_cast<unsigned int*>(renderData.d_light_colorIndex);
+
+				params.directional_light_direction = normalize(make_float3(0, 1, 0.2 * std::cos(3.14159256 * (now_rendertime/10.0f))));
+				params.directional_light_weight = sceneData.directional_light_weight;
+				params.directional_light_color = sceneData.directional_light_color;
 
 				params.frame = frame;
 

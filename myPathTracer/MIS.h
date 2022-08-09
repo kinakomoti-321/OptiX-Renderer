@@ -57,17 +57,20 @@ static __forceinline__ __device__ float3 MIS(const float3 cameraRayOri, const fl
 
 		{
 			PRD light_shot;
-			light_shot.done = false;
+			light_shot.intersection = false;
 
 			float light_pdf;
 			float3 light_color;
 			float3 light_normal;
-			float3 light_position = lightPointSampling(prd.seed, light_pdf, light_color, light_normal);
+			bool is_direction = false;
+			float3 light_position = lightPointSampling(prd.seed,light_pdf,light_color,light_normal,is_direction);
 
 			float3 light_shadowRay_origin = prd.origin;
-			float3 light_shadowRay_direciton = normalize(light_position - light_shadowRay_origin);
+			//float3 light_shadowRay_direciton =  normalize(light_position - light_shadowRay_origin);
+			float3 light_shadowRay_direciton = (is_direction) ? - light_normal : normalize(light_position - light_shadowRay_origin);
+			//printf("(%f,%f,%f,%d)\n", light_normal.x, light_normal.y, light_normal.z,is_direction);
 
-			float light_distance = length(light_position - light_shadowRay_origin);
+			float light_distance = (is_direction) ? 1e16f :length(light_position - light_shadowRay_origin);
 			float ipsiron_distance = 0.001;
 
 			TraceOcculution(
@@ -79,7 +82,7 @@ static __forceinline__ __device__ float3 MIS(const float3 cameraRayOri, const fl
 				&light_shot
 			);
 
-			if (light_shot.done) {
+			if (!light_shot.intersection) {
 				float cosine1 = absDot(normal, light_shadowRay_direciton);
 				float cosine2 = absDot(light_normal, -light_shadowRay_direciton);
 
@@ -90,13 +93,13 @@ static __forceinline__ __device__ float3 MIS(const float3 cameraRayOri, const fl
 
 				float3 bsdf = CurrentBSDF.evaluateBSDF(local_wo, local_wi);
 
-				float G = cosine2 / (light_distance * light_distance);
+				float G = (is_direction) ? 1.0f : cosine2 / (light_distance * light_distance);
 				
-				float pt_pdf = G * CurrentBSDF.pdfBSDF(local_wo,local_wi);
+				float pt_pdf = (is_direction)? 0.0f : G * CurrentBSDF.pdfBSDF(local_wo,local_wi);
 
 				float miswight = light_pdf / (light_pdf + pt_pdf);
 				//miswight = 1;
-				//printf("mis_weight(%f)", miswight);
+				//printf("mis_weight(%f) %d %f\n", miswight,is_direction,light_pdf);
 				LTE += prd.throughput * miswight * (bsdf * G * cosine1 / light_pdf) * light_color;
 			}
 		}
@@ -124,16 +127,21 @@ static __forceinline__ __device__ float3 MIS(const float3 cameraRayOri, const fl
 				1e16f,
 				&pt_light_hit);
 
-			if ( pt_light_hit.intersection && pt_light_hit.geoinfo.is_light) {
-				float cosine2 = absDot(-wi,pt_light_hit.geoinfo.shadingNormal);
-				float light_distance = pt_light_hit.distance;
+			if (pt_light_hit.intersection) {
+				if (pt_light_hit.geoinfo.is_light) {
+					float cosine2 = absDot(-wi, pt_light_hit.geoinfo.shadingNormal);
+					float light_distance = pt_light_hit.distance;
 
-				float invG = light_distance * light_distance / cosine2;
+					float invG = light_distance * light_distance / cosine2;
 
-				float lightPdf = lightPointPDF(pt_light_hit.geoinfo.primID) * invG;
-				float mis_weight = pt_pdf / (pt_pdf + lightPdf);
-				//mis_weight = 1;
-				LTE += prd.throughput * mis_weight * cosine1 * pt_light_hit.lightColor * brdf / pt_pdf;
+					float lightPdf = lightPointPDF(pt_light_hit.geoinfo.primID) * invG;
+					float mis_weight = pt_pdf / (pt_pdf + lightPdf);
+					//mis_weight = 1;
+					LTE += prd.throughput * mis_weight * cosine1 * pt_light_hit.lightColor * brdf / pt_pdf;
+				}
+			}
+			else {
+				LTE += prd.throughput * brdf * cosine1 *  pt_light_hit.lightColor / pt_pdf;
 			}
 		}
 
