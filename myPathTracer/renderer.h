@@ -194,7 +194,7 @@ struct SceneData {
 	std::vector<float> light_weight;
 	std::vector<float> light_nee_weight;
 
-	float3 directional_light_direction = normalize(make_float3(1,1,0));
+	float3 directional_light_direction = normalize(make_float3(1, 1, 0));
 	float3 directional_light_color = make_float3(1);
 	float directional_light_weight;
 
@@ -221,11 +221,12 @@ struct SceneData {
 		for (int i = 1; i < light_weight.size(); i++) {
 			light_nee_weight[i] = light_weight[i - 1] / weight_sum + light_nee_weight[i - 1];
 		}
-
+		/*
 		Log::DebugLog(light_faceID);
 		Log::DebugLog(light_weight);
 		Log::DebugLog(light_nee_weight);
 		Log::DebugLog(light_nee_weight.size());
+		*/
 	}
 };
 
@@ -561,19 +562,19 @@ private:
 			nullptr,            // emitted property list
 			0                   // num emitted properties
 		));
-		
+
 		//Light Weight Update
 		for (int i = 0; i < sceneData.light_faceID.size(); i++) {
 			unsigned int primitive_id = sceneData.light_faceID[i];
 			unsigned int instance_id = ac_data.face_instanceID[primitive_id];
 			Affine4x4 affine = sceneData.animation[sceneData.gas_data[instance_id].animation_index].getAnimationAffine(time);
-			
-			float3 v1 = affineConvertPoint(affine,sceneData.vertices[primitive_id * 3]);
-			float3 v2 = affineConvertPoint(affine,sceneData.vertices[primitive_id * 3 + 1]);
-			float3 v3 = affineConvertPoint(affine,sceneData.vertices[primitive_id * 3 + 2]);
+
+			float3 v1 = affineConvertPoint(affine, sceneData.vertices[primitive_id * 3]);
+			float3 v2 = affineConvertPoint(affine, sceneData.vertices[primitive_id * 3 + 1]);
+			float3 v3 = affineConvertPoint(affine, sceneData.vertices[primitive_id * 3 + 2]);
 			float Area = length(cross(v2 - v1, v3 - v1)) * 0.5f;
-			
-			float3 light_color =sceneData.light_color[sceneData.light_colorIndex[i]];
+
+			float3 light_color = sceneData.light_color[sceneData.light_colorIndex[i]];
 			float radiance = 0.2126 * light_color.x + 0.7152 * light_color.y + 0.0722 * light_color.z;
 			sceneData.light_weight[i] = Area * radiance;
 		}
@@ -1172,12 +1173,18 @@ public:
 		float delta_rendertime = 1.0f / static_cast<float>(flamedata.frameRate);
 		int renderIteration = static_cast<int>((flamedata.maxRenderTime - flamedata.minRenderTime) / delta_rendertime);
 
+		CUstream stream;
+		CUDA_CHECK(cudaStreamCreate(&stream));
+
+		sutil::CUDAOutputBuffer<uchar4> output_buffer(sutil::CUDAOutputBufferType::CUDA_DEVICE, width, height);
+		sutil::CUDAOutputBuffer<uchar4> AOV_albedo(sutil::CUDAOutputBufferType::CUDA_DEVICE, width, height);
+		sutil::CUDAOutputBuffer<uchar4> AOV_normal(sutil::CUDAOutputBufferType::CUDA_DEVICE, width, height);
+
+		sutil::ImageBuffer buffer;
+
 		long long animation_renderingTime = 0;
 		for (int frame = 0; frame < renderIteration; frame++) {
 			auto start = std::chrono::system_clock::now();
-			sutil::CUDAOutputBuffer<uchar4> output_buffer(sutil::CUDAOutputBufferType::CUDA_DEVICE, width, height);
-			sutil::CUDAOutputBuffer<uchar4> AOV_albedo(sutil::CUDAOutputBufferType::CUDA_DEVICE, width, height);
-			sutil::CUDAOutputBuffer<uchar4> AOV_normal(sutil::CUDAOutputBufferType::CUDA_DEVICE, width, height);
 
 			Log::StartLog("Rendering");
 			Log::DebugLog("Sample", sampling);
@@ -1199,8 +1206,6 @@ public:
 			}
 
 			{
-				CUstream stream;
-				CUDA_CHECK(cudaStreamCreate(&stream));
 
 				IASUpdate(now_rendertime);
 
@@ -1243,7 +1248,7 @@ public:
 				params.light_color = reinterpret_cast<float3*>(renderData.d_light_color);
 				params.light_colorIndex = reinterpret_cast<unsigned int*>(renderData.d_light_colorIndex);
 
-				params.directional_light_direction = normalize(make_float3(0, 1, 0.2 * std::cos(3.14159256 * (now_rendertime/10.0f))));
+				params.directional_light_direction = normalize(make_float3(0, 1, 0.2 * std::cos(3.14159256 * (now_rendertime / 10.0f))));
 				params.directional_light_weight = sceneData.directional_light_weight;
 				params.directional_light_color = sceneData.directional_light_color;
 
@@ -1268,7 +1273,6 @@ public:
 			}
 
 			{
-				sutil::ImageBuffer buffer;
 				buffer.data = output_buffer.getHostPointer();
 				if (RENDERMODE == NORMALCHECK) buffer.data = AOV_normal.getHostPointer();
 				if (RENDERMODE == ALBEDOCHECK) buffer.data = AOV_albedo.getHostPointer();
