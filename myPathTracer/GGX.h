@@ -1,4 +1,5 @@
 #pragma once
+
 #include <cuda_runtime.h>
 #include <sutil/vec_math.h>
 #include <myPathTracer/math.h>
@@ -14,6 +15,7 @@ struct MaterialParam {
 	float sheen;
 	float subsurface;
 	float clearcoat;
+	float transmission;
 	float ior;
 	bool ideal_specular;
 };
@@ -394,4 +396,10 @@ public:
 		return rho;
 	}
 
+	__device__ float3 evaluateBSDF(const float3& wo,const float3& wi) {
+		return make_float3(0);
+	}
+	__device__ float pdfBSDF(const float3& wo,const float3& wi) {
+		return 0.0f;
+	}
 };

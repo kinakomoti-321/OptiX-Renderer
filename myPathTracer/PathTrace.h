@@ -64,7 +64,7 @@ static __forceinline__ __device__ float3 PathTrace(const float3 cameraRayOri, co
 		prd.throughput *= cosine * brdf / pdf;
 		//prd.throughput = prd.matparam.diffuse;
 		//LTE = prd.geoinfo.shadingNormal;
-		ray_origin = prd.origin + prd.geoinfo.GeoNormal * 0.001;
+		ray_origin = prd.origin + wi * 0.0001;
 		ray_direction = wi;
 	}
 

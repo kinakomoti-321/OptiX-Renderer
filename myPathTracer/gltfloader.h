@@ -1155,7 +1155,7 @@ bool gltfloader(std::string& filepath, std::string& filename, SceneData& sceneda
 		if (material.normalTexture.index != -1) {
 			std::string normal_texture_name = model.images[model.textures[material.normalTexture.index].source].uri;
 			Log::DebugLog(normal_texture_name);
-			mat.normal_tex = loadTexture(scenedata.textures, known_tex, normal_texture_name, filepath, "Roughness");
+			mat.normal_tex = loadTexture(scenedata.textures, known_tex, normal_texture_name, filepath, "Normalmap");
 		}
 		else {
 			mat.normal_tex = -1;
@@ -1193,6 +1193,9 @@ bool gltfloader(std::string& filepath, std::string& filename, SceneData& sceneda
 				tinygltf::Value::Object::const_iterator it(o.begin());
 				tinygltf::Value::Object::const_iterator itEnd(o.end());
 				for (; it != itEnd; it++) {
+					if (it->first == "sheenRoughnessFactor") {
+						mat.sheen = it->second.Get<double>();
+					}
 				}
 			}
 			else if (mat_extensions.first == "KHR_materials_transmission") {
@@ -1200,7 +1203,9 @@ bool gltfloader(std::string& filepath, std::string& filename, SceneData& sceneda
 				tinygltf::Value::Object::const_iterator it(o.begin());
 				tinygltf::Value::Object::const_iterator itEnd(o.end());
 				for (; it != itEnd; it++) {
-
+					if (it->first == "transmissionFactor") {
+						mat.transmission = it->second.Get<double>();
+					}
 				}
 			}
 			else if (mat_extensions.first == "KHR_materials_ior") {
@@ -1208,6 +1213,9 @@ bool gltfloader(std::string& filepath, std::string& filename, SceneData& sceneda
 				tinygltf::Value::Object::const_iterator it(o.begin());
 				tinygltf::Value::Object::const_iterator itEnd(o.end());
 				for (; it != itEnd; it++) {
+					if (it->first == "ior") {
+						mat.ior = it->second.Get<double>();
+					}
 				}
 			}
 
@@ -1222,8 +1230,11 @@ bool gltfloader(std::string& filepath, std::string& filename, SceneData& sceneda
 				}
 			}
 		}
-
+		
 		mat.ideal_specular = false;
+		if (mat.roughness == 0) {
+			mat.ideal_specular = true;
+		}
 		scenedata.light_color.push_back(mat.emmision_color);
 		scenedata.material.push_back(mat);
 		Log::DebugLog(mat);
@@ -1345,8 +1356,6 @@ bool gltfloader(std::string& filepath, std::string& filename, SceneData& sceneda
 							auto byte_stride = attribAccessor.ByteStride(bufferView);
 							auto count = attribAccessor.count;
 
-							//Log::DebugLog(attribute.first);
-
 							if (attribute.first == "POSITION") {
 								vertices = std::make_unique<v3fArray>(arrayAdapter<v3f>(dataPtr, count, byte_stride));
 							}
@@ -1455,12 +1464,13 @@ bool gltfloader(std::string& filepath, std::string& filename, SceneData& sceneda
 	{
 		//(node_index,deta)
 		for (auto& anim : model.animations) {
+			Log::DebugLog(anim.name);
 			for (int i = 0; i < anim.channels.size(); i++) {
+				
 				auto sampler = anim.samplers[i];
 				auto channel = anim.channels[i];
 				auto animKeyAccessor = model.accessors[sampler.input];
 				auto animDataAccessor = model.accessors[sampler.output];
-				Log::DebugLog(channel.target_node);
 				auto node = model.nodes[channel.target_node];
 
 				auto& keyBufferView = model.bufferViews[animKeyAccessor.bufferView];

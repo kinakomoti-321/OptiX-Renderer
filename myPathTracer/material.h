@@ -36,6 +36,9 @@ struct Material
 	//IOR
 	float ior;
 
+	//Transmission
+	float transmission;
+
 	//Normalmap
 	int normal_tex;
 
@@ -63,6 +66,8 @@ std::ostream& operator<<(std::ostream& stream, const Material& f)
 	stream << "clearcoat " << f.clearcoat << " texID : " << f.clearcoat_tex << std::endl;
 	stream << "ior " << f.ior << " texID : " << f.sheen_tex << std::endl;
 	stream << "emission " << f.emmision_color << " texID : " << f.emmision_color_tex << std::endl;
+	stream << "normal map texID : " << f.normal_tex << std::endl;
+	stream << "ideal specular" << f.ideal_specular << std::endl;
 
 	return stream;
 }

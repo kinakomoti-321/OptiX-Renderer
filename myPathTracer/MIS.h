@@ -33,6 +33,7 @@ static __forceinline__ __device__ float3 MIS(const float3 cameraRayOri, const fl
 
 		//Intersection	
 		float3 wo = -ray_direction;
+
 		RayTrace(
 			params.handle,
 			ray_origin,
@@ -113,7 +114,7 @@ static __forceinline__ __device__ float3 MIS(const float3 cameraRayOri, const fl
 			float3 brdf = CurrentBSDF.sampleBSDF(local_wo, local_wi,pt_pdf, prd.seed);
 			wi = local_to_world(local_wi, t, normal, b);
 			float cosine1 = absDot(wi, normal);
-			float3 pt_ray_origin = prd.origin + prd.geoinfo.GeoNormal * 0.001;
+			float3 pt_ray_origin = prd.origin + wi* 0.001;
 			float3 pt_ray_direction = wi;
 
 			PRD pt_light_hit;
@@ -134,10 +135,11 @@ static __forceinline__ __device__ float3 MIS(const float3 cameraRayOri, const fl
 
 					float invG = light_distance * light_distance / cosine2;
 
-					float lightPdf = lightPointPDF(pt_light_hit.geoinfo.primID) * invG;
-					float mis_weight = pt_pdf / (pt_pdf + lightPdf);
-					//mis_weight = 1;
+					float lightPdf = (prd.matparam.ideal_specular) ? 0 : lightPointPDF(pt_light_hit.geoinfo.primID) * invG;
+					float mis_weight =(prd.matparam.ideal_specular) ? 1 : pt_pdf / (pt_pdf + lightPdf);
+					
 					LTE += prd.throughput * mis_weight * cosine1 * pt_light_hit.lightColor * brdf / pt_pdf;
+					//LTE += prd.throughput * cosine1 * pt_light_hit.lightColor * brdf / pt_pdf;
 				}
 			}
 			else {
@@ -155,7 +157,7 @@ static __forceinline__ __device__ float3 MIS(const float3 cameraRayOri, const fl
 		float cosine = absDot(wi, normal);
 
 		prd.throughput *= cosine * brdf / pdf;
-		ray_origin = prd.origin + prd.geoinfo.GeoNormal * 0.001;
+		ray_origin = prd.origin + wi * 0.001;
 		ray_direction = wi;
 	}
 

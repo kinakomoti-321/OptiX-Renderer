@@ -803,6 +803,9 @@ private:
 				//IOR
 				hitgroup_record[sbt_idx].data.ior = sceneData.material[i].ior;
 
+				//Transmission
+				hitgroup_record[sbt_idx].data.transmission = sceneData.material[i].transmission;
+
 				//NormalMap
 				hitgroup_record[sbt_idx].data.normalmap_texID = sceneData.material[i].normal_tex;
 

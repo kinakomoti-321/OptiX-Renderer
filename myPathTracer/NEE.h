@@ -110,7 +110,7 @@ static __forceinline__ __device__ float3 NEE(const float3 cameraRayOri, const fl
 		float cosine = absDot(wi, normal);
 		
 		prd.throughput *= cosine * brdf / pdf;
-		ray_origin = prd.origin + prd.geoinfo.GeoNormal * 0.001;
+		ray_origin = prd.origin + wi * 0.001;
 		ray_direction = wi;
 	}
 

@@ -4,7 +4,7 @@
 
 static __forceinline __device__ float3 tangentSpaceBasis(const float3& n, float3& t, float3& b) {
 	float3 d = { 0.0f,1.0f,0.0f };
-	if (std::abs(n.y) < 0.9f) {
+	if (fabsf(n.y) < 0.99999f) {
 		t = cross(n, d);
 	}
 	else {
