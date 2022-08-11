@@ -1241,6 +1241,7 @@ public:
 				params.textures = reinterpret_cast<cudaTextureObject_t*>(renderData.d_textures);
 				params.ibl = ibl_texture_object;
 				params.has_ibl = have_ibl;
+
 				params.normals = reinterpret_cast<float3*>(renderData.d_normal);
 				params.texcoords = reinterpret_cast<float2*>(renderData.d_texcoord);
 				params.vertices = reinterpret_cast<float3*> (renderData.d_vertex);
