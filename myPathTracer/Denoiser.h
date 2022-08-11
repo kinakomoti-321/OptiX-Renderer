@@ -13,6 +13,21 @@ static OptixImage2D createOptixImage2D(unsigned int width, unsigned int height, 
 	oi.pixelStrideInBytes = sizeof(float4);
 	oi.data = reinterpret_cast<CUdeviceptr>(data);
 	oi.format = OPTIX_PIXEL_FORMAT_FLOAT4;
+
+	return oi;
+}
+
+static OptixImage2D createOptixImage2D(unsigned int width, unsigned int height, uchar4* data)
+{
+	OptixImage2D oi;
+
+	oi.width = width;
+	oi.height = height;
+	oi.rowStrideInBytes = width * sizeof(uchar4);
+	oi.pixelStrideInBytes = sizeof(uchar4);
+	oi.data = reinterpret_cast<CUdeviceptr>(data);
+	oi.format = OPTIX_PIXEL_FORMAT_UCHAR4;
+
 	return oi;
 }
 
@@ -45,7 +60,7 @@ public:
 		options.guideNormal = 1;
 
 		OptixDenoiserModelKind model_kind;
-		model_kind = OPTIX_DENOISER_MODEL_KIND_HDR;
+		model_kind = OPTIX_DENOISER_MODEL_KIND_LDR;
 
 		OPTIX_CHECK(optixDenoiserCreate(
 			context,
@@ -91,7 +106,10 @@ public:
 	}
 
 	void layerSet(float4* in_albedo,float4* in_normal,float4* in_input,float4* in_output) {
-			
+		albedo = in_albedo;
+		normal = in_normal;
+		input = in_input;
+		output = in_output;
 	}
 
 	void denoise() {
@@ -123,7 +141,6 @@ public:
 			m_scratch,
 			m_scratch_size
 		));
-
 	}
 
 	~OptixDenoiserManager() {

@@ -3,7 +3,6 @@
 #include <sutil/vec_math.h>
 #include <myPathTracer/math.h>
 #include <myPathTracer/constant.h>
-#include <myPathTracer/random.h>
 
 static __forceinline__ __device__ float3 hemisphere_sampling(float u1, float u2, float& pdf) {
 	const float theta = acosf(fmaxf(1.0f - u1, 0.0f));

@@ -70,5 +70,4 @@ static __host__ __device__ __inline__ unsigned int rot_seed(unsigned int seed, u
 {
     return seed ^ frame;
 }
-
 */

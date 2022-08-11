@@ -27,6 +27,7 @@
 #include <myPathTracer/material.h>
 #include <myPathTracer/texture.h>
 #include <myPathTracer/animation.h>
+#include <myPathTracer/Denoiser.h>
 
 
 struct CameraStatus {
@@ -242,7 +243,6 @@ private:
 
 	OptixModule module = nullptr;
 	OptixPipelineCompileOptions pipeline_compile_options = {};
-
 
 	OptixProgramGroup raygen_prog_group = nullptr;
 	OptixProgramGroup miss_prog_group = nullptr;
@@ -1058,11 +1058,22 @@ public:
 	void render(unsigned int sampling, unsigned int RENDERMODE, const std::string& filename, CameraStatus& camera, float time) {
 		float now_rendertime = time;
 
+		CUstream stream;
+		CUDA_CHECK(cudaStreamCreate(&stream));
+
+		sutil::CUDAOutputBuffer<float4> output_buffer(sutil::CUDAOutputBufferType::CUDA_DEVICE, width, height);
+		sutil::CUDAOutputBuffer<float4> AOV_albedo(sutil::CUDAOutputBufferType::CUDA_DEVICE, width, height);
+		sutil::CUDAOutputBuffer<float4> AOV_normal(sutil::CUDAOutputBufferType::CUDA_DEVICE, width, height);
+		sutil::CUDAOutputBuffer<float4> denoiser_output_buffer(sutil::CUDAOutputBufferType::CUDA_DEVICE, width, height);
+
+		sutil::ImageBuffer buffer;
+
+		OptixDenoiserManager denoiser_manager(width,height,context,stream);
+
+		long long animation_renderingTime = 0;
+
 		for (int frame = 0; frame < 1; frame++) {
 			auto start = std::chrono::system_clock::now();
-			sutil::CUDAOutputBuffer<uchar4> output_buffer(sutil::CUDAOutputBufferType::CUDA_DEVICE, width, height);
-			sutil::CUDAOutputBuffer<uchar4> AOV_albedo(sutil::CUDAOutputBufferType::CUDA_DEVICE, width, height);
-			sutil::CUDAOutputBuffer<uchar4> AOV_normal(sutil::CUDAOutputBufferType::CUDA_DEVICE, width, height);
 
 			Log::StartLog("Rendering");
 			Log::DebugLog("Sample", sampling);
@@ -1084,8 +1095,6 @@ public:
 			}
 
 			{
-				CUstream stream;
-				CUDA_CHECK(cudaStreamCreate(&stream));
 
 				IASUpdate(now_rendertime);
 
@@ -1118,6 +1127,7 @@ public:
 				params.textures = reinterpret_cast<cudaTextureObject_t*>(renderData.d_textures);
 				params.ibl = ibl_texture_object;
 				params.has_ibl = have_ibl;
+
 				params.normals = reinterpret_cast<float3*>(renderData.d_normal);
 				params.texcoords = reinterpret_cast<float2*>(renderData.d_texcoord);
 				params.vertices = reinterpret_cast<float3*> (renderData.d_vertex);
@@ -1125,6 +1135,12 @@ public:
 				params.light_nee_weight = reinterpret_cast<float*>(renderData.d_light_nee_weight);
 				params.light_faceID = reinterpret_cast<unsigned int*>(renderData.d_light_primID);
 				params.light_polyn = sceneData.light_faceID.size();
+				params.light_color = reinterpret_cast<float3*>(renderData.d_light_color);
+				params.light_colorIndex = reinterpret_cast<unsigned int*>(renderData.d_light_colorIndex);
+
+				params.directional_light_direction = normalize(make_float3(0, 1, 0.2 * std::cos(3.14159256 * (now_rendertime / 10.0f))));
+				params.directional_light_weight = sceneData.directional_light_weight;
+				params.directional_light_color = sceneData.directional_light_color;
 
 				params.frame = frame;
 
@@ -1146,22 +1162,33 @@ public:
 				output_buffer.unmap();
 			}
 
+			//Denoiser
 			{
-				sutil::ImageBuffer buffer;
-				buffer.data = output_buffer.getHostPointer();
+				denoiser_manager.layerSet(
+					AOV_albedo.map(),
+					AOV_normal.map(),
+					output_buffer.map(),
+					denoiser_output_buffer.map()
+				);
+				
+				denoiser_manager.denoise();
+			}
+
+			{
+				buffer.data = denoiser_output_buffer.getHostPointer();
 				if (RENDERMODE == NORMALCHECK) buffer.data = AOV_normal.getHostPointer();
 				if (RENDERMODE == ALBEDOCHECK) buffer.data = AOV_albedo.getHostPointer();
 
 				buffer.width = width;
 				buffer.height = height;
-				buffer.pixel_format = sutil::BufferImageFormat::UNSIGNED_BYTE4;
-				std::string imagename = filename + "_" + std::to_string(frame) + ".png";
-				//std::string imagename = "1 .png";
-				//std::cout << imagename << std::endl;
+				buffer.pixel_format = sutil::BufferImageFormat::FLOAT4;
+				std::string imagename = filename + "_" + std::to_string(frame) + ".ppm";
+
 				sutil::saveImage(imagename.c_str(), buffer, false);
 
 				auto end = std::chrono::system_clock::now();
 				auto Renderingtime = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+				animation_renderingTime += Renderingtime;
 				std::cout << std::endl << "Rendering finish" << std::endl;
 				std::cout << "Rendering Time is " << Renderingtime << "ms" << std::endl;
 				std::cout << std::endl << "----------------------" << std::endl;
@@ -1169,6 +1196,7 @@ public:
 				std::cout << "----------------------" << std::endl;
 			}
 		}
+		std::cout << "Animation Rendering Time " << animation_renderingTime << "ms" << std::endl;
 	}
 
 	void animationRender(unsigned int sampling, unsigned int RENDERMODE, const std::string& filename, CameraStatus& camera, FlameData flamedata) {
@@ -1179,13 +1207,17 @@ public:
 		CUstream stream;
 		CUDA_CHECK(cudaStreamCreate(&stream));
 
-		sutil::CUDAOutputBuffer<uchar4> output_buffer(sutil::CUDAOutputBufferType::CUDA_DEVICE, width, height);
-		sutil::CUDAOutputBuffer<uchar4> AOV_albedo(sutil::CUDAOutputBufferType::CUDA_DEVICE, width, height);
-		sutil::CUDAOutputBuffer<uchar4> AOV_normal(sutil::CUDAOutputBufferType::CUDA_DEVICE, width, height);
+		sutil::CUDAOutputBuffer<float4> output_buffer(sutil::CUDAOutputBufferType::CUDA_DEVICE, width, height);
+		sutil::CUDAOutputBuffer<float4> AOV_albedo(sutil::CUDAOutputBufferType::CUDA_DEVICE, width, height);
+		sutil::CUDAOutputBuffer<float4> AOV_normal(sutil::CUDAOutputBufferType::CUDA_DEVICE, width, height);
+		sutil::CUDAOutputBuffer<float4> denoiser_output_buffer(sutil::CUDAOutputBufferType::CUDA_DEVICE, width, height);
 
 		sutil::ImageBuffer buffer;
 
+		OptixDenoiserManager denoiser_manager(width,height,context,stream);
+
 		long long animation_renderingTime = 0;
+
 		for (int frame = 0; frame < renderIteration; frame++) {
 			auto start = std::chrono::system_clock::now();
 
@@ -1276,17 +1308,28 @@ public:
 				output_buffer.unmap();
 			}
 
+			//Denoiser
 			{
-				buffer.data = output_buffer.getHostPointer();
+				denoiser_manager.layerSet(
+					AOV_albedo.map(),
+					AOV_normal.map(),
+					output_buffer.map(),
+					denoiser_output_buffer.map()
+				);
+				
+				denoiser_manager.denoise();
+			}
+
+			{
+				buffer.data = denoiser_output_buffer.getHostPointer();
 				if (RENDERMODE == NORMALCHECK) buffer.data = AOV_normal.getHostPointer();
 				if (RENDERMODE == ALBEDOCHECK) buffer.data = AOV_albedo.getHostPointer();
 
 				buffer.width = width;
 				buffer.height = height;
-				buffer.pixel_format = sutil::BufferImageFormat::UNSIGNED_BYTE4;
-				std::string imagename = filename + "_" + std::to_string(frame) + ".png";
-				//std::string imagename = "1 .png";
-				//std::cout << imagename << std::endl;
+				buffer.pixel_format = sutil::BufferImageFormat::FLOAT4;
+				std::string imagename = filename + "_" + std::to_string(frame) + ".ppm";
+
 				sutil::saveImage(imagename.c_str(), buffer, false);
 
 				auto end = std::chrono::system_clock::now();
