@@ -49,6 +49,8 @@ private:
 	float4* normal;
 	float4* input;
 	float4* output;
+	float4* previous;
+	float4* flow;
 
 public:
 
@@ -61,6 +63,8 @@ public:
 
 		OptixDenoiserModelKind model_kind;
 		model_kind = OPTIX_DENOISER_MODEL_KIND_LDR;
+		//model_kind = OPTIX_DENOISER_MODEL_KIND_TEMPORAL;
+
 
 		OPTIX_CHECK(optixDenoiserCreate(
 			context,
@@ -105,20 +109,23 @@ public:
 		}
 	}
 
-	void layerSet(float4* in_albedo,float4* in_normal,float4* in_input,float4* in_output) {
+	void layerSet(float4* in_albedo,float4* in_normal,float4* in_input,float4* in_output,float4* in_previous) {
 		albedo = in_albedo;
 		normal = in_normal;
 		input = in_input;
 		output = in_output;
+		//previous = in_previous;
 	}
 
 	void denoise() {
 		OptixDenoiserGuideLayer guidelayer;
 		guidelayer.albedo = createOptixImage2D(width,height,albedo);
 		guidelayer.normal = createOptixImage2D(width, height, normal);
+		//guidelayer.flow = createOptixImage2D(width,height,flow);
 
 		OptixDenoiserLayer layers;
 		layers.input = createOptixImage2D(width, height, input);
+		//layers.previousOutput = createOptixImage2D(width, height, input);
 		layers.output = createOptixImage2D(width, height, output);
 
 		OptixDenoiserParams param;

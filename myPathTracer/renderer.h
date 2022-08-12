@@ -1085,6 +1085,7 @@ public:
 	}
 
 	void render(unsigned int sampling, unsigned int RENDERMODE, const std::string& filename, CameraStatus& camera, float time) {
+		/*
 		float now_rendertime = time;
 
 		CUstream stream;
@@ -1185,7 +1186,7 @@ public:
 				));
 
 
-				OPTIX_CHECK(optixLaunch(pipeline, stream, d_param, sizeof(Params), &sbt, width, height, /*depth=*/1));
+				OPTIX_CHECK(optixLaunch(pipeline, stream, d_param, sizeof(Params), &sbt, width, height, 1));
 				CUDA_SYNC_CHECK();
 
 				output_buffer.unmap();
@@ -1226,6 +1227,7 @@ public:
 			}
 		}
 		std::cout << "Animation Rendering Time " << animation_renderingTime << "ms" << std::endl;
+		*/
 	}
 
 	void animationRender(unsigned int sampling, unsigned int RENDERMODE, const std::string& filename, CameraStatus& camera, FlameData flamedata) {
@@ -1236,6 +1238,7 @@ public:
 		CUstream stream;
 		CUDA_CHECK(cudaStreamCreate(&stream));
 
+		sutil::CUDAOutputBuffer<float4> previous_buffer(sutil::CUDAOutputBufferType::CUDA_DEVICE, width, height);
 		sutil::CUDAOutputBuffer<float4> output_buffer(sutil::CUDAOutputBufferType::CUDA_DEVICE, width, height);
 		sutil::CUDAOutputBuffer<float4> AOV_albedo(sutil::CUDAOutputBufferType::CUDA_DEVICE, width, height);
 		sutil::CUDAOutputBuffer<float4> AOV_normal(sutil::CUDAOutputBufferType::CUDA_DEVICE, width, height);
@@ -1347,7 +1350,8 @@ public:
 						AOV_albedo.map(),
 						AOV_normal.map(),
 						output_buffer.map(),
-						denoiser_output_buffer.map()
+						denoiser_output_buffer.map(),
+						previous_buffer.map()
 					);
 
 					denoiser_manager.denoise();
@@ -1364,14 +1368,16 @@ public:
 				}
 
 				float4ConvertColor(data_pointer, output_data, width, height);
-				buffer.data = output_data;
 
+				buffer.data = output_data;
 				buffer.width = width;
 				buffer.height = height;
 				buffer.pixel_format = sutil::BufferImageFormat::UNSIGNED_BYTE4;
 				std::string imagename = filename + "_" + std::to_string(frame) + ".png";
 
 				sutil::saveImage(imagename.c_str(), buffer, false);
+
+				//std::swap(previous_buffer,denoiser_output_buffer);
 
 				auto end = std::chrono::system_clock::now();
 				auto Renderingtime = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
