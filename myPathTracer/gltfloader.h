@@ -1289,7 +1289,7 @@ bool gltfloader(std::string& filepath, std::string& filename, SceneData& sceneda
 				for (auto& primitives : meshs.primitives) {
 					std::unique_ptr<intArrayBase> indicesArrayPtr;
 					{
-						auto indicesAccessor = model.accessors[primitives.indices];
+						auto& indicesAccessor = model.accessors[primitives.indices];
 						auto& indexBufferView = model.bufferViews[indicesAccessor.bufferView];
 						auto& indexBuffer = model.buffers[indexBufferView.buffer];
 						auto indexPtr = indexBuffer.data.data() + indexBufferView.byteOffset + indicesAccessor.byteOffset;

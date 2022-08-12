@@ -18,6 +18,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <algorithm>
 
 #include <sutil/Camera.h>
 #include <sutil/Trackball.h>
@@ -53,7 +54,35 @@ typedef SbtRecord<RayGenData>     RayGenSbtRecord;
 typedef SbtRecord<MissData>       MissSbtRecord;
 typedef SbtRecord<HitGroupData>   HitGroupSbtRecord;
 
+inline float3 toSRGB(const float3& col) {
+	float  invGamma = 1.0f / 2.4f;
+    float3 powed    = make_float3( std::pow( col.x, invGamma ), std::pow(col.y, invGamma ), std::pow( col.z, invGamma ) );
+    return make_float3(
+        col.x < 0.0031308f ? 12.92f * col.x : 1.055f * powed.x - 0.055f,
+        col.y < 0.0031308f ? 12.92f * col.y : 1.055f * powed.y - 0.055f,
+        col.z < 0.0031308f ? 12.92f * col.z : 1.055f * powed.z - 0.055f );
+}
 
+inline unsigned char quantizeUnsignedChar(float x) {
+	enum {N = (1 << 8) - 1, Np1 = (1<<8) };
+	return (unsigned char)std::min((unsigned int)(x * (float)Np1), (unsigned int)N);
+}
+
+void float4ConvertColor(float4* data, uchar4* color, unsigned int width, unsigned int height) {
+	for (int j = 0; j < height; j++) {
+		for (int i = 0; i < width; i++) {
+			unsigned int idx = i + width * j;
+			float3 col = make_float3(data[idx]);
+			col = toSRGB(col);
+			
+			color[idx] = make_uchar4(
+			quantizeUnsignedChar(col.x),
+			quantizeUnsignedChar(col.y),
+			quantizeUnsignedChar(col.z),
+			(unsigned char)255);
+		}
+	}
+}
 void configureCamera(sutil::Camera& cam, const uint32_t width, const uint32_t height)
 {
 	cam.setEye({ 5.0f, 0.0f, 0.0f });
@@ -1218,6 +1247,8 @@ public:
 
 		long long animation_renderingTime = 0;
 
+		uchar4* output_data = new uchar4[width * height];
+
 		for (int frame = 0; frame < renderIteration; frame++) {
 			auto start = std::chrono::system_clock::now();
 
@@ -1254,7 +1285,6 @@ public:
 				params.image_width = width;
 				params.image_height = height;
 
-				//params.handle = gas_handle;
 				params.handle = ac_data.ias_handle;
 				params.sampling = sampling;
 				params.cam_eye = cam.eye();
@@ -1306,29 +1336,40 @@ public:
 				CUDA_SYNC_CHECK();
 
 				output_buffer.unmap();
+				AOV_albedo.unmap();
+				AOV_normal.unmap();
 			}
 
 			//Denoiser
 			{
-				denoiser_manager.layerSet(
-					AOV_albedo.map(),
-					AOV_normal.map(),
-					output_buffer.map(),
-					denoiser_output_buffer.map()
-				);
-				
-				denoiser_manager.denoise();
-			}
+				if (RENDERMODE == DENOISE) {
+					denoiser_manager.layerSet(
+						AOV_albedo.map(),
+						AOV_normal.map(),
+						output_buffer.map(),
+						denoiser_output_buffer.map()
+					);
 
+					denoiser_manager.denoise();
+				}
+				
+			}
 			{
-				buffer.data = denoiser_output_buffer.getHostPointer();
-				if (RENDERMODE == NORMALCHECK) buffer.data = AOV_normal.getHostPointer();
-				if (RENDERMODE == ALBEDOCHECK) buffer.data = AOV_albedo.getHostPointer();
+				float4* data_pointer;
+				if (RENDERMODE == DENOISE) {
+					data_pointer = denoiser_output_buffer.getHostPointer();
+				}
+				else {
+					data_pointer = output_buffer.getHostPointer();
+				}
+
+				float4ConvertColor(data_pointer, output_data, width, height);
+				buffer.data = output_data;
 
 				buffer.width = width;
 				buffer.height = height;
-				buffer.pixel_format = sutil::BufferImageFormat::FLOAT4;
-				std::string imagename = filename + "_" + std::to_string(frame) + ".ppm";
+				buffer.pixel_format = sutil::BufferImageFormat::UNSIGNED_BYTE4;
+				std::string imagename = filename + "_" + std::to_string(frame) + ".png";
 
 				sutil::saveImage(imagename.c_str(), buffer, false);
 
@@ -1340,10 +1381,12 @@ public:
 				std::cout << std::endl << "----------------------" << std::endl;
 				std::cout << "Rendering End" << std::endl;
 				std::cout << "----------------------" << std::endl;
+
 			}
 			now_rendertime += delta_rendertime;
 
 		}
+		delete[] output_data;
 		std::cout << "Animation Rendering Time " << animation_renderingTime << "ms" << std::endl;
 	}
 };
