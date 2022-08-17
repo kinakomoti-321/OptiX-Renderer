@@ -11,7 +11,9 @@
 #include <myPathTracer/BSDF.h>
 #include <myPathTracer/RayTrace.h>
 
-static __forceinline__ __device__ float3 MIS(const float3 cameraRayOri, const float3 cameraRayDir, unsigned int seed) {
+static __forceinline__ __device__ float3 MIS(const float3 cameraRayOri, const float3 cameraRayDir,
+	unsigned int seed,float3& albedo) {
+
 	float3 ray_origin = cameraRayOri;
 	float3 ray_direction = cameraRayDir;
 	float3 LTE = { 0.0,0.0,0.0 };
@@ -21,7 +23,10 @@ static __forceinline__ __device__ float3 MIS(const float3 cameraRayOri, const fl
 	prd.done = false;
 	prd.throughput = { 1.0f,1.0f,1.0f };
 
+	bool albedo_frag = false;
+
 	float p = 1.0;
+
 	for (int depth = 0; depth < MAX_DEPTH; depth++) {
 
 		//Rossian Roulette
@@ -46,10 +51,17 @@ static __forceinline__ __device__ float3 MIS(const float3 cameraRayOri, const fl
 			if (depth == 0) {
 				LTE = prd.throughput * prd.lightColor;
 			}
+
+			albedo = (albedo_frag) ? albedo : prd.lightColor;
 			break;
 		}
 
 		BSDF CurrentBSDF(prd.matparam);
+		if (!albedo_frag && !(prd.matparam.roughness < 0.1 || prd.matparam.ideal_specular)) {
+			albedo = prd.matparam.diffuse;
+			albedo_frag = true;
+		}
+
 		float3 normal = prd.geoinfo.shadingNormal;
 		float3 t, b;
 		tangentSpaceBasis(normal, t, b);

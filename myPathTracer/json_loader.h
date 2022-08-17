@@ -5,19 +5,19 @@
 #include <string>
 #include <myPathTracer/myPathTracer.h>
 
-struct SceneInformation{
+struct SceneInformation {
 	unsigned int width = 1;
 	unsigned int height = 1;
 	unsigned int sampling = 1;
-	
+
 	std::string gltf_filename;
 	std::string gltf_filepath;
 
 	bool use_hdr = false;
-	float3 default_enviroment = {0,0,0};
+	float3 default_enviroment = { 0,0,0 };
 	std::string hdrpath;
-	
-	float3 directional_light_color = {0,0,0};
+
+	float3 directional_light_color = { 0,0,0 };
 	float directional_light_weight = 0.0;
 	float3 directional_light_direction = { 0,1,0 };
 
@@ -38,13 +38,13 @@ bool loadSceneFile(std::string& scene_filename, SceneInformation& scene_info)
 		scene_filename = "./scene_file.json";
 		std::ifstream ifs(scene_filename);
 		std::string jsonstr;
-		
+
 		if (ifs.fail()) {
 			std::cout << "File " << scene_filename << " not found" << std::endl;
 			return false;
 		}
 		std::string str;
-		while (std::getline(ifs,str)) {
+		while (std::getline(ifs, str)) {
 			jsonstr += str + "\n";
 		}
 
@@ -60,16 +60,16 @@ bool loadSceneFile(std::string& scene_filename, SceneInformation& scene_info)
 		scene_info.use_hdr = jobj["HDRI"]["use_hdr"];
 		auto enviroment = jobj["HDRI"]["default_enviroment"];
 		scene_info.default_enviroment =
-			make_float3(enviroment[0],enviroment[1],enviroment[2]);
+			make_float3(enviroment[0], enviroment[1], enviroment[2]);
 		scene_info.hdrpath = jobj["HDRI"]["HDRpath"];
 
 		auto light_color = jobj["DirectionalLight"]["color"];
-		scene_info.directional_light_color = 
-			make_float3(light_color[0],light_color[1],light_color[2]);
+		scene_info.directional_light_color =
+			make_float3(light_color[0], light_color[1], light_color[2]);
 		scene_info.directional_light_weight = jobj["DirectionalLight"]["weight"];
 		auto light_dir = jobj["DirectionalLight"]["direction"];
-		scene_info.directional_light_direction = 
-			normalize(make_float3(light_dir[0],light_dir[1],light_dir[2]));
+		scene_info.directional_light_direction =
+			normalize(make_float3(light_dir[0], light_dir[1], light_dir[2]));
 
 		scene_info.output_filename = jobj["Output"]["output_filename"];
 		scene_info.use_time = jobj["Output"]["use_time"];
@@ -91,6 +91,23 @@ bool loadSceneFile(std::string& scene_filename, SceneInformation& scene_info)
 		}
 		else if (render_type == "NORMAL") {
 			scene_info.render_type = RenderType::NORMAL;
+		}
+
+		if (jobj["SaveSceneFile"]) {
+			auto now = std::chrono::system_clock::now();
+			std::time_t end_time = std::chrono::system_clock::to_time_t(now);
+			std::string time = std::ctime(&end_time);
+
+			auto start = std::chrono::system_clock::now();
+			time.erase(std::remove(time.begin(), time.end(), ':'), time.end());
+			time.erase(std::remove(time.begin(), time.end(), '\n'), time.end());
+
+			std::ofstream file("scene_file" + time + ".json");
+			file << jsonstr;
+			file.close();
+
+			std::cout << "Scene File Save " << "scene_file" + time + ".json" << std::endl;
+
 		}
 	}
 	catch (std::exception& e)
@@ -121,7 +138,7 @@ std::ostream& operator<<(std::ostream& stream, const SceneInformation& info)
 	stream << "Output Filename : " << info.output_filename << std::endl;
 	stream << "use Time : " << info.use_time << std::endl;
 
-	stream << "fps : " << info.fps<< std::endl;
+	stream << "fps : " << info.fps << std::endl;
 	stream << "minFrame : " << info.minframe << std::endl;
 	stream << "maxFrame : " << info.maxframe << std::endl;
 
