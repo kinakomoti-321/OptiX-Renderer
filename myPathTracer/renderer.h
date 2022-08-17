@@ -38,10 +38,10 @@ struct CameraStatus {
 	int cameraAnimationIndex;
 };
 
-struct FlameData {
-	float maxRenderTime;
-	float minRenderTime;
-	int frameRate;
+struct FrameData {
+	float maxFrame;
+	float minFrame;
+	int fps;
 };
 template <typename T>
 struct SbtRecord
@@ -1236,11 +1236,11 @@ public:
 	}
 
 	void animationRender(unsigned int sampling, const RenderType& render_type,
-		const std::string& filename, CameraStatus& camera, FlameData flamedata) {
+		const std::string& filename, CameraStatus& camera, FrameData flamedata) {
 
-		float now_rendertime = flamedata.minRenderTime;
-		float delta_rendertime = 1.0f / static_cast<float>(flamedata.frameRate);
-		int renderIteration = static_cast<int>((flamedata.maxRenderTime - flamedata.minRenderTime) / delta_rendertime);
+		float delta_rendertime = 1.0f / static_cast<float>(flamedata.fps);
+		float now_rendertime = flamedata.minFrame * delta_rendertime;
+		int renderIteration = flamedata.maxFrame - flamedata.minFrame;
 
 		CUstream stream;
 		CUDA_CHECK(cudaStreamCreate(&stream));
