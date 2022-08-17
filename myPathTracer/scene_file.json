@@ -1,0 +1,40 @@
+{
+    "width": 1024,
+    "height": 768,
+    "sampling": 100,
+    "gltf_filename": "sponza.gltf",
+    "gltf_filepath": "./model/GLTF/sponza",
+    "HDRI": {
+        "use_hdr": true,
+        "default_enviroment": [
+            1,
+            1,
+            1
+        ],
+        "HDRpath": "model/hdr/test.hdr"
+    },
+    "DirectionalLight": {
+        "color": [
+            1,
+            1,
+            1
+        ],
+        "weight": 0.5,
+        "direction": [
+            0,
+            1,
+            0
+        ]
+    },
+    "Output": {
+        "output_filename": "output_test",
+        "use_time": true
+    },
+    "FrameRate": {
+        "use_animation": true,
+        "fps": 1,
+        "minframe": 0,
+        "maxframe": 10
+    },
+    "RenderType": "NORMAL"
+}

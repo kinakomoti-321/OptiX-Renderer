@@ -93,6 +93,9 @@
     <ClInclude Include="Denoiser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="json_loader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\myPathTracer\myPathTracer.cu">

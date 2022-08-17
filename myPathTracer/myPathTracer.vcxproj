@@ -86,7 +86,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\ProgramData\NVIDIA Corporation\OptiX SDK 7.4.0\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\cuda;C:\Users\PC\Desktop\Program\OptixRenderer\SDK;C:\Users\PC\Desktop\Program\OptixRenderer\build\include;C:\Users\PC\Desktop\Program\OptixRenderer\build;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\support\imgui\..;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\support\GLFW\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\support\.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\ProgramData\NVIDIA Corporation\OptiX SDK 7.4.0\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\cuda;C:\Users\PC\Desktop\Program\OptixRenderer\SDK;C:\Users\PC\Desktop\Program\OptixRenderer\build\include;C:\Users\PC\Desktop\Program\OptixRenderer\build;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\support\imgui\..;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\support\GLFW\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\support\.;C:\Users\PC\Desktop\Program\OptixRenderer\build\external\json\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>%(AdditionalOptions) /w34101 /w34189 /w34018 /w34389</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -132,7 +132,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\ProgramData\NVIDIA Corporation\OptiX SDK 7.4.0\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\cuda;C:\Users\PC\Desktop\Program\OptixRenderer\SDK;C:\Users\PC\Desktop\Program\OptixRenderer\build\include;C:\Users\PC\Desktop\Program\OptixRenderer\build;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\support\imgui\..;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\support\GLFW\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\support\.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\ProgramData\NVIDIA Corporation\OptiX SDK 7.4.0\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\cuda;C:\Users\PC\Desktop\Program\OptixRenderer\SDK;C:\Users\PC\Desktop\Program\OptixRenderer\build\include;C:\Users\PC\Desktop\Program\OptixRenderer\build;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\support\imgui\..;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\support\GLFW\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\support\.;C:\Users\PC\Desktop\Program\OptixRenderer\build\external\json\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>%(AdditionalOptions) /w34101 /w34189 /w34018 /w34389</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <DisableSpecificWarnings>4355;4996;4800</DisableSpecificWarnings>
@@ -180,7 +180,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\ProgramData\NVIDIA Corporation\OptiX SDK 7.4.0\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\cuda;C:\Users\PC\Desktop\Program\OptixRenderer\SDK;C:\Users\PC\Desktop\Program\OptixRenderer\build\include;C:\Users\PC\Desktop\Program\OptixRenderer\build;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\support\imgui\..;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\support\GLFW\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\support\.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\ProgramData\NVIDIA Corporation\OptiX SDK 7.4.0\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\cuda;C:\Users\PC\Desktop\Program\OptixRenderer\SDK;C:\Users\PC\Desktop\Program\OptixRenderer\build\include;C:\Users\PC\Desktop\Program\OptixRenderer\build;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\support\imgui\..;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\support\GLFW\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\support\.;C:\Users\PC\Desktop\Program\OptixRenderer\build\external\json\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>%(AdditionalOptions) /w34101 /w34189 /w34018 /w34389</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <DisableSpecificWarnings>4355;4996;4800</DisableSpecificWarnings>
@@ -226,7 +226,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\ProgramData\NVIDIA Corporation\OptiX SDK 7.4.0\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\cuda;C:\Users\PC\Desktop\Program\OptixRenderer\SDK;C:\Users\PC\Desktop\Program\OptixRenderer\build\include;C:\Users\PC\Desktop\Program\OptixRenderer\build;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\support\imgui\..;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\support\GLFW\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\support\.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\ProgramData\NVIDIA Corporation\OptiX SDK 7.4.0\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\cuda;C:\Users\PC\Desktop\Program\OptixRenderer\SDK;C:\Users\PC\Desktop\Program\OptixRenderer\build\include;C:\Users\PC\Desktop\Program\OptixRenderer\build;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.7\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\support\imgui\..;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\support\GLFW\include;C:\Users\PC\Desktop\Program\OptixRenderer\SDK\support\.;C:\Users\PC\Desktop\Program\OptixRenderer\build\external\json\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>%(AdditionalOptions) /w34101 /w34189 /w34018 /w34389</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -422,6 +422,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClInclude Include="gltfloader.h" />
     <ClInclude Include="hash.h" />
     <ClInclude Include="IBL.h" />
+    <ClInclude Include="json_loader.h" />
     <ClInclude Include="lambert.h" />
     <ClInclude Include="light_sampling.h" />
     <ClInclude Include="material.h" />

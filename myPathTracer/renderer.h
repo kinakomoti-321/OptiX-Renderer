@@ -56,15 +56,15 @@ typedef SbtRecord<HitGroupData>   HitGroupSbtRecord;
 
 inline float3 toSRGB(const float3& col) {
 	float  invGamma = 1.0f / 2.4f;
-    float3 powed    = make_float3( std::pow( col.x, invGamma ), std::pow(col.y, invGamma ), std::pow( col.z, invGamma ) );
-    return make_float3(
-        col.x < 0.0031308f ? 12.92f * col.x : 1.055f * powed.x - 0.055f,
-        col.y < 0.0031308f ? 12.92f * col.y : 1.055f * powed.y - 0.055f,
-        col.z < 0.0031308f ? 12.92f * col.z : 1.055f * powed.z - 0.055f );
+	float3 powed = make_float3(std::pow(col.x, invGamma), std::pow(col.y, invGamma), std::pow(col.z, invGamma));
+	return make_float3(
+		col.x < 0.0031308f ? 12.92f * col.x : 1.055f * powed.x - 0.055f,
+		col.y < 0.0031308f ? 12.92f * col.y : 1.055f * powed.y - 0.055f,
+		col.z < 0.0031308f ? 12.92f * col.z : 1.055f * powed.z - 0.055f);
 }
 
 inline unsigned char quantizeUnsignedChar(float x) {
-	enum {N = (1 << 8) - 1, Np1 = (1<<8) };
+	enum { N = (1 << 8) - 1, Np1 = (1 << 8) };
 	return (unsigned char)std::min((unsigned int)(x * (float)Np1), (unsigned int)N);
 }
 
@@ -74,12 +74,12 @@ void float4ConvertColor(float4* data, uchar4* color, unsigned int width, unsigne
 			unsigned int idx = i + width * j;
 			float3 col = make_float3(data[idx]);
 			col = toSRGB(col);
-			
+
 			color[idx] = make_uchar4(
-			quantizeUnsignedChar(col.x),
-			quantizeUnsignedChar(col.y),
-			quantizeUnsignedChar(col.z),
-			(unsigned char)255);
+				quantizeUnsignedChar(col.x),
+				quantizeUnsignedChar(col.y),
+				quantizeUnsignedChar(col.z),
+				(unsigned char)255);
 		}
 	}
 }
@@ -348,7 +348,7 @@ private:
 			std::vector<uint32_t> triangle_input_flags;
 			triangle_input_flags.resize(sceneData.material.size());
 			for (int i = 0; i < triangle_input_flags.size(); i++) {
-				triangle_input_flags[i] = OPTIX_GEOMETRY_FLAG_DISABLE_ANYHIT;
+				triangle_input_flags[i] = OPTIX_GEOMETRY_FLAG_REQUIRE_SINGLE_ANYHIT_CALL;
 			}
 
 			OptixBuildInput triangle_input = {};
@@ -692,6 +692,9 @@ private:
 		hitgroup_prog_group_desc.kind = OPTIX_PROGRAM_GROUP_KIND_HITGROUP;
 		hitgroup_prog_group_desc.hitgroup.moduleCH = module;
 		hitgroup_prog_group_desc.hitgroup.entryFunctionNameCH = "__closesthit__ch";
+		hitgroup_prog_group_desc.hitgroup.moduleAH = module;
+		hitgroup_prog_group_desc.hitgroup.entryFunctionNameAH = "__anyhit__ch";
+
 		sizeof_log = sizeof(log);
 		OPTIX_CHECK_LOG(optixProgramGroupCreate(
 			context,
@@ -705,8 +708,10 @@ private:
 		memset(&hitgroup_prog_group_desc, 0, sizeof(OptixProgramGroupDesc));
 		hitgroup_prog_group_desc.kind = OPTIX_PROGRAM_GROUP_KIND_HITGROUP;
 		hitgroup_prog_group_desc.hitgroup.moduleCH = module;
-
 		hitgroup_prog_group_desc.hitgroup.entryFunctionNameCH = "__closesthit__occulusion";
+		hitgroup_prog_group_desc.hitgroup.moduleAH = module;
+		hitgroup_prog_group_desc.hitgroup.entryFunctionNameAH = "__anyhit__occulusion";
+
 		sizeof_log = sizeof(log);
 		OPTIX_CHECK_LOG(optixProgramGroupCreate(
 			context,
@@ -1200,7 +1205,7 @@ public:
 					output_buffer.map(),
 					denoiser_output_buffer.map()
 				);
-				
+
 				denoiser_manager.denoise();
 			}
 
@@ -1230,7 +1235,9 @@ public:
 		*/
 	}
 
-	void animationRender(unsigned int sampling, unsigned int RENDERMODE, const std::string& filename, CameraStatus& camera, FlameData flamedata) {
+	void animationRender(unsigned int sampling, const RenderType& render_type,
+		const std::string& filename, CameraStatus& camera, FlameData flamedata) {
+
 		float now_rendertime = flamedata.minRenderTime;
 		float delta_rendertime = 1.0f / static_cast<float>(flamedata.frameRate);
 		int renderIteration = static_cast<int>((flamedata.maxRenderTime - flamedata.minRenderTime) / delta_rendertime);
@@ -1246,7 +1253,7 @@ public:
 
 		sutil::ImageBuffer buffer;
 
-		OptixDenoiserManager denoiser_manager(width,height,context,stream);
+		OptixDenoiserManager denoiser_manager(width, height, context, stream);
 
 		long long animation_renderingTime = 0;
 
@@ -1261,17 +1268,23 @@ public:
 			Log::DebugLog("Height", height);
 			Log::DebugLog("Frame", frame);
 
-			if (RENDERMODE == PATHTRACE) {
-				Log::DebugLog("RenderMode", "PathTrace");
-			}
-			else if (RENDERMODE == NORMALCHECK) {
-				Log::DebugLog("RenderMode", "NormalCheck");
-			}
-			else if (RENDERMODE == UVCHECK) {
-				Log::DebugLog("RenderMode", "UVCheck");
-			}
-			else if (RENDERMODE == ALBEDOCHECK) {
-				Log::DebugLog("RenderMode", "AlbedoCheck");
+			switch (render_type)
+			{
+			case PATHTRACE_NON_DENOISE:
+				Log::DebugLog("PathTrace Non Denoise");
+				break;
+			case PATHTRACE_DENOISE:
+				Log::DebugLog("PathTrace Denoise");
+				break;
+			case NORMAL:
+				Log::DebugLog("NORMAL");
+				break;
+			case ALBEDO:
+				Log::DebugLog("ALBEDO");
+				break;
+			default:
+				Log::DebugLog("PathTrace Non Denoise");
+				break;
 			}
 
 			{
@@ -1323,7 +1336,6 @@ public:
 
 				params.frame = frame;
 
-				params.RENDERE_MODE = RENDERMODE;
 				cam.UVWFrame(params.cam_u, params.cam_v, params.cam_w);
 
 				CUdeviceptr d_param;
@@ -1345,7 +1357,8 @@ public:
 
 			//Denoiser
 			{
-				if (RENDERMODE == DENOISE) {
+				if (render_type == RenderType::PATHTRACE_DENOISE)
+				{
 					denoiser_manager.layerSet(
 						AOV_albedo.map(),
 						AOV_normal.map(),
@@ -1356,15 +1369,33 @@ public:
 
 					denoiser_manager.denoise();
 				}
-				
+
 			}
+
 			{
 				float4* data_pointer;
-				if (RENDERMODE == DENOISE) {
-					data_pointer = denoiser_output_buffer.getHostPointer();
-				}
-				else {
+
+				switch (render_type)
+				{
+				case PATHTRACE_NON_DENOISE:
 					data_pointer = output_buffer.getHostPointer();
+					break;
+
+				case PATHTRACE_DENOISE:
+					data_pointer = denoiser_output_buffer.getHostPointer();
+					break;
+
+				case NORMAL:
+					data_pointer = AOV_normal.getHostPointer();
+					break;
+
+				case ALBEDO:
+					data_pointer = AOV_albedo.getHostPointer();
+					break;
+
+				default:
+					data_pointer = output_buffer.getHostPointer();
+					break;
 				}
 
 				float4ConvertColor(data_pointer, output_data, width, height);
@@ -1390,8 +1421,8 @@ public:
 
 			}
 			now_rendertime += delta_rendertime;
-
 		}
+
 		delete[] output_data;
 		std::cout << "Animation Rendering Time " << animation_renderingTime << "ms" << std::endl;
 	}
