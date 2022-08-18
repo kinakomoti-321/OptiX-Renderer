@@ -260,7 +260,40 @@ struct SceneData {
 	}
 };
 
+struct BufferObject {
+	float4* buffer;
+	unsigned int width;
+	unsigned int height;
+	CUdeviceptr d_gpu_buffer = 0;
 
+	BufferObject(unsigned int in_width,unsigned int in_height) {
+		width = in_width;
+		height = in_height;
+		
+		buffer = new float4[in_width * in_height];
+
+		const size_t buffer_size = sizeof(float4) * in_width * in_height;
+		CUDA_CHECK(cudaMalloc(
+			reinterpret_cast<void**>(&d_gpu_buffer),
+			buffer_size
+		));
+	}
+
+	~BufferObject() {
+		delete[] buffer;
+		CUDA_CHECK(cudaFree(reinterpret_cast<void*>(d_gpu_buffer)));
+	}
+
+	void cpyGPUBufferToHost() {
+		const size_t buffer_size = sizeof(float4) * width * height;
+		CUDA_CHECK(cudaMemcpy(
+			buffer,
+			reinterpret_cast<void*>(d_gpu_buffer),
+			buffer_size,
+			cudaMemcpyDeviceToHost
+		));
+	}
+};
 
 class Renderer {
 private:
@@ -1259,6 +1292,18 @@ public:
 
 		uchar4* output_data = new uchar4[width * height];
 
+		//float4* test_buffer = new float4[width * height];
+		/*
+		CUdeviceptr d_test_output_buffer = 0;
+		const size_t buffer_size = sizeof(float4) * width * height;
+		CUDA_CHECK(cudaMalloc(
+			reinterpret_cast<void**>(&d_test_output_buffer),
+			buffer_size
+		));
+		*/
+
+		BufferObject test_output_buffer(width,height);
+		
 		for (int frame = 0; frame < renderIteration; frame++) {
 			auto start = std::chrono::system_clock::now();
 
@@ -1295,7 +1340,8 @@ public:
 				configureCamera(cam, width, height);
 
 				Params params;
-				params.image = output_buffer.map();
+				//params.image = output_buffer.map();
+				params.image = reinterpret_cast<float4*>(test_output_buffer.d_gpu_buffer);
 				params.AOV_albedo = AOV_albedo.map();
 				params.AOV_normal = AOV_normal.map();
 				params.image_width = width;
@@ -1362,7 +1408,8 @@ public:
 					denoiser_manager.layerSet(
 						AOV_albedo.map(),
 						AOV_normal.map(),
-						output_buffer.map(),
+						//output_buffer.map(),
+						reinterpret_cast<float4 *>(test_output_buffer.d_gpu_buffer),
 						denoiser_output_buffer.map(),
 						previous_buffer.map()
 					);
@@ -1378,7 +1425,9 @@ public:
 				switch (render_type)
 				{
 				case PATHTRACE_NON_DENOISE:
-					data_pointer = output_buffer.getHostPointer();
+					test_output_buffer.cpyGPUBufferToHost();
+					//data_pointer = output_buffer.getHostPointer();
+					data_pointer = test_output_buffer.buffer;
 					break;
 
 				case PATHTRACE_DENOISE:
@@ -1419,6 +1468,7 @@ public:
 				std::cout << "Rendering End" << std::endl;
 				std::cout << "----------------------" << std::endl;
 
+				//std::swap(denoiser_output_buffer,previous_buffer);
 			}
 			now_rendertime += delta_rendertime;
 		}

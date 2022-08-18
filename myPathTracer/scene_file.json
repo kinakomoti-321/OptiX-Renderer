@@ -2,8 +2,8 @@
     "width": 1024,
     "height": 768,
     "sampling": 100,
-    "gltf_filename": "sponza.gltf",
-    "gltf_filepath": "./model/GLTF/sponza",
+    "gltf_filename": "material_test.gltf",
+    "gltf_filepath": "./model/GLTF",
     "HDRI": {
         "use_hdr": true,
         "default_enviroment": [
@@ -36,6 +36,6 @@
         "minframe": 0,
         "maxframe": 10
     },
-    "RenderType": "PATHTRACE_DENOISE",
+    "RenderType": "PATHTRACE_NON_DENOISE",
     "SaveSceneFile": false
 }

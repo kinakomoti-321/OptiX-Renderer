@@ -1173,6 +1173,8 @@ bool gltfloader(std::string& filepath, std::string& filename, SceneData& sceneda
 		mat.specular = { 0,0,0 };
 		mat.specular_tex = -1;
 
+		mat.transmission = 0;
+
 		mat.bump_tex = -1;
 		mat.ior = 1.0;
 
@@ -1232,7 +1234,7 @@ bool gltfloader(std::string& filepath, std::string& filename, SceneData& sceneda
 		}
 		
 		mat.ideal_specular = false;
-		if (mat.roughness == 0) {
+		if (mat.roughness == 0 && mat.transmission > 0) {
 			mat.ideal_specular = true;
 		}
 		scenedata.light_color.push_back(mat.emmision_color);
