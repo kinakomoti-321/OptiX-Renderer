@@ -36,6 +36,6 @@
         "minframe": 0,
         "maxframe": 10
     },
-    "RenderType": "PATHTRACE_NON_DENOISE",
+    "RenderType": "PATHTRACE_DENOISE",
     "SaveSceneFile": false
 }

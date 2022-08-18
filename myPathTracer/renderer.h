@@ -1278,11 +1278,11 @@ public:
 		CUstream stream;
 		CUDA_CHECK(cudaStreamCreate(&stream));
 
-		sutil::CUDAOutputBuffer<float4> previous_buffer(sutil::CUDAOutputBufferType::CUDA_DEVICE, width, height);
-		sutil::CUDAOutputBuffer<float4> output_buffer(sutil::CUDAOutputBufferType::CUDA_DEVICE, width, height);
-		sutil::CUDAOutputBuffer<float4> AOV_albedo(sutil::CUDAOutputBufferType::CUDA_DEVICE, width, height);
-		sutil::CUDAOutputBuffer<float4> AOV_normal(sutil::CUDAOutputBufferType::CUDA_DEVICE, width, height);
-		sutil::CUDAOutputBuffer<float4> denoiser_output_buffer(sutil::CUDAOutputBufferType::CUDA_DEVICE, width, height);
+		//sutil::CUDAOutputBuffer<float4> previous_buffer(sutil::CUDAOutputBufferType::CUDA_DEVICE, width, height);
+		//sutil::CUDAOutputBuffer<float4> output_buffer(sutil::CUDAOutputBufferType::CUDA_DEVICE, width, height);
+		//sutil::CUDAOutputBuffer<float4> AOV_albedo(sutil::CUDAOutputBufferType::CUDA_DEVICE, width, height);
+		//sutil::CUDAOutputBuffer<float4> AOV_normal(sutil::CUDAOutputBufferType::CUDA_DEVICE, width, height);
+		//sutil::CUDAOutputBuffer<float4> denoiser_output_buffer(sutil::CUDAOutputBufferType::CUDA_DEVICE, width, height);
 
 		sutil::ImageBuffer buffer;
 
@@ -1302,7 +1302,14 @@ public:
 		));
 		*/
 
-		BufferObject test_output_buffer(width,height);
+		//BufferObject test_output_buffer(width,height);
+		BufferObject result_buffer(width, height);
+		BufferObject albedo_buffer(width, height);
+		BufferObject normal_buffer(width, height);
+		BufferObject denoise_buffer(width, height);
+
+		BufferObject flow_buffer(width, height);
+		BufferObject previous_buffer(width, height);
 		
 		for (int frame = 0; frame < renderIteration; frame++) {
 			auto start = std::chrono::system_clock::now();
@@ -1336,14 +1343,20 @@ public:
 
 				IASUpdate(now_rendertime);
 
+			}
+
+			{
+
 				sutil::Camera cam;
 				configureCamera(cam, width, height);
 
 				Params params;
 				//params.image = output_buffer.map();
-				params.image = reinterpret_cast<float4*>(test_output_buffer.d_gpu_buffer);
-				params.AOV_albedo = AOV_albedo.map();
-				params.AOV_normal = AOV_normal.map();
+				//params.image = reinterpret_cast<float4*>(test_output_buffer.d_gpu_buffer);
+				params.image = reinterpret_cast<float4*>(result_buffer.d_gpu_buffer);
+				params.AOV_albedo = reinterpret_cast<float4*>(albedo_buffer.d_gpu_buffer);
+				params.AOV_normal = reinterpret_cast<float4*>(normal_buffer.d_gpu_buffer);
+
 				params.image_width = width;
 				params.image_height = height;
 
@@ -1396,9 +1409,6 @@ public:
 				OPTIX_CHECK(optixLaunch(pipeline, stream, d_param, sizeof(Params), &sbt, width, height, /*depth=*/1));
 				CUDA_SYNC_CHECK();
 
-				output_buffer.unmap();
-				AOV_albedo.unmap();
-				AOV_normal.unmap();
 			}
 
 			//Denoiser
@@ -1406,12 +1416,11 @@ public:
 				if (render_type == RenderType::PATHTRACE_DENOISE)
 				{
 					denoiser_manager.layerSet(
-						AOV_albedo.map(),
-						AOV_normal.map(),
-						//output_buffer.map(),
-						reinterpret_cast<float4 *>(test_output_buffer.d_gpu_buffer),
-						denoiser_output_buffer.map(),
-						previous_buffer.map()
+						reinterpret_cast<float4 *>(albedo_buffer.d_gpu_buffer),
+						reinterpret_cast<float4 *>(normal_buffer.d_gpu_buffer),
+						reinterpret_cast<float4 *>(result_buffer.d_gpu_buffer),
+						reinterpret_cast<float4 *>(denoise_buffer.d_gpu_buffer),
+						reinterpret_cast<float4 *>(previous_buffer.d_gpu_buffer)
 					);
 
 					denoiser_manager.denoise();
@@ -1425,25 +1434,28 @@ public:
 				switch (render_type)
 				{
 				case PATHTRACE_NON_DENOISE:
-					test_output_buffer.cpyGPUBufferToHost();
-					//data_pointer = output_buffer.getHostPointer();
-					data_pointer = test_output_buffer.buffer;
+					result_buffer.cpyGPUBufferToHost();
+					data_pointer = result_buffer.buffer;
 					break;
 
 				case PATHTRACE_DENOISE:
-					data_pointer = denoiser_output_buffer.getHostPointer();
+					denoise_buffer.cpyGPUBufferToHost();
+					data_pointer = denoise_buffer.buffer;
 					break;
 
 				case NORMAL:
-					data_pointer = AOV_normal.getHostPointer();
+					normal_buffer.cpyGPUBufferToHost();
+					data_pointer = normal_buffer.buffer;
 					break;
 
 				case ALBEDO:
-					data_pointer = AOV_albedo.getHostPointer();
+					albedo_buffer.cpyGPUBufferToHost();
+					data_pointer = albedo_buffer.buffer;
 					break;
 
 				default:
-					data_pointer = output_buffer.getHostPointer();
+					denoise_buffer.cpyGPUBufferToHost();
+					data_pointer = denoise_buffer.buffer;
 					break;
 				}
 
@@ -1468,7 +1480,10 @@ public:
 				std::cout << "Rendering End" << std::endl;
 				std::cout << "----------------------" << std::endl;
 
-				//std::swap(denoiser_output_buffer,previous_buffer);
+				//std::swap(denoise_buffer,previous_buffer);
+				auto copy = previous_buffer.d_gpu_buffer;
+				previous_buffer.d_gpu_buffer = denoise_buffer.d_gpu_buffer;
+				denoise_buffer.d_gpu_buffer = copy;
 			}
 			now_rendertime += delta_rendertime;
 		}
