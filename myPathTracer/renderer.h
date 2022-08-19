@@ -227,6 +227,7 @@ struct SceneData {
 	float3 directional_light_direction = normalize(make_float3(1, 1, 0));
 	float3 directional_light_color = make_float3(1);
 	float directional_light_weight;
+	int direcitonal_light_animation = -1;
 
 	std::vector<std::shared_ptr<Texture>> textures;
 	std::vector<int> texture_index;

@@ -1232,7 +1232,7 @@ bool gltfloader(std::string& filepath, std::string& filename, SceneData& sceneda
 				}
 			}
 		}
-		
+
 		mat.ideal_specular = false;
 		if (mat.roughness == 0 && mat.transmission > 0) {
 			mat.ideal_specular = true;
@@ -1241,6 +1241,44 @@ bool gltfloader(std::string& filepath, std::string& filename, SceneData& sceneda
 		scenedata.material.push_back(mat);
 		Log::DebugLog(mat);
 	}
+
+	//Direcitonal Light
+	/*
+	{
+	float directional_light_intensity;
+	float3 direcitonal_light_color;
+
+		for (auto& extension : model.extensions) {
+			Log::DebugLog(extension.first);
+			if (extension.first == "KHR_lights_punctual")
+			{
+				const tinygltf::Value::Object& o = extension.second.Get<tinygltf::Value::Object>();
+				tinygltf::Value::Object::const_iterator it(o.begin());
+				tinygltf::Value::Object::const_iterator itEnd(o.end());
+				for (; it != itEnd; it++) {
+					Log::DebugLog(it->first);
+					if (it->first == "lights") {
+						const tinygltf::Value::Object& lights = it->second.Get<tinygltf::Value::Object>();
+						tinygltf::Value::Object::const_iterator lightsin(lights.begin());
+						tinygltf::Value::Object::const_iterator lightsend(lights.end());
+						for (; lightsin != lightsend; lightsin++) {
+							Log::DebugLog(lightsin->first);
+							if (lightsin->first == "color") {
+								std::vector<float> light_col;
+								if (light_col.size() == 3) {
+
+								}
+							}
+							else if (lightsin->first == "intensity") {
+									
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	*/
 
 	//GeometryData
 	{
@@ -1280,8 +1318,16 @@ bool gltfloader(std::string& filepath, std::string& filename, SceneData& sceneda
 				}
 			}
 
+			bool is_directional_light = false;
+			for (auto& node_extension : nodes.extensions) {
+				Log::DebugLog(node_extension.first);
+				if (node_extension.first == "KHR_lights_punctual") {
+					is_directional_light = true;
+				}
+			}
+
 			//Mesh
-			if (nodes.camera == -1) {
+			if (nodes.mesh != -1) {
 				auto meshs = model.meshes[nodes.mesh];
 				GASData gasdata;
 				gasdata.vert_offset = scenedata.vertices.size();
@@ -1442,13 +1488,16 @@ bool gltfloader(std::string& filepath, std::string& filename, SceneData& sceneda
 				scenedata.gas_data.push_back(gasdata);
 
 			}
-			else {
+			else if (nodes.camera != -1) {
 				//Camera
 				scenedata.camera.origin = { 0,0,0 };
 				scenedata.camera.direciton = { 0,0,-1 };
 				scenedata.camera.f = 2;
 				cameraCheck = true;
 				scenedata.camera.cameraAnimationIndex = node_index;
+			}
+			else if (is_directional_light) {
+				scenedata.direcitonal_light_animation = node_index;
 			}
 			node_index += 1;
 		}
@@ -1465,7 +1514,7 @@ bool gltfloader(std::string& filepath, std::string& filename, SceneData& sceneda
 		for (auto& anim : model.animations) {
 			Log::DebugLog(anim.name);
 			for (int i = 0; i < anim.channels.size(); i++) {
-				
+
 				auto sampler = anim.samplers[i];
 				auto channel = anim.channels[i];
 				auto animKeyAccessor = model.accessors[sampler.input];

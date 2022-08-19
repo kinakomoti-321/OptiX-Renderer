@@ -7,9 +7,9 @@
     "HDRI": {
         "use_hdr": false,
         "default_enviroment": [
-            1,
-            1,
-            1
+            0,
+            0,
+            0
         ],
         "HDRpath": "model/hdr/test.hdr"
     },
@@ -19,7 +19,7 @@
             1,
             1
         ],
-        "weight": 0.5,
+        "weight": 0.0,
         "direction": [
             0,
             1,
@@ -48,7 +48,7 @@
         "minframe": 0,
         "maxframe": 1
     },
-    "RenderType": "PATHTRACE_DENOISE",
+    "RenderType": "PATHTRACE_NON_DENOISE",
     "DenoiseType": "NONE",
     "SaveSceneFile": false
 }
