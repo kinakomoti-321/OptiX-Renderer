@@ -21,6 +21,9 @@ struct SceneInformation {
 	float3 directional_light_color = { 0,0,0 };
 	float directional_light_weight = 0.0;
 	float3 directional_light_direction = { 0,1,0 };
+	
+	float3 camera_origin = { 0,0,0 };
+	float3 camera_dir = { 1,0,0 };
 
 	bool use_time = true;
 	std::string output_filename = "default";
@@ -100,10 +103,10 @@ bool loadSceneFile(std::string& scene_filename, SceneInformation& scene_info)
 
 		std::string denoise_type = jobj["DenoiseType"];
 		if (render_type == "NONE") {
-			denoise_type = DenoiseType::NONE;
+			scene_info.denoise_type = DenoiseType::NONE;
 		}
 		else if (render_type == "TEMPORAL") {
-			denoise_type = DenoiseType::TEMPORAL;
+			scene_info.denoise_type = DenoiseType::TEMPORAL;
 		}
 
 		if (jobj["SaveSceneFile"]) {
@@ -122,6 +125,14 @@ bool loadSceneFile(std::string& scene_filename, SceneInformation& scene_info)
 			std::cout << "Scene File Save " << "scene_file" + time + ".json" << std::endl;
 		}
 
+		auto camera_origin_array = jobj["Camera"]["Origin"];
+		float3 camera_origin = make_float3(camera_origin_array[0],camera_origin_array[1],camera_origin_array[2]);
+
+		auto camera_atlook_array = jobj["Camera"]["Atlook"];
+		float3 camera_direction = normalize(make_float3(camera_atlook_array[0],camera_atlook_array[1],camera_atlook_array[2]) - camera_origin);
+
+		scene_info.camera_origin = camera_origin;
+		scene_info.camera_dir = camera_direction;
 	}
 	catch (std::exception& e)
 	{

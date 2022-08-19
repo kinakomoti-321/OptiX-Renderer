@@ -1453,9 +1453,6 @@ bool gltfloader(std::string& filepath, std::string& filename, SceneData& sceneda
 			node_index += 1;
 		}
 		if (!cameraCheck) {
-			scenedata.camera.origin = { 0,0,0 };
-			scenedata.camera.direciton = { 0,0,1 };
-			scenedata.camera.f = 2;
 			scenedata.camera.cameraAnimationIndex = -1;
 		}
 	}

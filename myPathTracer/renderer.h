@@ -266,10 +266,10 @@ struct BufferObject {
 	unsigned int height;
 	CUdeviceptr d_gpu_buffer = 0;
 
-	BufferObject(unsigned int in_width,unsigned int in_height) {
+	BufferObject(unsigned int in_width, unsigned int in_height) {
 		width = in_width;
 		height = in_height;
-		
+
 		buffer = new float4[in_width * in_height];
 
 		const size_t buffer_size = sizeof(float4) * in_width * in_height;
@@ -1269,21 +1269,21 @@ public:
 	}
 
 	void animationRender(unsigned int sampling, const RenderType& render_type,
-		const std::string& filename, CameraStatus& camera, FrameData flamedata,DenoiseType denoise_type) {
+		const std::string& filename, CameraStatus& camera, FrameData flamedata, DenoiseType denoise_type) {
 
 		float delta_rendertime = 1.0f / static_cast<float>(flamedata.fps);
 		float now_rendertime = flamedata.minFrame * delta_rendertime;
 		int renderIteration = flamedata.maxFrame - flamedata.minFrame;
 
 		long long animation_renderingTime = 0;
-		
+
 		//CUDA stream
 		CUstream stream;
 		CUDA_CHECK(cudaStreamCreate(&stream));
-		
+
 		//Denoiser
 		OptixDenoiserManager denoiser_manager(width, height, context, stream, denoise_type);
-		
+
 		//Output Image Buffer
 		uchar4* output_data = new uchar4[width * height];
 		sutil::ImageBuffer buffer;
@@ -1297,11 +1297,20 @@ public:
 		//Temporal Denoise
 		BufferObject flow_buffer(width, height);
 		BufferObject previous_buffer(width, height);
-		
+
 		//First Camera Frame
-		auto& firstcameraAnim = sceneData.animation[camera.cameraAnimationIndex];
-		float3 pre_cam_origin = make_float3(firstcameraAnim.getTranslateAnimationAffine(now_rendertime) * make_float4(camera.origin, 1));
-		float3 pre_cam_dir = make_float3(firstcameraAnim.getRotateAnimationAffine(now_rendertime) * make_float4(camera.direciton, 0));
+		float3 first_camera_origin = camera.origin;
+		float3 first_camera_direction = camera.direciton;
+
+		float3 pre_cam_origin = camera.origin;
+		float3 pre_cam_dir = camera.direciton;
+
+		if (camera.cameraAnimationIndex != -1) {
+			//Camera Animation
+			auto& firstcameraAnim = sceneData.animation[camera.cameraAnimationIndex];
+			pre_cam_origin = make_float3(firstcameraAnim.getTranslateAnimationAffine(now_rendertime) * make_float4(camera.origin, 1));
+			pre_cam_dir = normalize(make_float3(firstcameraAnim.getRotateAnimationAffine(now_rendertime) * make_float4(camera.direciton, 0)));
+		}
 
 		//Parametors
 		Params params;
@@ -1335,7 +1344,7 @@ public:
 				Log::DebugLog("PathTrace Non Denoise");
 				break;
 			}
-			
+
 
 			//IAS and Light Weight Update
 			{
@@ -1343,11 +1352,11 @@ public:
 				IASUpdate(now_rendertime);
 
 			}
-			
+
 			//Parametor Update
 			{
 
-				
+
 				//Output Buffers
 				params.image = reinterpret_cast<float4*>(result_buffer.d_gpu_buffer);
 				params.AOV_albedo = reinterpret_cast<float4*>(albedo_buffer.d_gpu_buffer);
@@ -1364,13 +1373,19 @@ public:
 				//Sampling count
 				params.sampling = sampling;
 
-				//Camera Animation
-				auto& cameraAnim = sceneData.animation[camera.cameraAnimationIndex];
-				float4 camera_origin = cameraAnim.getTranslateAnimationAffine(now_rendertime) * make_float4(camera.origin, 1);
-				float4 camera_direction = cameraAnim.getRotateAnimationAffine(now_rendertime) * make_float4(camera.direciton, 0);
+				//Camera
+				float3 camera_origin = camera.origin;
+				float3 camera_direction = camera.direciton;
 
-				params.cam_ori = make_float3(camera_origin);
-				params.cam_dir = normalize(make_float3(camera_direction));
+				if (camera.cameraAnimationIndex != -1) {
+					//Camera Animation
+					auto& cameraAnim = sceneData.animation[camera.cameraAnimationIndex];
+					camera_origin = make_float3(cameraAnim.getTranslateAnimationAffine(now_rendertime) * make_float4(camera.origin, 1));
+					camera_direction = normalize(make_float3(cameraAnim.getRotateAnimationAffine(now_rendertime) * make_float4(camera.direciton, 0)));
+				}
+
+				params.cam_ori = camera_origin;
+				params.cam_dir = camera_direction;
 				params.f = camera.f;
 
 				//previous frame Camera status
@@ -1433,15 +1448,15 @@ public:
 			//Denoise
 			{
 				if (render_type == RenderType::PATHTRACE_DENOISE)
-				{	
+				{
 					//Layer Setting
 					denoiser_manager.layerSet(
-						reinterpret_cast<float4 *>(albedo_buffer.d_gpu_buffer),
-						reinterpret_cast<float4 *>(normal_buffer.d_gpu_buffer),
-						reinterpret_cast<float4 *>(flow_buffer.d_gpu_buffer),
-						reinterpret_cast<float4 *>(result_buffer.d_gpu_buffer),
-						reinterpret_cast<float4 *>(denoise_buffer.d_gpu_buffer),
-						reinterpret_cast<float4 *>(previous_buffer.d_gpu_buffer)
+						reinterpret_cast<float4*>(albedo_buffer.d_gpu_buffer),
+						reinterpret_cast<float4*>(normal_buffer.d_gpu_buffer),
+						reinterpret_cast<float4*>(flow_buffer.d_gpu_buffer),
+						reinterpret_cast<float4*>(result_buffer.d_gpu_buffer),
+						reinterpret_cast<float4*>(denoise_buffer.d_gpu_buffer),
+						reinterpret_cast<float4*>(previous_buffer.d_gpu_buffer)
 					);
 
 					//Denoise

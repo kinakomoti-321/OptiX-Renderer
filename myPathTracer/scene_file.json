@@ -1,11 +1,11 @@
 {
     "width": 1024,
     "height": 768,
-    "sampling": 100,
+    "sampling": 10,
     "gltf_filename": "material_test.gltf",
     "gltf_filepath": "./model/GLTF",
     "HDRI": {
-        "use_hdr": true,
+        "use_hdr": false,
         "default_enviroment": [
             1,
             1,
@@ -26,6 +26,18 @@
             0
         ]
     },
+    "Camera": {
+        "Origin": [
+            -5,
+            1,
+            0
+        ],
+        "Atlook": [
+            1,
+            0,
+            0
+        ]
+    },
     "Output": {
         "output_filename": "output_test",
         "use_time": true
@@ -34,7 +46,7 @@
         "use_animation": true,
         "fps": 24,
         "minframe": 0,
-        "maxframe": 240
+        "maxframe": 1
     },
     "RenderType": "PATHTRACE_DENOISE",
     "DenoiseType": "NONE",
