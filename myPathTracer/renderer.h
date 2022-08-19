@@ -1275,45 +1275,38 @@ public:
 		float now_rendertime = flamedata.minFrame * delta_rendertime;
 		int renderIteration = flamedata.maxFrame - flamedata.minFrame;
 
+		long long animation_renderingTime = 0;
+		
+		//CUDA stream
 		CUstream stream;
 		CUDA_CHECK(cudaStreamCreate(&stream));
-
-		//sutil::CUDAOutputBuffer<float4> previous_buffer(sutil::CUDAOutputBufferType::CUDA_DEVICE, width, height);
-		//sutil::CUDAOutputBuffer<float4> output_buffer(sutil::CUDAOutputBufferType::CUDA_DEVICE, width, height);
-		//sutil::CUDAOutputBuffer<float4> AOV_albedo(sutil::CUDAOutputBufferType::CUDA_DEVICE, width, height);
-		//sutil::CUDAOutputBuffer<float4> AOV_normal(sutil::CUDAOutputBufferType::CUDA_DEVICE, width, height);
-		//sutil::CUDAOutputBuffer<float4> denoiser_output_buffer(sutil::CUDAOutputBufferType::CUDA_DEVICE, width, height);
-
+		
+		//Denoiser
+		OptixDenoiserManager denoiser_manager(width, height, context, stream, denoise_type);
+		
+		//Output Image Buffer
+		uchar4* output_data = new uchar4[width * height];
 		sutil::ImageBuffer buffer;
 
-		OptixDenoiserManager denoiser_manager(width, height, context, stream, denoise_type);
-
-		long long animation_renderingTime = 0;
-
-		uchar4* output_data = new uchar4[width * height];
-
-		//float4* test_buffer = new float4[width * height];
-		/*
-		CUdeviceptr d_test_output_buffer = 0;
-		const size_t buffer_size = sizeof(float4) * width * height;
-		CUDA_CHECK(cudaMalloc(
-			reinterpret_cast<void**>(&d_test_output_buffer),
-			buffer_size
-		));
-		*/
-
-		//BufferObject test_output_buffer(width,height);
+		//Output Buffers
 		BufferObject result_buffer(width, height);
 		BufferObject albedo_buffer(width, height);
 		BufferObject normal_buffer(width, height);
 		BufferObject denoise_buffer(width, height);
 
+		//Temporal Denoise
 		BufferObject flow_buffer(width, height);
 		BufferObject previous_buffer(width, height);
-
+		
+		//First Camera Frame
 		auto& firstcameraAnim = sceneData.animation[camera.cameraAnimationIndex];
 		float3 pre_cam_origin = make_float3(firstcameraAnim.getTranslateAnimationAffine(now_rendertime) * make_float4(camera.origin, 1));
 		float3 pre_cam_dir = make_float3(firstcameraAnim.getRotateAnimationAffine(now_rendertime) * make_float4(camera.direciton, 0));
+
+		//Parametors
+		Params params;
+		CUdeviceptr d_param;
+		CUDA_CHECK(cudaMalloc(reinterpret_cast<void**>(&d_param), sizeof(Params)));
 
 		for (int frame = 0; frame < renderIteration; frame++) {
 			auto start = std::chrono::system_clock::now();
@@ -1342,99 +1335,106 @@ public:
 				Log::DebugLog("PathTrace Non Denoise");
 				break;
 			}
+			
 
+			//IAS and Light Weight Update
 			{
 
 				IASUpdate(now_rendertime);
 
 			}
-
+			
+			//Parametor Update
 			{
 
-				sutil::Camera cam;
-				configureCamera(cam, width, height);
-
-				Params params;
-				//params.image = output_buffer.map();
-				//params.image = reinterpret_cast<float4*>(test_output_buffer.d_gpu_buffer);
+				
+				//Output Buffers
 				params.image = reinterpret_cast<float4*>(result_buffer.d_gpu_buffer);
 				params.AOV_albedo = reinterpret_cast<float4*>(albedo_buffer.d_gpu_buffer);
 				params.AOV_normal = reinterpret_cast<float4*>(normal_buffer.d_gpu_buffer);
 				params.AOV_flow = reinterpret_cast<float4*>(flow_buffer.d_gpu_buffer);
 
+				//Image status
 				params.image_width = width;
 				params.image_height = height;
 
+				//Traversal Handle
 				params.handle = ac_data.ias_handle;
-				params.sampling = sampling;
-				params.cam_eye = cam.eye();
 
+				//Sampling count
+				params.sampling = sampling;
+
+				//Camera Animation
 				auto& cameraAnim = sceneData.animation[camera.cameraAnimationIndex];
 				float4 camera_origin = cameraAnim.getTranslateAnimationAffine(now_rendertime) * make_float4(camera.origin, 1);
 				float4 camera_direction = cameraAnim.getRotateAnimationAffine(now_rendertime) * make_float4(camera.direciton, 0);
 
 				params.cam_ori = make_float3(camera_origin);
-				params.cam_dir = normalize(make_float3(camera_direction)); //normalize(make_float3( - camera_origin));
+				params.cam_dir = normalize(make_float3(camera_direction));
 				params.f = camera.f;
+
+				//previous frame Camera status
 				params.pre_cam_ori = pre_cam_origin;
 				params.pre_cam_dir = pre_cam_dir;
 				params.pre_f = camera.f;
 
-				Log::DebugLog("cam_dir",params.cam_dir);
-				Log::DebugLog("cam_ori",params.cam_ori);
-				
-				Log::DebugLog("pre_cam_dir",params.pre_cam_dir);
-				Log::DebugLog("pre_cam_ori",params.pre_cam_ori);
+				Log::DebugLog("cam_dir", params.cam_dir);
+				Log::DebugLog("cam_ori", params.cam_ori);
+
+				Log::DebugLog("pre_cam_dir", params.pre_cam_dir);
+				Log::DebugLog("pre_cam_ori", params.pre_cam_ori);
 
 				pre_cam_origin = params.cam_ori;
 				pre_cam_dir = params.cam_dir;
 
-				pre_cam_origin = params.cam_ori;
-				pre_cam_dir = params.cam_dir;	
-
+				//Face and Instance , Texture Data
 				params.instance_data = reinterpret_cast<InsatanceData*>(ac_data.d_instance_data);
 				params.face_instanceID = reinterpret_cast<unsigned int*>(ac_data.d_face_instanceID);
-
 				params.textures = reinterpret_cast<cudaTextureObject_t*>(renderData.d_textures);
+
+				//IBL status
 				params.ibl = ibl_texture_object;
 				params.has_ibl = have_ibl;
 
+				//Attribute Data
 				params.normals = reinterpret_cast<float3*>(renderData.d_normal);
 				params.texcoords = reinterpret_cast<float2*>(renderData.d_texcoord);
 				params.vertices = reinterpret_cast<float3*> (renderData.d_vertex);
 
+				//Light Data
 				params.light_nee_weight = reinterpret_cast<float*>(renderData.d_light_nee_weight);
 				params.light_faceID = reinterpret_cast<unsigned int*>(renderData.d_light_primID);
 				params.light_polyn = sceneData.light_faceID.size();
 				params.light_color = reinterpret_cast<float3*>(renderData.d_light_color);
 				params.light_colorIndex = reinterpret_cast<unsigned int*>(renderData.d_light_colorIndex);
 
+				//Directional Light Data
 				params.directional_light_direction = normalize(make_float3(0, 1, 0.2 * std::cos(3.14159256 * (now_rendertime / 10.0f))));
 				params.directional_light_weight = sceneData.directional_light_weight;
 				params.directional_light_color = sceneData.directional_light_color;
 
+				//Frame 
 				params.frame = frame;
-				
 
-				cam.UVWFrame(params.cam_u, params.cam_v, params.cam_w);
 
-				CUdeviceptr d_param;
-				CUDA_CHECK(cudaMalloc(reinterpret_cast<void**>(&d_param), sizeof(Params)));
+				//Parametor cpy to Device
 				CUDA_CHECK(cudaMemcpy(
 					reinterpret_cast<void*>(d_param),
 					&params, sizeof(params),
 					cudaMemcpyHostToDevice
 				));
 
+				//Rendering Start
 				OPTIX_CHECK(optixLaunch(pipeline, stream, d_param, sizeof(Params), &sbt, width, height, /*depth=*/1));
 				CUDA_SYNC_CHECK();
 
 			}
 
-			//Denoiser
+			//Denoise
 			{
 				if (render_type == RenderType::PATHTRACE_DENOISE)
-				{
+				{	
+					//Layer Setting
 					denoiser_manager.layerSet(
 						reinterpret_cast<float4 *>(albedo_buffer.d_gpu_buffer),
 						reinterpret_cast<float4 *>(normal_buffer.d_gpu_buffer),
@@ -1444,12 +1444,14 @@ public:
 						reinterpret_cast<float4 *>(previous_buffer.d_gpu_buffer)
 					);
 
+					//Denoise
 					denoiser_manager.denoise();
 				}
 
 			}
 
 			{
+				//Output Buffer Image Pointer
 				float4* data_pointer;
 
 				switch (render_type)
@@ -1482,18 +1484,20 @@ public:
 					break;
 				}
 
+				//Convert
 				float4ConvertColor(data_pointer, output_data, width, height);
 
+				//Buffer Setting
 				buffer.data = output_data;
 				buffer.width = width;
 				buffer.height = height;
 				buffer.pixel_format = sutil::BufferImageFormat::UNSIGNED_BYTE4;
 				std::string imagename = filename + "_" + std::to_string(frame) + ".png";
 
+				//Save
 				sutil::saveImage(imagename.c_str(), buffer, false);
 
-				//std::swap(previous_buffer,denoiser_output_buffer);
-
+				//Rendering Data
 				auto end = std::chrono::system_clock::now();
 				auto Renderingtime = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
 				animation_renderingTime += Renderingtime;
@@ -1511,6 +1515,7 @@ public:
 			now_rendertime += delta_rendertime;
 		}
 
+		CUDA_CHECK(cudaFree(reinterpret_cast<void*>(d_param)));
 		delete[] output_data;
 		std::cout << "Animation Rendering Time " << animation_renderingTime << "ms" << std::endl;
 	}
