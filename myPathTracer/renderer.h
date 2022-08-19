@@ -1269,7 +1269,7 @@ public:
 	}
 
 	void animationRender(unsigned int sampling, const RenderType& render_type,
-		const std::string& filename, CameraStatus& camera, FrameData flamedata) {
+		const std::string& filename, CameraStatus& camera, FrameData flamedata,DenoiseType denoise_type) {
 
 		float delta_rendertime = 1.0f / static_cast<float>(flamedata.fps);
 		float now_rendertime = flamedata.minFrame * delta_rendertime;
@@ -1286,7 +1286,7 @@ public:
 
 		sutil::ImageBuffer buffer;
 
-		OptixDenoiserManager denoiser_manager(width, height, context, stream);
+		OptixDenoiserManager denoiser_manager(width, height, context, stream, denoise_type);
 
 		long long animation_renderingTime = 0;
 
@@ -1310,7 +1310,11 @@ public:
 
 		BufferObject flow_buffer(width, height);
 		BufferObject previous_buffer(width, height);
-		
+
+		auto& firstcameraAnim = sceneData.animation[camera.cameraAnimationIndex];
+		float3 pre_cam_origin = make_float3(firstcameraAnim.getTranslateAnimationAffine(now_rendertime) * make_float4(camera.origin, 1));
+		float3 pre_cam_dir = make_float3(firstcameraAnim.getRotateAnimationAffine(now_rendertime) * make_float4(camera.direciton, 0));
+
 		for (int frame = 0; frame < renderIteration; frame++) {
 			auto start = std::chrono::system_clock::now();
 
@@ -1356,6 +1360,7 @@ public:
 				params.image = reinterpret_cast<float4*>(result_buffer.d_gpu_buffer);
 				params.AOV_albedo = reinterpret_cast<float4*>(albedo_buffer.d_gpu_buffer);
 				params.AOV_normal = reinterpret_cast<float4*>(normal_buffer.d_gpu_buffer);
+				params.AOV_flow = reinterpret_cast<float4*>(flow_buffer.d_gpu_buffer);
 
 				params.image_width = width;
 				params.image_height = height;
@@ -1371,6 +1376,21 @@ public:
 				params.cam_ori = make_float3(camera_origin);
 				params.cam_dir = normalize(make_float3(camera_direction)); //normalize(make_float3( - camera_origin));
 				params.f = camera.f;
+				params.pre_cam_ori = pre_cam_origin;
+				params.pre_cam_dir = pre_cam_dir;
+				params.pre_f = camera.f;
+
+				Log::DebugLog("cam_dir",params.cam_dir);
+				Log::DebugLog("cam_ori",params.cam_ori);
+				
+				Log::DebugLog("pre_cam_dir",params.pre_cam_dir);
+				Log::DebugLog("pre_cam_ori",params.pre_cam_ori);
+
+				pre_cam_origin = params.cam_ori;
+				pre_cam_dir = params.cam_dir;
+
+				pre_cam_origin = params.cam_ori;
+				pre_cam_dir = params.cam_dir;	
 
 				params.instance_data = reinterpret_cast<InsatanceData*>(ac_data.d_instance_data);
 				params.face_instanceID = reinterpret_cast<unsigned int*>(ac_data.d_face_instanceID);
@@ -1394,6 +1414,7 @@ public:
 				params.directional_light_color = sceneData.directional_light_color;
 
 				params.frame = frame;
+				
 
 				cam.UVWFrame(params.cam_u, params.cam_v, params.cam_w);
 
@@ -1404,7 +1425,6 @@ public:
 					&params, sizeof(params),
 					cudaMemcpyHostToDevice
 				));
-
 
 				OPTIX_CHECK(optixLaunch(pipeline, stream, d_param, sizeof(Params), &sbt, width, height, /*depth=*/1));
 				CUDA_SYNC_CHECK();
@@ -1418,6 +1438,7 @@ public:
 					denoiser_manager.layerSet(
 						reinterpret_cast<float4 *>(albedo_buffer.d_gpu_buffer),
 						reinterpret_cast<float4 *>(normal_buffer.d_gpu_buffer),
+						reinterpret_cast<float4 *>(flow_buffer.d_gpu_buffer),
 						reinterpret_cast<float4 *>(result_buffer.d_gpu_buffer),
 						reinterpret_cast<float4 *>(denoise_buffer.d_gpu_buffer),
 						reinterpret_cast<float4 *>(previous_buffer.d_gpu_buffer)
@@ -1441,6 +1462,8 @@ public:
 				case PATHTRACE_DENOISE:
 					denoise_buffer.cpyGPUBufferToHost();
 					data_pointer = denoise_buffer.buffer;
+					//flow_buffer.cpyGPUBufferToHost();
+					//data_pointer = flow_buffer.buffer;
 					break;
 
 				case NORMAL:
@@ -1480,7 +1503,7 @@ public:
 				std::cout << "Rendering End" << std::endl;
 				std::cout << "----------------------" << std::endl;
 
-				//std::swap(denoise_buffer,previous_buffer);
+				//Buffer Swap
 				auto copy = previous_buffer.d_gpu_buffer;
 				previous_buffer.d_gpu_buffer = denoise_buffer.d_gpu_buffer;
 				denoise_buffer.d_gpu_buffer = copy;

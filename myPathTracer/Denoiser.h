@@ -31,6 +31,10 @@ static OptixImage2D createOptixImage2D(unsigned int width, unsigned int height, 
 	return oi;
 }
 
+enum DenoiseType {
+	NONE,
+	TEMPORAL
+};
 class OptixDenoiserManager {
 private:
 	OptixDeviceContext context = nullptr;
@@ -52,18 +56,30 @@ private:
 	float4* previous;
 	float4* flow;
 
+	DenoiseType denoise_type = NONE;
+
 public:
 
 	OptixDenoiserManager(const unsigned int& width, const unsigned int& height,
-		OptixDeviceContext context, CUstream cu_stream) : width(width), height(height), context(context), cu_stream(cu_stream) {
+		OptixDeviceContext context, CUstream cu_stream,DenoiseType denoise_type) : width(width), height(height), context(context), cu_stream(cu_stream),denoise_type(denoise_type) {
 
 		OptixDenoiserOptions options;
 		options.guideAlbedo = 1;
 		options.guideNormal = 1;
 
 		OptixDenoiserModelKind model_kind;
-		model_kind = OPTIX_DENOISER_MODEL_KIND_LDR;
-		//model_kind = OPTIX_DENOISER_MODEL_KIND_TEMPORAL;
+		switch (denoise_type)
+		{
+		case NONE:
+			model_kind = OPTIX_DENOISER_MODEL_KIND_LDR;
+			break;
+		case TEMPORAL:
+			model_kind = OPTIX_DENOISER_MODEL_KIND_TEMPORAL;
+			break;
+		default:
+			model_kind = OPTIX_DENOISER_MODEL_KIND_LDR;
+			break;
+		}
 
 
 		OPTIX_CHECK(optixDenoiserCreate(
@@ -109,23 +125,24 @@ public:
 		}
 	}
 
-	void layerSet(float4* in_albedo,float4* in_normal,float4* in_input,float4* in_output,float4* in_previous) {
+	void layerSet(float4* in_albedo,float4* in_normal,float4* in_flow,float4* in_input,float4* in_output,float4* in_previous) {
 		albedo = in_albedo;
 		normal = in_normal;
+		flow = in_flow;
 		input = in_input;
 		output = in_output;
-		//previous = in_previous;
+		previous = in_previous;
 	}
 
 	void denoise() {
 		OptixDenoiserGuideLayer guidelayer;
 		guidelayer.albedo = createOptixImage2D(width,height,albedo);
 		guidelayer.normal = createOptixImage2D(width, height, normal);
-		//guidelayer.flow = createOptixImage2D(width,height,flow);
+		guidelayer.flow = createOptixImage2D(width,height,flow);
 
 		OptixDenoiserLayer layers;
 		layers.input = createOptixImage2D(width, height, input);
-		//layers.previousOutput = createOptixImage2D(width, height, input);
+		layers.previousOutput = createOptixImage2D(width, height, input);
 		layers.output = createOptixImage2D(width, height, output);
 
 		OptixDenoiserParams param;

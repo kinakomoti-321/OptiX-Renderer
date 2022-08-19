@@ -23,6 +23,24 @@ public:
         rayDir = normalize(cameraDir * p + cameraSide * uv.y + cameraUp * uv.x);
         weight = 1.0;
     }
+
+	__device__ float2 getPreCameraUV(const float3& pre_origin,const float3& pre_direction,const float3& position) {
+        float3 t, b;
+        tangentSpaceBasis(pre_direction, t, b);
+		
+		float3 pre_camUP = t;
+		float3 pre_camSide = b;
+		
+		float3 pos_direction = normalize(position - pre_origin);
+		
+		float3 local_dir = world_to_local(pos_direction,pre_camUP,pre_direction,pre_camSide);
+
+		float3 uv_dir = local_dir * ( p / local_dir.y);
+	
+		//printf("pos_direction (%f,%f,%f)\n",pos_direction.x,pos_direction.y,pos_direction.z);
+		//printf("uv_dir (%f,%f,%f)\n",uv_dir.x,uv_dir.y,uv_dir.z);
+		return make_float2(uv_dir.x, uv_dir.z);
+	}
 };
 /*
 static __forceinline__ __device__ void computeRay(uint3 idx, uint3 dim, float3& origin, float3& direction, unsigned int& seed)

@@ -4,6 +4,7 @@
 #include <fstream>
 #include <string>
 #include <myPathTracer/myPathTracer.h>
+#include <myPathTracer/Denoiser.h>
 
 struct SceneInformation {
 	unsigned int width = 1;
@@ -30,6 +31,7 @@ struct SceneInformation {
 	unsigned int maxframe = 1;
 
 	RenderType render_type = RenderType::PATHTRACE_DENOISE;
+	DenoiseType denoise_type = DenoiseType::NONE;
 };
 
 bool loadSceneFile(std::string& scene_filename, SceneInformation& scene_info)
@@ -92,6 +94,17 @@ bool loadSceneFile(std::string& scene_filename, SceneInformation& scene_info)
 		else if (render_type == "NORMAL") {
 			scene_info.render_type = RenderType::NORMAL;
 		}
+		else {
+			scene_info.render_type = RenderType::PATHTRACE_DENOISE;
+		}
+
+		std::string denoise_type = jobj["DenoiseType"];
+		if (render_type == "NONE") {
+			denoise_type = DenoiseType::NONE;
+		}
+		else if (render_type == "TEMPORAL") {
+			denoise_type = DenoiseType::TEMPORAL;
+		}
 
 		if (jobj["SaveSceneFile"]) {
 			auto now = std::chrono::system_clock::now();
@@ -107,8 +120,8 @@ bool loadSceneFile(std::string& scene_filename, SceneInformation& scene_info)
 			file.close();
 
 			std::cout << "Scene File Save " << "scene_file" + time + ".json" << std::endl;
-
 		}
+
 	}
 	catch (std::exception& e)
 	{
