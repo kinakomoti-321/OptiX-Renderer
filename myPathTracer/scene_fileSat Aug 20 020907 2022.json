@@ -1,11 +1,11 @@
 {
     "width": 1024,
     "height": 768,
-    "sampling": 50,
-    "gltf_filename": "glTF_test.gltf",
-    "gltf_filepath": "./model/GLTF/San_Miguel/GLTF",
+    "sampling": 10,
+    "gltf_filename": "material_test.gltf",
+    "gltf_filepath": "./model/GLTF",
     "HDRI": {
-        "use_hdr": true,
+        "use_hdr": false,
         "default_enviroment": [
             0,
             0,
@@ -19,7 +19,7 @@
             2,
             2
         ],
-        "weight": 1.0,
+        "weight": 0.8,
         "direction": [
             0,
             1,
@@ -39,16 +39,16 @@
         ]
     },
     "Output": {
-        "output_filename": "Directional_Light_Animation_BOTTOM",
+        "output_filename": "output_test",
         "use_time": true
     },
     "FrameRate": {
         "use_animation": true,
-        "fps": 24,
+        "fps": 1,
         "minframe": 0,
-        "maxframe": 240
+        "maxframe": 24
     },
-    "RenderType": "PATHTRACE_DENOISE",
+    "RenderType": "PATHTRACE_NON_DENOISE",
     "DenoiseType": "NONE",
-    "SaveSceneFile": false
+    "SaveSceneFile": true
 }

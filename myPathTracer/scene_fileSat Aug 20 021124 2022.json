@@ -5,7 +5,7 @@
     "gltf_filename": "glTF_test.gltf",
     "gltf_filepath": "./model/GLTF/San_Miguel/GLTF",
     "HDRI": {
-        "use_hdr": true,
+        "use_hdr": false,
         "default_enviroment": [
             0,
             0,
@@ -19,7 +19,7 @@
             2,
             2
         ],
-        "weight": 1.0,
+        "weight": 0.8,
         "direction": [
             0,
             1,
@@ -39,16 +39,16 @@
         ]
     },
     "Output": {
-        "output_filename": "Directional_Light_Animation_BOTTOM",
+        "output_filename": "output_test",
         "use_time": true
     },
     "FrameRate": {
         "use_animation": true,
         "fps": 24,
         "minframe": 0,
-        "maxframe": 240
+        "maxframe": 120
     },
     "RenderType": "PATHTRACE_DENOISE",
     "DenoiseType": "NONE",
-    "SaveSceneFile": false
+    "SaveSceneFile": true
 }

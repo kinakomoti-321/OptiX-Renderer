@@ -40,15 +40,15 @@
     },
     "Output": {
         "output_filename": "Directional_Light_Animation_BOTTOM",
-        "use_time": true
+        "use_time": false
     },
     "FrameRate": {
         "use_animation": true,
         "fps": 24,
         "minframe": 0,
-        "maxframe": 240
+        "maxframe": 120
     },
     "RenderType": "PATHTRACE_DENOISE",
     "DenoiseType": "NONE",
-    "SaveSceneFile": false
+    "SaveSceneFile": true
 }

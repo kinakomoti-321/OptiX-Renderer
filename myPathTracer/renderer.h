@@ -1318,7 +1318,7 @@ public:
 		CUdeviceptr d_param;
 		CUDA_CHECK(cudaMalloc(reinterpret_cast<void**>(&d_param), sizeof(Params)));
 
-		for (int frame = 0; frame < renderIteration; frame++) {
+		for (int frame = flamedata.minFrame; frame < renderIteration + flamedata.minFrame; frame++) {
 			auto start = std::chrono::system_clock::now();
 
 			Log::StartLog("Rendering");
@@ -1425,7 +1425,12 @@ public:
 				params.light_colorIndex = reinterpret_cast<unsigned int*>(renderData.d_light_colorIndex);
 
 				//Directional Light Data
-				params.directional_light_direction = normalize(make_float3(0, 1, 0.2 * std::cos(3.14159256 * (now_rendertime / 10.0f))));
+				float3 directional_light_direction = sceneData.directional_light_direction;
+				if (sceneData.direcitonal_light_animation != -1) {
+					auto& anim = sceneData.animation[sceneData.direcitonal_light_animation];
+					directional_light_direction = normalize(make_float3(anim.getRotateAnimationAffine(now_rendertime) * make_float4(0,0,1,0)));
+				}
+				params.directional_light_direction = directional_light_direction;
 				params.directional_light_weight = sceneData.directional_light_weight;
 				params.directional_light_color = sceneData.directional_light_color;
 
