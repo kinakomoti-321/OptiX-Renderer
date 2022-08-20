@@ -142,7 +142,7 @@ public:
 
 		OptixDenoiserLayer layers;
 		layers.input = createOptixImage2D(width, height, input);
-		layers.previousOutput = createOptixImage2D(width, height, previous);
+		layers.previousOutput = createOptixImage2D(width, height, input);
 		layers.output = createOptixImage2D(width, height, output);
 
 		OptixDenoiserParams param;

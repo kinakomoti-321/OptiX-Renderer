@@ -29,7 +29,7 @@
 #include <myPathTracer/texture.h>
 #include <myPathTracer/animation.h>
 #include <myPathTracer/Denoiser.h>
-#include <myPathTracer/PostEffect.h>
+
 
 struct CameraStatus {
 	float3 origin;
@@ -54,7 +54,6 @@ typedef SbtRecord<RayGenData>     RayGenSbtRecord;
 typedef SbtRecord<MissData>       MissSbtRecord;
 typedef SbtRecord<HitGroupData>   HitGroupSbtRecord;
 
-/*
 inline float3 toSRGB(const float3& col) {
 	float  invGamma = 1.0f / 2.4f;
 	float3 powed = make_float3(std::pow(col.x, invGamma), std::pow(col.y, invGamma), std::pow(col.z, invGamma));
@@ -63,7 +62,6 @@ inline float3 toSRGB(const float3& col) {
 		col.y < 0.0031308f ? 12.92f * col.y : 1.055f * powed.y - 0.055f,
 		col.z < 0.0031308f ? 12.92f * col.z : 1.055f * powed.z - 0.055f);
 }
-*/
 
 inline unsigned char quantizeUnsignedChar(float x) {
 	enum { N = (1 << 8) - 1, Np1 = (1 << 8) };
@@ -1505,10 +1503,6 @@ public:
 				//Convert
 				float4ConvertColor(data_pointer, output_data, width, height);
 
-				dim3 grid(10, 10);
-				dim3 block(4, 4, 1);
-
-				
 				//Buffer Setting
 				buffer.data = output_data;
 				buffer.width = width;
