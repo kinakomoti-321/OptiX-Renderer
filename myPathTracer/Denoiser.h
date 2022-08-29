@@ -17,16 +17,16 @@ static OptixImage2D createOptixImage2D(unsigned int width, unsigned int height, 
 	return oi;
 }
 
-static OptixImage2D createOptixImage2D(unsigned int width, unsigned int height, uchar4* data)
+static OptixImage2D createOptixImage2D(unsigned int width, unsigned int height, float2* data)
 {
 	OptixImage2D oi;
 
 	oi.width = width;
 	oi.height = height;
-	oi.rowStrideInBytes = width * sizeof(uchar4);
-	oi.pixelStrideInBytes = sizeof(uchar4);
+	oi.rowStrideInBytes = width * sizeof(float2);
+	oi.pixelStrideInBytes = sizeof(float2);
 	oi.data = reinterpret_cast<CUdeviceptr>(data);
-	oi.format = OPTIX_PIXEL_FORMAT_UCHAR4;
+	oi.format = OPTIX_PIXEL_FORMAT_FLOAT2;
 
 	return oi;
 }
@@ -54,7 +54,7 @@ private:
 	float4* input;
 	float4* output;
 	float4* previous;
-	float4* flow;
+	float2* flow;
 
 	DenoiseType denoise_type = NONE;
 
@@ -72,12 +72,14 @@ public:
 		{
 		case NONE:
 			model_kind = OPTIX_DENOISER_MODEL_KIND_LDR;
+			model_kind = OPTIX_DENOISER_MODEL_KIND_TEMPORAL;
 			break;
 		case TEMPORAL:
 			model_kind = OPTIX_DENOISER_MODEL_KIND_TEMPORAL;
 			break;
 		default:
 			model_kind = OPTIX_DENOISER_MODEL_KIND_LDR;
+			model_kind = OPTIX_DENOISER_MODEL_KIND_TEMPORAL;
 			break;
 		}
 
@@ -125,7 +127,7 @@ public:
 		}
 	}
 
-	void layerSet(float4* in_albedo,float4* in_normal,float4* in_flow,float4* in_input,float4* in_output,float4* in_previous) {
+	void layerSet(float4* in_albedo,float4* in_normal,float2* in_flow,float4* in_input,float4* in_output,float4* in_previous) {
 		albedo = in_albedo;
 		normal = in_normal;
 		flow = in_flow;
@@ -142,7 +144,7 @@ public:
 
 		OptixDenoiserLayer layers;
 		layers.input = createOptixImage2D(width, height, input);
-		layers.previousOutput = createOptixImage2D(width, height, input);
+		layers.previousOutput = createOptixImage2D(width, height, previous);
 		layers.output = createOptixImage2D(width, height, output);
 
 		OptixDenoiserParams param;

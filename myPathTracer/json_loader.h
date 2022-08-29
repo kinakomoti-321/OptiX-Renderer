@@ -24,6 +24,7 @@ struct SceneInformation {
 	
 	float3 camera_origin = { 0,0,0 };
 	float3 camera_dir = { 1,0,0 };
+	float camera_f = 1.0;
 
 	bool use_time = true;
 	std::string output_filename = "default";
@@ -97,6 +98,9 @@ bool loadSceneFile(std::string& scene_filename, SceneInformation& scene_info)
 		else if (render_type == "NORMAL") {
 			scene_info.render_type = RenderType::NORMAL;
 		}
+		else if (render_type == "FLOW") {
+			scene_info.render_type = RenderType::FLOW;
+		}
 		else {
 			scene_info.render_type = RenderType::PATHTRACE_DENOISE;
 		}
@@ -133,6 +137,29 @@ bool loadSceneFile(std::string& scene_filename, SceneInformation& scene_info)
 
 		scene_info.camera_origin = camera_origin;
 		scene_info.camera_dir = camera_direction;
+		scene_info.camera_f = jobj["Camera"]["F"];
+	}
+	catch (std::exception& e)
+	{
+		std::cerr << "Caught exception: " << e.what() << "\n";
+		return false;
+	}
+	return true;
+}
+
+bool fpsLoader(unsigned int& fps) {
+	std::string filename = "./fps.txt";
+	try {
+		std::ifstream ifs(filename);
+
+		if (ifs.fail()) {
+			std::cout << "File " << filename << " not found" << std::endl;
+			return false;
+		}
+		std::string str;
+		while (std::getline(ifs, str)) {
+			fps = std::stoi(str);
+		}
 	}
 	catch (std::exception& e)
 	{

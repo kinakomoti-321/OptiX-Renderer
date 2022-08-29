@@ -1,25 +1,25 @@
 {
-    "width": 1024,
-    "height": 768,
-    "sampling": 10,
-    "gltf_filename": "material_test.gltf",
-    "gltf_filepath": "./model/GLTF",
+    "width": 1280,
+    "height": 720,
+    "sampling": 100,
+    "gltf_filename": "library.gltf",
+    "gltf_filepath": "./model/GLTF/Scene",
     "HDRI": {
-        "use_hdr": false,
+        "use_hdr": true,
         "default_enviroment": [
             0,
             0,
             0
         ],
-        "HDRpath": "model/hdr/test.hdr"
+        "HDRpath": "model/hdr/starmap_4k.hdr"
     },
     "DirectionalLight": {
         "color": [
-            1,
-            1,
+            0.01,
+            0.2,
             1
         ],
-        "weight": 0.0,
+        "weight": 0.3,
         "direction": [
             0,
             1,
@@ -36,19 +36,20 @@
             1,
             0,
             0
-        ]
+        ],
+        "F": 1.0
     },
     "Output": {
-        "output_filename": "output_test",
+        "output_filename": "Library_scene_animation",
         "use_time": true
     },
     "FrameRate": {
         "use_animation": true,
         "fps": 24,
         "minframe": 0,
-        "maxframe": 1
+        "maxframe": 120
     },
-    "RenderType": "PATHTRACE_NON_DENOISE",
+    "RenderType": "PATHTRACE_DENOISE",
     "DenoiseType": "NONE",
     "SaveSceneFile": false
 }

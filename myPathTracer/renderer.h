@@ -1356,8 +1356,6 @@ public:
 
 			//Parametor Update
 			{
-
-
 				//Output Buffers
 				params.image = reinterpret_cast<float4*>(result_buffer.d_gpu_buffer);
 				params.AOV_albedo = reinterpret_cast<float4*>(albedo_buffer.d_gpu_buffer);
@@ -1454,7 +1452,7 @@ public:
 					denoiser_manager.layerSet(
 						reinterpret_cast<float4*>(albedo_buffer.d_gpu_buffer),
 						reinterpret_cast<float4*>(normal_buffer.d_gpu_buffer),
-						reinterpret_cast<float4*>(flow_buffer.d_gpu_buffer),
+						reinterpret_cast<float2*>(flow_buffer.d_gpu_buffer),
 						reinterpret_cast<float4*>(result_buffer.d_gpu_buffer),
 						reinterpret_cast<float4*>(denoise_buffer.d_gpu_buffer),
 						reinterpret_cast<float4*>(previous_buffer.d_gpu_buffer)
@@ -1493,7 +1491,9 @@ public:
 					albedo_buffer.cpyGPUBufferToHost();
 					data_pointer = albedo_buffer.buffer;
 					break;
-
+				case FLOW:
+					flow_buffer.cpyGPUBufferToHost();
+					data_pointer = flow_buffer.buffer;
 				default:
 					denoise_buffer.cpyGPUBufferToHost();
 					data_pointer = denoise_buffer.buffer;
