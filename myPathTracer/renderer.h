@@ -354,9 +354,11 @@ private:
 
 		for (int i = 0; i < sceneData.gas_data.size(); i++) {
 			auto& gas_data = sceneData.gas_data[i];
+			/*
 			Log::DebugLog(gas_data.vert_offset);
 			Log::DebugLog(gas_data.poly_n);
 			Log::DebugLog(gas_data.animation_index);
+			*/
 
 			const size_t vertices_size = sizeof(float3) * gas_data.poly_n * 3;
 			CUdeviceptr d_vertices = 0;
@@ -458,8 +460,8 @@ private:
 			instance_data.instanceID = instance.instanceId;
 			memcpy(instance_data.transform, transform, sizeof(float) * 12);
 
-			Log::DebugLog(instance_data.faceIDoffset);
-			Log::DebugLog(instance_data.instanceID);
+			//Log::DebugLog(instance_data.faceIDoffset);
+			//Log::DebugLog(instance_data.instanceID);
 
 			ac_data.instance_data.push_back(instance_data);
 			for (int j = 0; j < sceneData.gas_data[i].poly_n; j++) {
@@ -469,8 +471,8 @@ private:
 			sum_face += sceneData.gas_data[i].poly_n;
 		}
 
-		Log::DebugLog("insatnce ID equel sum face", sceneData.vertices.size() / 3 == ac_data.face_instanceID.size());
-		Log::DebugLog("insatnce Data check", ac_data.instance_data.size() == ac_data.instance_array.size());
+		//Log::DebugLog("insatnce ID equel sum face", sceneData.vertices.size() / 3 == ac_data.face_instanceID.size());
+		//Log::DebugLog("insatnce Data check", ac_data.instance_data.size() == ac_data.instance_array.size());
 		ac_data.insatnceTransformInit();
 
 		CUDA_CHECK(cudaMalloc(reinterpret_cast<void**>(&ac_data.d_instance), sizeof(OptixInstance) * ac_data.instance_array.size()));
@@ -1392,11 +1394,11 @@ public:
 				params.pre_cam_dir = pre_cam_dir;
 				params.pre_f = camera.f;
 
-				Log::DebugLog("cam_dir", params.cam_dir);
-				Log::DebugLog("cam_ori", params.cam_ori);
+				//Log::DebugLog("cam_dir", params.cam_dir);
+				//Log::DebugLog("cam_ori", params.cam_ori);
 
-				Log::DebugLog("pre_cam_dir", params.pre_cam_dir);
-				Log::DebugLog("pre_cam_ori", params.pre_cam_ori);
+				//Log::DebugLog("pre_cam_dir", params.pre_cam_dir);
+				//Log::DebugLog("pre_cam_ori", params.pre_cam_ori);
 
 				pre_cam_origin = params.cam_ori;
 				pre_cam_dir = params.cam_dir;

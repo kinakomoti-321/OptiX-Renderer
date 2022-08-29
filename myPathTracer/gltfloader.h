@@ -1060,6 +1060,8 @@ bool gltfloader(std::string& filepath, std::string& filename, SceneData& sceneda
 	// Store original JSON string for `extras` and `extensions`
 	bool store_original_json_for_extras_and_extensions = true;
 
+	Log::StartLog("GLTF load " + filename);
+
 	tinygltf::Model model;
 	tinygltf::TinyGLTF gltf_ctx;
 	std::string err;
@@ -1099,9 +1101,11 @@ bool gltfloader(std::string& filepath, std::string& filename, SceneData& sceneda
 
 	//Dump(model);
 	//Texture
+	/*
 	for (auto& image : model.images) {
 		Log::DebugLog(image.uri);
 	}
+	*/
 
 	std::vector<Animation> animation;
 	animation.resize(model.nodes.size());
@@ -1511,7 +1515,7 @@ bool gltfloader(std::string& filepath, std::string& filename, SceneData& sceneda
 	{
 		//(node_index,deta)
 		for (auto& anim : model.animations) {
-			Log::DebugLog(anim.name);
+			//Log::DebugLog(anim.name);
 			for (int i = 0; i < anim.channels.size(); i++) {
 
 				auto sampler = anim.samplers[i];
@@ -1569,5 +1573,8 @@ bool gltfloader(std::string& filepath, std::string& filename, SceneData& sceneda
 		*/
 	}
 	scenedata.animation = animation;
+	
+	Log::EndLog("GLTF load finished");
+
 	return true;
 }
