@@ -42,6 +42,8 @@ struct FrameData {
 	float maxFrame;
 	float minFrame;
 	int fps;
+
+	float timeLimit = 9.0; //Minute
 };
 template <typename T>
 struct SbtRecord
@@ -1278,7 +1280,7 @@ public:
 		float now_rendertime = flamedata.minFrame * delta_rendertime;
 		int renderIteration = flamedata.maxFrame - flamedata.minFrame;
 
-		long long animation_renderingTime = 0;
+		double animation_renderingTime = 0;
 
 		//CUDA stream
 		CUstream stream;
@@ -1321,6 +1323,13 @@ public:
 		CUDA_CHECK(cudaMalloc(reinterpret_cast<void**>(&d_param), sizeof(Params)));
 
 		for (int frame = 0; frame < renderIteration; frame++) {
+			float renderingTimeMinute = animation_renderingTime * 0.001 / 60.0;
+			Log::DebugLog(renderingTimeMinute);
+			Log::DebugLog(flamedata.timeLimit);
+			if (renderingTimeMinute > flamedata.timeLimit) {
+				std::cout << "TimeLimit Over" << std::endl;
+				break;
+			}
 			auto start = std::chrono::system_clock::now();
 
 			Log::StartLog("Rendering");
@@ -1538,4 +1547,3 @@ public:
 		std::cout << "Animation Rendering Time " << animation_renderingTime << "ms" << std::endl;
 	}
 };
-

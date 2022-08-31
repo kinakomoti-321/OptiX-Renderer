@@ -36,6 +36,8 @@ struct SceneInformation {
 
 	RenderType render_type = RenderType::PATHTRACE_DENOISE;
 	DenoiseType denoise_type = DenoiseType::NONE;
+	
+	float timelimit = 9.5;
 };
 
 bool loadSceneFile(std::string& scene_filename, SceneInformation& scene_info)
@@ -138,6 +140,8 @@ bool loadSceneFile(std::string& scene_filename, SceneInformation& scene_info)
 		scene_info.camera_origin = camera_origin;
 		scene_info.camera_dir = camera_direction;
 		scene_info.camera_f = jobj["Camera"]["F"];
+
+		scene_info.timelimit = jobj["TimeLimit"];
 	}
 	catch (std::exception& e)
 	{

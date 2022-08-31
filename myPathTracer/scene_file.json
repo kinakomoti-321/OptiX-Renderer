@@ -1,7 +1,7 @@
 {
     "width": 1280,
     "height": 720,
-    "sampling": 100,
+    "sampling": 50,
     "gltf_filename": "library.gltf",
     "gltf_filepath": "./model/GLTF/Scene",
     "HDRI": {
@@ -51,5 +51,6 @@
     },
     "RenderType": "PATHTRACE_DENOISE",
     "DenoiseType": "NONE",
-    "SaveSceneFile": false
+    "SaveSceneFile": false,
+    "TimeLimit": 3.0
 }
