@@ -2,8 +2,8 @@
     "width": 1280,
     "height": 720,
     "sampling": 50,
-    "gltf_filename": "library.gltf",
-    "gltf_filepath": "./model/GLTF/Scene",
+    "gltf_filename": "Roughness_test.gltf",
+    "gltf_filepath": "./model/BRDF_test",
     "HDRI": {
         "use_hdr": true,
         "default_enviroment": [
@@ -47,7 +47,7 @@
         "use_animation": true,
         "fps": 24,
         "minframe": 0,
-        "maxframe": 120
+        "maxframe": 1
     },
     "RenderType": "PATHTRACE_DENOISE",
     "DenoiseType": "NONE",
