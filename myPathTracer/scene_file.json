@@ -1,7 +1,7 @@
 {
     "width": 1280,
     "height": 720,
-    "sampling": 100000,
+    "sampling": 10000,
     "gltf_filename": "Roughness_test.gltf",
     "gltf_filepath": "./model/BRDF_test",
     "HDRI": {

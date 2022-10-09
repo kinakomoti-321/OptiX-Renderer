@@ -124,6 +124,7 @@ SET(CUDA_NVCC_DEPEND
  "C:/Users/PC/Desktop/Program/OptixRenderer/build/myPathTracer/MIS.h"
  "C:/Users/PC/Desktop/Program/OptixRenderer/build/myPathTracer/NEE.h"
  "C:/Users/PC/Desktop/Program/OptixRenderer/build/myPathTracer/PathTrace.h"
+ "C:/Users/PC/Desktop/Program/OptixRenderer/build/myPathTracer/Phong.h"
  "C:/Users/PC/Desktop/Program/OptixRenderer/build/myPathTracer/RayTrace.h"
  "C:/Users/PC/Desktop/Program/OptixRenderer/build/myPathTracer/camera.h"
  "C:/Users/PC/Desktop/Program/OptixRenderer/build/myPathTracer/color_converter.h"

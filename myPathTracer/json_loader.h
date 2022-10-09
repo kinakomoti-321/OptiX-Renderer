@@ -1,6 +1,6 @@
 #pragma once
 
-#include <nlohmann/json.hpp>
+#include <external/json/include/nlohmann/json.hpp>
 #include <fstream>
 #include <string>
 #include <myPathTracer/myPathTracer.h>

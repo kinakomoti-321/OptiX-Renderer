@@ -21,6 +21,7 @@ static __forceinline__ __device__ float3 PathTrace(const float3 cameraRayOri, co
 	prd.seed = seed;
 	prd.done = false;
 	prd.throughput = { 1.0f,1.0f,1.0f };
+	int depth_count = 0;
 	
 	float p = 1.0;
 	for (int depth = 0; depth < MAX_DEPTH; depth++) {
@@ -66,8 +67,9 @@ static __forceinline__ __device__ float3 PathTrace(const float3 cameraRayOri, co
 		//LTE = prd.geoinfo.shadingNormal;
 		ray_origin = prd.origin + wi * 0.0001;
 		ray_direction = wi;
+		//printf("%d \n", depth);
+		//printf("throughput %f,%f,%f \n", prd.throughput.x, prd.throughput.y, prd.throughput.z);
 	}
-
 	return LTE;
 }
 

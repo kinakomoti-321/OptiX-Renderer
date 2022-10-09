@@ -6,6 +6,7 @@
 #include <myPathTracer/Lambert.h>
 #include <myPathTracer/disneyBRDF.h>
 #include <myPathTracer/specular.h>
+#include <myPathTracer/Phong.h>
 
 //wo 入射ベクトル
 //wi 出射ベクトル
@@ -19,6 +20,9 @@ private:
 	GGX ggx;
 	Lambert lan;
 	DisneyBRDF disney;
+	Phong phong;
+	BlinnPhong blinnphong;
+
 public:
 	__device__ BSDF(const MaterialParam& param) : param(param) {
 		lan = Lambert(param.diffuse);
@@ -27,14 +31,20 @@ public:
 		ref = IdealReflect(param.diffuse);
 		glass = IdealGlass(param.diffuse,param.ior);
 		disney = DisneyBRDF(param);
+		phong = Phong(param.diffuse, param.roughness);
+		blinnphong = BlinnPhong(param.diffuse, param.roughness);
 	}
 
 	__device__ float3 sampleBSDF(const float3& wo, float3& wi, float& pdf, unsigned int& seed) {
 
+		return blinnphong.sampleBSDF(wo,wi,pdf,seed);
+		/*
 		if (param.ideal_specular) {
 			return glass.sampleBSDF(wo, wi, pdf, seed);
 		}
+		//return ggx.sampleBSDF(wo, wi, pdf, seed);
 		return disney.sampleBRDF(wo, wi, pdf, seed);
+		*/
 	}
 
 	__device__ float3 evaluateBSDF(const float3& wo,const float3& wi) {
