@@ -47,6 +47,7 @@ public:
 		float specularTint = 0.0;
 
 		alpha = fmaxf(param.roughness * param.roughness, 0.001f);
+		alpha = param.roughness;
 
 		rho_tint = param.diffuse / RGB_to_Radiance(param.diffuse);
 		rho_sheen = lerp(make_float3(1.0), rho_tint, sheenTint);

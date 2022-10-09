@@ -1,7 +1,7 @@
 {
     "width": 1280,
     "height": 720,
-    "sampling": 50,
+    "sampling": 100000,
     "gltf_filename": "Roughness_test.gltf",
     "gltf_filepath": "./model/BRDF_test",
     "HDRI": {
@@ -11,7 +11,7 @@
             0,
             0
         ],
-        "HDRpath": "model/hdr/starmap_4k.hdr"
+        "HDRpath": "model/hdr/brown_photostudio.hdr"
     },
     "DirectionalLight": {
         "color": [
@@ -37,10 +37,10 @@
             0,
             0
         ],
-        "F": 1.0
+        "F": 5.0
     },
     "Output": {
-        "output_filename": "Library_scene_animation",
+        "output_filename": "Metallic_test",
         "use_time": true
     },
     "FrameRate": {
@@ -49,7 +49,7 @@
         "minframe": 0,
         "maxframe": 1
     },
-    "RenderType": "PATHTRACE_DENOISE",
+    "RenderType": "PATHTRACE_NON_DENOISE",
     "DenoiseType": "NONE",
     "SaveSceneFile": false,
     "TimeLimit": 3.0

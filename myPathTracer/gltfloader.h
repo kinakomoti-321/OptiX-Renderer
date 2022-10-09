@@ -8,6 +8,7 @@
 #include <cstdio>
 #include <fstream>
 #include <iostream>
+#include <cmath>
 #include <myPathTracer/modelLoader.h>
 
 static std::string GetFilePathExtension(const std::string& FileName) {
@@ -1498,6 +1499,7 @@ bool gltfloader(std::string& filepath, std::string& filename, SceneData& sceneda
 				scenedata.camera.direciton = { 0,0,-1 };
 				cameraCheck = true;
 				scenedata.camera.cameraAnimationIndex = node_index;
+				scenedata.camera.f = 2.0 / std::tan(model.cameras[nodes.camera].perspective.yfov);
 			}
 			else if (is_directional_light) {
 				scenedata.direcitonal_light_animation = node_index;
