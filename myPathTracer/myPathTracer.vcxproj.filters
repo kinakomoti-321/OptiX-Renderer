@@ -9,6 +9,18 @@
     <ClInclude Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\myPathTracer\myPathTracer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="BSDF.h">
+      <Filter>CUDA Files</Filter>
+    </ClInclude>
+    <ClInclude Include="transmit.h">
+      <Filter>CUDA Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PathTrace.h">
+      <Filter>CUDA Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GGX.h">
+      <Filter>CUDA Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="C:\Users\PC\Desktop\Program\OptixRenderer\SDK\myPathTracer\myPathTracer.cu">

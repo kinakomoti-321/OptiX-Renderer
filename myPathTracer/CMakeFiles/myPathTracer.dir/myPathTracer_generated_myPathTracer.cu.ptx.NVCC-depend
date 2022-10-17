@@ -133,6 +133,7 @@ myPathTracer.obj : C:/Users/PC/Desktop/Program/OptixRenderer/SDK/myPathTracer/my
     C:/Users/PC/Desktop/Program/OptixRenderer/build/myPathTracer/disneyBRDF.h \
     C:/Users/PC/Desktop/Program/OptixRenderer/build/myPathTracer/specular.h \
     C:/Users/PC/Desktop/Program/OptixRenderer/build/myPathTracer/Phong.h \
+    C:/Users/PC/Desktop/Program/OptixRenderer/build/myPathTracer/transmit.h \
     C:/Users/PC/Desktop/Program/OptixRenderer/build/myPathTracer/PathTrace.h \
     C:/Users/PC/Desktop/Program/OptixRenderer/build/myPathTracer/normal_bumpmap.h \
     C:/Users/PC/Desktop/Program/OptixRenderer/build/myPathTracer/NEE.h \

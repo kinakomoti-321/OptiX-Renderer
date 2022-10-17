@@ -67,7 +67,8 @@ static __forceinline__ __device__ float3 PathTrace(const float3 cameraRayOri, co
 		//LTE = prd.geoinfo.shadingNormal;
 		ray_origin = prd.origin + wi * 0.0001;
 		ray_direction = wi;
-		//printf("%d \n", depth);
+		//printf("%f,%f,%f \n", wi.x,wi.y,wi.z);
+		//printf("throughput %f,%f,%f \n", prd.throughput.x, prd.throughput.y, prd.throughput.z);
 		//printf("throughput %f,%f,%f \n", prd.throughput.x, prd.throughput.y, prd.throughput.z);
 	}
 	return LTE;

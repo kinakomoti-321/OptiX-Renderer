@@ -265,7 +265,6 @@ public:
 	}
 	__device__ ClearcoatGGX(const float3& F0, const float& in_alpha) :F0(F0) {
 		clearcoat = clamp(in_alpha * in_alpha, 0.01f, 1.0f);
-
 	}
 
 	__device__ float3 visibleNormalSampling(const float3& V_, float u, float v) {

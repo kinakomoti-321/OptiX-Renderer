@@ -5,11 +5,11 @@
     "gltf_filename": "Roughness_test.gltf",
     "gltf_filepath": "./model/BRDF_test",
     "HDRI": {
-        "use_hdr": true,
+        "use_hdr": false,
         "default_enviroment": [
-            0,
-            0,
-            0
+            0.8,
+            0.8,
+            0.8
         ],
         "HDRpath": "model/hdr/brown_photostudio.hdr"
     },
